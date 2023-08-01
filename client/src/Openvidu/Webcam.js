@@ -246,7 +246,6 @@ const Webcam = () => {
                     </div>
                       {/* JANG: 게임 대기방 */}
                       <GamePlay />
-
                     </div>
                     ) : null }
 
