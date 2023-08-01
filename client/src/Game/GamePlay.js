@@ -3,6 +3,8 @@ import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
 import "./GamePlay.css";
 
+// import GamePlayContext from "../Context/GamePlayContext";
+
 // 게임 컴포넌트
 import WhiteCanvas from "./WhiteCanvas";
 import UserList from "./UserList";
@@ -21,16 +23,16 @@ function GamePlay() {
     
   
     return (
-      <GamePlayContext.Provider value={{ gameState, gameStateDispatch }}>
-
+      // <GamePlayContext.Provider value={{ gameState, gameStateDispatch }}>
+        <>
           <div className="GameCanvas_Left">
             <UserList />
           </div>
           <div className="GameCanvas_Right">
             <WhiteCanvas />
           </div>
-
-      </GamePlayContext.Provider>
-    );
+        </>
+      // </GamePlayContext.Provider>
+    );  
   }
   export default GamePlay;

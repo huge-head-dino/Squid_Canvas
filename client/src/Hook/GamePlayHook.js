@@ -1,6 +1,6 @@
 /* eslint no-param-reassign:0 */
 import { useReducer } from 'react';
-import produce from 'immer';
+import {produce} from 'immer';
 
 export default function useGamePlay() {
   const initialQuestionWordState = {

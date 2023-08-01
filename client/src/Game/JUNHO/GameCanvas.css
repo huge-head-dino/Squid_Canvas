@@ -1,0 +1,10 @@
+
+.ButtonZone{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .ButtonZone .Tool{
+    margin: 10px 0;
+  }

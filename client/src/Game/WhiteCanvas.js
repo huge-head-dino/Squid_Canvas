@@ -1,4 +1,3 @@
-import useStore from "../store";
 import "./WhiteCanvas.css";
 
 function WhiteCanvas() {
