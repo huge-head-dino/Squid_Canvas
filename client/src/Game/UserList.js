@@ -60,12 +60,12 @@ function UserList() {
           </div>
 
           <div className="VideoBox">
-            <div id={0} className="VideoFrame_Out">
-              {gamers[0] && (
+            <div id={1} className="VideoFrame_Out">
+              {gamers[1] && (
                 <div className="VideoFrame_In">
                   <UserVideoComponent
-                    streamManager={{ gamers }.gamers[0].streamManager}
-                    my_name={{ gamers }.gamers[0].name}
+                    streamManager={{ gamers }.gamers[1].streamManager}
+                    my_name={{ gamers }.gamers[1].name}
                   />
                 </div>
               )}
@@ -73,12 +73,12 @@ function UserList() {
           </div>
 
           <div className="VideoBox">
-            <div id={0} className="VideoFrame_Out">
-              {gamers[0] && (
+            <div id={2} className="VideoFrame_Out">
+              {gamers[2] && (
                 <div className="VideoFrame_In">
                   <UserVideoComponent
-                    streamManager={{ gamers }.gamers[0].streamManager}
-                    my_name={{ gamers }.gamers[0].name}
+                    streamManager={{ gamers }.gamers[2].streamManager}
+                    my_name={{ gamers }.gamers[2].name}
                   />
                 </div>
               )}
@@ -86,12 +86,12 @@ function UserList() {
           </div>
 
           <div className="VideoBox">
-            <div id={0} className="VideoFrame_Out">
-              {gamers[0] && (
+            <div id={3} className="VideoFrame_Out">
+              {gamers[3] && (
                 <div className="VideoFrame_In">
                   <UserVideoComponent
-                    streamManager={{ gamers }.gamers[0].streamManager}
-                    my_name={{ gamers }.gamers[0].name}
+                    streamManager={{ gamers }.gamers[3].streamManager}
+                    my_name={{ gamers }.gamers[3].name}
                   />
                 </div>
               )}
