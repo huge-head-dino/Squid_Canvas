@@ -158,7 +158,7 @@ const Webcam = () => {
     setMyUserName('Participant' + Math.floor(Math.random() * 100));
     setPublisher(undefined);
 
-    location.replace("http://localhost:3000/");
+    // location.replace("http://localhost:3000/");
   };
 
   const handleGameStart = () => {

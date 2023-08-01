@@ -34,7 +34,7 @@ function UserList() {
         for (var i = 0; i < playerCount; i++) {
           if (gamers[i]) {
             if (myUserID === { gamers }.gamers[i].name) {
-              set_my_index(i);
+              setMyIndex(i);
             }
           }
         }
