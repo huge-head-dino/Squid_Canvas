@@ -41,9 +41,6 @@ const useStore = create((set) => ({
   gameEnd: false,
   setGameEnd: (gameEnd) => { set({gameEnd: gameEnd}) },
 
-  myIndex: 10000,
-  setMyIndex: (myIndex) => { set({myIndex: myIndex}) },
-
 }));
 
 export default useStore;
