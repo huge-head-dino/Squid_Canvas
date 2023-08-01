@@ -178,18 +178,19 @@ const Webcam = () => {
 
       {session === undefined ? (
         
-        <div className="JoinForm">
+        <div className="1_JoinForm">
 
-            {/* <div className="JoinForm_Header" id="img-div">
+            <div className="1_JoinForm_Header">
                 <img src="resources/images/main-card.jpeg" alt="logo" />
-            </div> */}
+            </div>
 
                 <h1> 게임 참가 </h1>
-                <form className="form-group" onSubmit={joinSession}>
+
+                <form className="1_JoinForm_Body" onSubmit={joinSession}>
                     <p>
                         <label>Participant: </label>
                         <input
-                            className="form-control"
+                            className="1_JoinForm_Input"
                             type="text"
                             id="userName"
                             value={myUserName}
@@ -200,7 +201,7 @@ const Webcam = () => {
                     <p>
                         <label> Session: </label>
                         <input
-                            className="form-control"
+                            className="1_JoinForm_Input"
                             type="text"
                             id="sessionId"
                             value={mySessionId}
@@ -208,7 +209,7 @@ const Webcam = () => {
                             required
                         />
                     </p>
-                    <div className="JoinForm_Button">
+                    <div className="1_JoinForm_Button">
                         <input name="commit" type="submit" value="JOIN" />
                     </div>
                 </form>
@@ -220,13 +221,13 @@ const Webcam = () => {
             <>
             {useStore.getState().gameStart === false ? (
               // JANG: 게임 대기방으로 만들기!
-                <div className="GameForm">
+                <div className="2_GameForm">
 
-                    <div className="GameForm_Header">
+                    <div className="2_GameForm_Header">
 
-                        <div className="GameForm_Button">
+                        <div className="2_GameForm_Button">
                             <Button
-                            className="exit_button"
+                            className="2_GameForm_Button_1"
                             onClick={leaveSession}
                             value="Exit"
                             >
@@ -236,7 +237,7 @@ const Webcam = () => {
                             {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
                             <Button
                             type="submit"
-                            className="gameStart_button"
+                            className="2_GameForm_Button_2"
                             onClick={handleGameStart}
                             >
                             Start
@@ -244,33 +245,27 @@ const Webcam = () => {
                         </div>
 
                     </div>
-                      {/* JANG: 게임 대기방 */}
+
+                    <div className="2_GameForm_Body">
+                      {/* JANG: 게임 진행 창*/}
                       <GamePlay />
                     </div>
-                    ) : null }
 
-                  {useStore.getState().gameStart === true && useStore.getState().gameEnd === false ? (
-                    
-                    // JANG: 게임 시작 방으로 만들기!
-                    <div className="GameForm_Body">
-                        {/* useStore.getState().gameStart -> false이면, 캔버스 lock 걸고
-                            useStore.getState().gameStart -> true이면, 캔버스 lokc 풀기 + 게임 시작
-                        */}
-                        <div className="GameForm_Content">
-                            <GamePlay />
-                        </div>
-                    </div>
-                ):null}
+                </div>
+                ) : null }
+
+                {/* JANG: 게임 끝난 창..? */}
+                {useStore.getState().gameStart === true && useStore.getState().gameEnd === false ? (
+                  
+                  <div className="3_GameForm_Body">
+                      {/* useStore.getState().gameStart -> false이면, 캔버스 lock 걸고
+                          useStore.getState().gameStart -> true이면, 캔버스 lokc 풀기 + 게임 시작
+                      */}
+
+                  </div>
+              ):null}
           </>
           ) : null}
-
-                  
-                {/* useStore.getState().gameEnd === false ? 
-                useStore.getState().gameEnd === true ? ( */}
-                    <>
-                    {/* 게임 끝났을 때 */}
-                    </>
-
     </div>
 
     )

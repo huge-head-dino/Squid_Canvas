@@ -22,14 +22,14 @@ function GamePlay() {
   
     return (
       // <GamePlayContext.Provider value={{ gameState, gameStateDispatch }}>
-        <>
-          <div className="GameCanvas_Left">
+        <div>
+          <div className="GamePlay_Left">
             <UserList />
           </div>
-          <div className="GameCanvas_Right">
+          <div className="GamePlay_Right">
             <WhiteCanvas />
           </div>
-        </>
+        </div>
       // </GamePlayContext.Provider>
     );  
   }

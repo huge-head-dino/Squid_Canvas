@@ -5,7 +5,7 @@ import { CanvasProvider } from "./JUNHO/CanvasContext";
 function WhiteCanvas() {
 
     return(
-        <div className="GameCanvas">
+        <div className="WhiteCanvas">
             <CanvasProvider>
                 <GameCanvas />
             </CanvasProvider>
