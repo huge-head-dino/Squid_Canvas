@@ -23,7 +23,6 @@ app.use(
 var server = http.createServer(app);
 var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 
-// JANG: sync_whiteboard/server/server.js 추가
 const socketIO = require('socket.io');
 const io = socketIO(server, {
   cors: {

@@ -13,19 +13,20 @@ function UserList() {
 
       myUserID,
 
-      myIndex,
       setMyIndex,
 
       curSession,
       
-      sortGamer,
+      // sortGamer,
     } = useStore();
   
     useEffect(() => {
       if (curSession !== undefined) {
         setPlayerCount(gamers.length);
       }
-      sortGamer();
+      // sortGamer();
+
+      // 의존성에 변화가 있으면 밑에 카메라 다시 렌더링 시키게?
       
     }, [gamers]);
   
@@ -33,7 +34,7 @@ function UserList() {
       if (curSession !== undefined) {
         for (var i = 0; i < playerCount; i++) {
           if (gamers[i]) {
-            if (myUserID === { gamers }.gamers[i].name) {
+            if (myUserID === gamers[i].name) {
               setMyIndex(i);
             }
           }
@@ -42,8 +43,6 @@ function UserList() {
     }, [playerCount]);
   
     return (
-
-      // JANG: gamers 인덱스 수정!
       
         <div className="GameCanvas_Left">
           <div className="VideoBox">
@@ -51,8 +50,8 @@ function UserList() {
               {gamers[0] && (
                 <div className="VideoFrame_In">
                   <UserVideoComponent
-                    streamManager={{ gamers }.gamers[0].streamManager}
-                    my_name={{ gamers }.gamers[0].name}
+                    streamManager={gamers[0].streamManager}
+                    my_name={gamers[0].name}
                   />
                 </div>
               )}
@@ -64,8 +63,8 @@ function UserList() {
               {gamers[1] && (
                 <div className="VideoFrame_In">
                   <UserVideoComponent
-                    streamManager={{ gamers }.gamers[1].streamManager}
-                    my_name={{ gamers }.gamers[1].name}
+                    streamManager={gamers[1].streamManager}
+                    my_name={gamers[1].name}
                   />
                 </div>
               )}
@@ -77,8 +76,8 @@ function UserList() {
               {gamers[2] && (
                 <div className="VideoFrame_In">
                   <UserVideoComponent
-                    streamManager={{ gamers }.gamers[2].streamManager}
-                    my_name={{ gamers }.gamers[2].name}
+                    streamManager={gamers[2].streamManager}
+                    my_name={gamers[2].name}
                   />
                 </div>
               )}
@@ -90,8 +89,8 @@ function UserList() {
               {gamers[3] && (
                 <div className="VideoFrame_In">
                   <UserVideoComponent
-                    streamManager={{ gamers }.gamers[3].streamManager}
-                    my_name={{ gamers }.gamers[3].name}
+                    streamManager={gamers[3].streamManager}
+                    my_name={gamers[3].name}
                   />
                 </div>
               )}

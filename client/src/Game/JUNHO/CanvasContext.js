@@ -16,8 +16,7 @@ export const CanvasProvider = ({ children }) => {
   //서버 연결부분
 
   useEffect(() => {
-    // socketRef.current = io.connect('http://localhost:4001');
-    // JANG: 캔버스 연결 시도!
+
     socketRef.current = io.connect('http://localhost:5050');
 
     socketRef.current.on('startDrawing', data => {  // Listen for 'startDrawing' events

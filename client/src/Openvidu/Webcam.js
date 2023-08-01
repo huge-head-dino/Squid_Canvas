@@ -12,7 +12,7 @@ import useStore from '../store';
 // Bootstrap-react
 import Button from 'react-bootstrap/Button';
 
-// JANG: (08.01) Game1 추가
+// GamePlay
 import GamePlay from '../Game/GamePlay';
 
 // ★ TODO: 서버 url 변경 필요
@@ -27,29 +27,13 @@ const Webcam = () => {
   const [subscribers, setSubscribers] = useState([]);
 
   useEffect(() => {
-    window.addEventListener('beforeunload', onBeforeUnload);
 
-    // 현재 페이지의 url에서 sessionId(쿼리 파라미터)를 가져오고
-    // 해당 값이 존재하면, 컴포넌트 상태 업데이트 후 joinSession() 호출
-    const url = new URL(window.location.href);
-    const sessionId = url.searchParams.get("sessionId");
-    if (sessionId) {
-      setMyUserName("Participant" + Math.floor(Math.random() * 100));
-      setMySessionId(sessionId);
-      joinSession();
-    }
+    window.addEventListener('beforeunload', onBeforeUnload);
 
     return () => {
       window.removeEventListener('beforeunload', onBeforeUnload);
     };
   }, []);
-
-  useEffect(() => {
-    if (session !== undefined) {
-      // JANG: (08.01) 맞춰서 상태 업데이트!
-
-    }
-  }, [session]);
 
   const onBeforeUnload = (event) => {
     leaveSession();
@@ -63,19 +47,17 @@ const Webcam = () => {
     setMyUserName(e.target.value);
   };
 
-  const joinSession = async() => {
+  const joinSession = async(e) => {
+    e.preventDefault();
 
     const OV = new OpenVidu();
-    const mySession = OV.initSession();
-    // setSession(mySession);
-    // setSession은 비동기로 처리하므로, 이벤트 핸들러 등록 전에 mySession 변수 올바르게 정의
 
-    await setSession(mySession); // await을 통해 mySession 변수가 올바르게 정의될 때까지 기다림
-    
-    useStore.getState().setCurSession(mySession);
+    const mySession = OV.initSession();
 
     mySession.on('streamCreated', (event) => {
-      var subscriber = mySession.subscribe(event.stream, undefined);
+      var subscriber = mySession.subscribe(event.stream, undefined); 
+      // mySession.subscribe : openvidu 세션(mySession)에 대해 스트림 구독
+     
       var subscribers = [...subscribers];
 
       const addSubscriber = (subscriber, subscribers) => {
@@ -86,6 +68,7 @@ const Webcam = () => {
         });
         return subscribers;
       };
+      
       setSubscribers(addSubscriber(subscriber, subscribers));
     });
 
@@ -94,7 +77,9 @@ const Webcam = () => {
 
       const deleteSubscriber = (streamManager, subscribers) => {
         let index = subscribers.indexOf(streamManager, 0);
+        
         useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
+        
         useStore.getState().setPlayerCount(useStore.getState().gamers.length);
         if (index > -1) {
           subscribers.splice(index, 1);
@@ -126,22 +111,22 @@ const Webcam = () => {
   
             mySession.publish(publisher);
   
-            // JANG: 원래 코드랑 비교하면서 수정하기!
             useStore.getState().setGamers({
               name: myUserName,
               streamManager: publisher,
             });
   
-            useStore.getState().setMyUserID(myUserName);
+            // useStore.getState().setMyUserID(myUserName);
             setPublisher(publisher);
-
           })
     }
     catch (error) {
       console.log('There was an error connecting to the session:', error.code, error.message);
     }
+
+    setSession(mySession);
+
   };
-  
 
   const leaveSession = () => {
     const mySession = session;
@@ -158,10 +143,10 @@ const Webcam = () => {
     setMyUserName('Participant' + Math.floor(Math.random() * 100));
     setPublisher(undefined);
 
-    // location.replace("http://localhost:3000/");
   };
 
   const handleGameStart = () => {
+    // 4명이 다 찼을 때만 실행 가능하게끔!
     useStore.getState().setGameStart(true);
   };
 
@@ -186,7 +171,6 @@ const Webcam = () => {
     });
     return response.data; // The token
   };
-
 
   return (
 
@@ -234,8 +218,8 @@ const Webcam = () => {
 
         {session !== undefined ? (
             <>
-            {useStore.getState().gameEnd === false ? (
-
+            {useStore.getState().gameStart === false ? (
+              // JANG: 게임 대기방으로 만들기!
                 <div className="GameForm">
 
                     <div className="GameForm_Header">
@@ -258,50 +242,35 @@ const Webcam = () => {
                             Start
                             </Button>
                         </div>
-                    </div>
 
+                    </div>
+                      {/* JANG: 게임 대기방 */}
+                      <GamePlay />
+
+                    </div>
+                    ) : null }
+
+                  {useStore.getState().gameStart === true && useStore.getState().gameEnd === false ? (
+                    
+                    // JANG: 게임 시작 방으로 만들기!
                     <div className="GameForm_Body">
                         {/* useStore.getState().gameStart -> false이면, 캔버스 lock 걸고
                             useStore.getState().gameStart -> true이면, 캔버스 lokc 풀기 + 게임 시작
                         */}
                         <div className="GameForm_Content">
-                            {/* JANG: Canvas 게임 */}
                             <GamePlay />
                         </div>
-
                     </div>
+                ):null}
+          </>
+          ) : null}
 
-                </div>
-
-                ) : useStore.getState().gameEnd === true ? (
+                  
+                {/* useStore.getState().gameEnd === false ? 
+                useStore.getState().gameEnd === true ? ( */}
                     <>
                     {/* 게임 끝났을 때 */}
                     </>
-                ) : null}
-                </>
-
-            //     {this.state.mainStreamManager !== undefined ? (
-            //         <div id="main-video" className="col-md-6">
-            //             <UserVideoComponent streamManager={this.state.mainStreamManager} />
-            //         </div>
-            //     ) : null}
-            //     <div id="video-container" className="col-md-6">
-            //         {this.state.publisher !== undefined ? (
-            //             <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-            //                 <UserVideoComponent
-            //                     streamManager={this.state.publisher} />
-            //             </div>
-            //         ) : null}
-            //         {this.state.subscribers.map((sub, i) => (
-            //             <div key={sub.id} className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(sub)}>
-            //                 <span>{sub.id}</span>
-            //                 <UserVideoComponent streamManager={sub} />
-            //             </div>
-            //         ))}
-            //     </div>
-            // </div>
-
-        ) : null}
 
     </div>
 

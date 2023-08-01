@@ -16,7 +16,7 @@ const useStore = create((set) => ({
   },
   deleteGamer: (name) => {
     set((state) => ({
-      gamers: state.gamers.filter((a) => a.name !== name),
+      gamers: state.gamers.filter((a) => a.name !== name), /* a.name이 name과 같지 않은 것만 남김 */
     }));
   },
   clearGamer: () => {
@@ -24,27 +24,13 @@ const useStore = create((set) => ({
       gamers: [],
     }));
   },
-  sortGamer: () => {
-    set((state) => ({
-      gamers: state.gamers.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        } else if (a.name > b.name) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }),
-    }));
-  },
-
+  // JANG: playerCount를 Gamer 함수로 처리
+  playerCount: 0,
+  setPlayerCount: (playerCount) => { set({playerCount: playerCount}) },
 
   // 추가!
   curSession: undefined,
   setCurSession: (curSession) => { set({curSession: curSession}) },
-
-  playerCount: 0,
-  setPlayerCount: (playerCount) => { set({playerCount: playerCount}) },
 
   myUserId: undefined,
   setMyUserId: (myUserId) => { set({myUserId: myUserId}) },

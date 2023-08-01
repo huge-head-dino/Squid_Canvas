@@ -3,11 +3,9 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import React, { Component } from 'react';
 import './App.css';
-// JANG: (08.01) 아래 원래대로 돌려놓기!
-// import UserVideoComponent from './UserVideoComponent';
 import UserVideoComponent from './Openvidu/UserVideoComponent';
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
 
 class App extends Component {
     constructor(props) {

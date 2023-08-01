@@ -1,4 +1,3 @@
-// JANG: sync_whiteboard/src/App.js 추가
 import React from 'react'
 import { Canvas } from './Canvas'
 import { ClearCanvasButton } from './ClearCanvasButton';
