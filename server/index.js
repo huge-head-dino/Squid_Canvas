@@ -13,6 +13,42 @@ var OPENVIDU_URL = process.env.OPENVIDU_URL || 'http://localhost:4443';
 // Environment variable: secret shared with our OpenVidu server
 var OPENVIDU_SECRET = process.env.OPENVIDU_SECRET || 'MY_SECRET';
 
+
+// JANG: sync_whiteboard/server/server.js 추가
+const socketIO = require('socket.io');
+const io = socketIO(server, {
+  cors: {
+    origin: "*",  // Allow all origins
+    methods: ["GET", "POST"]  // Allow GET and POST methods
+  }
+});
+io.on('connection', socket => {
+  console.log('User connected');
+
+  socket.on('startDrawing', (data) => {
+    console.log(data);
+    socket.broadcast.emit('startDrawing', data);  // Broadcast 'startDrawing' event
+  });
+
+  socket.on('drawing', (data) => {
+    console.log(data);
+    socket.broadcast.emit('drawing', data);
+  });
+
+  socket.on('endDrawing', () => {
+    socket.broadcast.emit('endDrawing');
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+
+  socket.on('clearCanvas', () => {
+      socket.broadcast.emit('clearCanvas');
+    });
+});
+
+
 // Enable CORS support
 app.use(
   cors({
