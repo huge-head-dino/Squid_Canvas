@@ -31,6 +31,8 @@ const io = socketIO(server, {
     methods: ["GET", "POST"]  // Allow GET and POST methods
   }
 });
+
+
 io.on('connection', socket => {
   console.log('User connected');
 
