@@ -5,7 +5,7 @@ const socketIO = require('socket.io');
 const cors = require('cors');  // Import cors module
 
 // Our server port
-const port = 5000;
+const port = 5050;
 
 const app = express();
 

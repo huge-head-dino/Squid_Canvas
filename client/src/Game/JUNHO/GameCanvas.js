@@ -2,8 +2,8 @@
 import React from 'react'
 import { Canvas } from './Canvas'
 import { ClearCanvasButton } from './ClearCanvasButton';
-// import { ColorPicker } from './painter_tool';
-// import { LineWidthButtons } from './painter_tool';
+import { ColorPicker } from './painter_tool';
+import { LineWidthButtons } from './painter_tool';
 
 import './GameCanvas.css'
 
@@ -16,8 +16,8 @@ function GameCanvas() {
           <ClearCanvasButton/>
         </div>
         <div className='Tool'>
-          {/* <LineWidthButtons/>
-          <ColorPicker/> */}
+          <LineWidthButtons/>
+          <ColorPicker/>
         </div>
       </div>
     </>
