@@ -32,7 +32,6 @@ const io = socketIO(server, {
   }
 });
 
-
 io.on('connection', socket => {
   console.log('User connected');
 
@@ -58,6 +57,7 @@ io.on('connection', socket => {
       socket.broadcast.emit('clearCanvas');
     });
 });
+
 
 // Allow application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
