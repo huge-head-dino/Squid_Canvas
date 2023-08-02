@@ -76,8 +76,14 @@ const Webcam = () => {
       var subscriber = mySession.subscribe(event.stream, undefined); 
       // mySession.subscribe : openvidu 세션(mySession)에 대해 스트림 구독
       
-      // MRSEO: SUBSCRIBER 로직 업데이트
-      var subscribers = [...subscribers];
+      // MRSEO: SUBSCRIBER 로직 업데이트 -> 다시 확인!
+      // var subscribers = [...subscribers];
+      useStore.getState().setGamers({
+        name: JSON.parse(event.stream.connection.data).clientData,
+        streamManager: subscriber,
+        // JANG: subscribers에는 publisher의 나머지 속성 두 개가 안 들어감
+      });
+      
       subscribers.push(subscriber);
       setSubscribers(subscribers);
     });
@@ -86,13 +92,13 @@ const Webcam = () => {
       var subscribers = [...subscribers];
 
       const deleteSubscriber = (streamManager, subscribers) => {
-        let index = subscribers.indexOf(streamManager, 0);
+        let index = subscribers.indexOf(streamManager, 0); 
         
         useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
         
         useStore.getState().setPlayerCount(useStore.getState().gamers.length);
         if (index > -1) {
-          subscribers.splice(index, 1);
+          subscribers.splice(index, 1); 
           return subscribers;
         }
       };
@@ -105,7 +111,7 @@ const Webcam = () => {
     });
 
     try{
-        const token = await getToken();
+        const token = await getToken(); 
         await mySession.connect(token, { clientData: myUserName })
         .then(async () => {
             let publisher = await OV.initPublisherAsync(undefined, {
@@ -216,6 +222,11 @@ const Webcam = () => {
     return response.data; // The token
   };
 
+  
+  const consoleCommand = () => {
+    console.log(useStore.getState().gamers);
+  }
+
   return (
 
     <div className="Wrapper">
@@ -262,7 +273,6 @@ const Webcam = () => {
 
         {session !== undefined ? (
             <>
-            {/* MRSEO:  ZUSTAND 상태 변수 변경에 따른렌더링 조건 변경 */}
             {useStore.getState().phase === 'Ready' || useStore.getState().phase === 'Game' ? (
               // JANG: 게임 대기방으로 만들기!
                 <div className="GameForm">
@@ -274,13 +284,16 @@ const Webcam = () => {
                       <Col xs={3}></Col>
                       <Col xs={2}></Col>
                       <Col xs={2}>
-                      {/* MRSEO: PASS 버튼 추가 */}
                       <Button>
                         PASS
                       </Button>
-                      {/* MRSEO: 정답 제출 추가 */}
+
+                      {/* 참가자 수 출력 테스트 */}
+                      <button onClick={consoleCommand}>test</button>
+
                       {useStore.getState().gamers.map((gamer) => 
                             ( gamer.drawable === false && gamer.canSeeAns === false ? (
+                            // JANG: TODO - 정답 입력창 css 수정
                             <div>
                               <input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
                               <button onClick={submitAns}>제출</button>

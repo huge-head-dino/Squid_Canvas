@@ -3,7 +3,7 @@ import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
 import "./UserList.css";
 
-// JANG: gamers가 늘어나도, 카메라가 그만큼 늘어나지 않는 문제 원인
+// gamers가 늘어나도, 카메라가 그만큼 늘어나지 않는 문제 원인
 // React의 Virtual DOM 업데이트 최적화 전략 때문에, 부모 컴포넌트가 렌더링 되더라도, 자식 컴포넌트의 props가 변경되지 않으면, 자식 컴포넌트는 렌더링 되지 않는다.
 // 이를 해결하기 위해 1) 해당 컴포넌트의 고유한 key 할당 or 2) 새로운 props 전달 (ex. forceUpdate={Date.now()} )
 

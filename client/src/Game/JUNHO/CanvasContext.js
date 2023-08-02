@@ -71,26 +71,26 @@ export const CanvasProvider = ({ children }) => {
   const prepareCanvas = useCallback(() => {
     // 4) prepareCanvas 함수를 useCallback 훅을 사용해, 함수의 참조가 변경되지 않도록 해야 함
     const canvas = canvasRef.current;
-  // 1) 캔버스에서 부모 요소의 크기를 직접 읽어와 캔버스의 크기를 설정함
-  const parent = canvas.parentElement;
+    // 1) 캔버스에서 부모 요소의 크기를 직접 읽어와 캔버스의 크기를 설정함
+    const parent = canvas.parentElement;
 
-  // 2) 캔버스의 크기를 부모 요소에 맞춰서 자동으로 조정 -> 3)으로 이동
-  const width = parent.offsetWidth * 0.95;
-  const height = parent.offsetHeight * 0.95;
+    // 2) 캔버스의 크기를 부모 요소에 맞춰서 자동으로 조정 -> 3)으로 이동
+    const width = parent.offsetWidth * 0.95;
+    const height = parent.offsetHeight * 0.95;
 
-  canvas.width = width * 2;
-  canvas.height = height * 2;
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
-  canvas.style.boxShadow = "10px 10px 5px grey";
+    canvas.width = width * 2;
+    canvas.height = height * 2;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    canvas.style.boxShadow = "10px 10px 5px grey";
 
-  const context = canvas.getContext("2d");
-  context.scale(1, 1);
+    const context = canvas.getContext("2d");
+    context.scale(1, 1);
 
-  context.lineCap = "round";
-  context.strokeStyle = strokeColor;
-  context.lineWidth = lineWidth;
-  contextRef.current = context;
+    context.lineCap = "round";
+    context.strokeStyle = strokeColor;
+    context.lineWidth = lineWidth;
+    contextRef.current = context;
   }, [strokeColor, lineWidth]);
 
   // 3) 앞선 2)는 부모의 크기가 변경될 때마다 캔버스 크기가 업데이트 되어야 하므로

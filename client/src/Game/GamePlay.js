@@ -3,13 +3,8 @@ import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
 import "./GamePlay.css";
 
-// JANG: 여기부터 ~~
-// 유저 리스트를 밖으로 뺌
-// import "./UserList.css";
-// 유저 플레이 게임 훅 추가 (아래 없길래)
-// import useGamePlay from "../Hook/GamePlayHook";
 import {Row, Col, Button, Badge } from "react-bootstrap";
-// JANG: ~~ 여기까지
+
 
 // import GamePlayContext from "../Context/GamePlayContext";
 
@@ -27,8 +22,6 @@ function GamePlay(props) {
     initialQuestionWordState,
   ] = useGamePlay();
 
-
-  // JANG: 유저들 관리
   const {
     gamers,
     playerCount,
@@ -41,7 +34,6 @@ function GamePlay(props) {
     round,
   } = useStore();
 
-  // JANG: 유저들 관리 (useEffect)
   useEffect(() => {
     if (curSession !== undefined) {
       setPlayerCount(gamers.length);
@@ -57,7 +49,6 @@ function GamePlay(props) {
       <div>
       <Row>
         <Col xs={3} style={{ color: 'white', textAlign: 'center' }}>
-          {/* MRSEO: */}
           <Button variant="outline-danger"><h1 style={{ fontWeight: 'bold' }}>RED SCORE : {redScoreCnt}</h1></Button>
         </Col>
         <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
@@ -67,7 +58,6 @@ function GamePlay(props) {
           <Button variant="outline-warning"><h1 style={{ fontWeight: 'bold' }}>타이머</h1></Button>
         </Col>
         <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
-          {/* MRSEO: */}
           <Button variant="outline-primary"><h1 style={{ fontWeight: 'bold' }}>BLUE SCORE : {blueScoreCnt}</h1></Button>
         </Col>
       </Row>
@@ -98,7 +88,6 @@ function GamePlay(props) {
                       streamManager={gamers[2].streamManager}
                       my_name={gamers[2].name}
                       key={gamers[2].name}
-
                     />
                   </div>
                 )}

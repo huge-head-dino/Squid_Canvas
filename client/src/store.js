@@ -16,7 +16,7 @@ const useStore = create((set) => ({
   },
   deleteGamer: (name) => {
     set((state) => ({
-      gamers: state.gamers.filter((a) => a.name !== name), /* a.name이 name과 같지 않은 것만 남김 */
+      gamers: state.gamers.filter((a) => a.name !== name),
     }));
   },
   clearGamer: () => {
