@@ -7,12 +7,20 @@ const APPLICATION_SERVER_URL = 'https://mysquidcanvas.shop/';
 const useStore = create((set) => ({
 // 상태와 관련된 변수와 함수들을 정의 : create 함수
 // 상태를 변경하는 함수(상태 갱신 시, 리액티브하게 컴포넌트 업데이트 됨) : set 함수
-
+ 
   gamers: [],
-  setGamers: (gamer) => {
-    set((state) => ({
-      gamers: [...state.gamers, gamer],
-    }));
+  // JANG: gamer 배열 중복 등록 방지 -> 수정
+  setGamers: (newGamer) => {
+    set((state) => {
+      // JANG: 이미 gamers 배열에 동일한 name을 가진 게이머가 존재하는지 확인
+      if (state.gamers.some(gamer => gamer.name === newGamer.name)) {
+        // 근데 이렇게 하면..동명이인 들어왔을 때, 방이 폭파되기는 하지만..
+        return;
+      }
+      return {
+        gamers: [...state.gamers, newGamer],
+      }
+    });
   },
   deleteGamer: (name) => {
     set((state) => ({

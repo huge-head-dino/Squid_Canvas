@@ -81,7 +81,9 @@ const Webcam = () => {
       useStore.getState().setGamers({
         name: JSON.parse(event.stream.connection.data).clientData,
         streamManager: subscriber,
-        // JANG: subscribers에는 publisher의 나머지 속성 두 개가 안 들어감
+        // JANG: publisher와 동일하게 속성 두 개 추가
+        drawable: false,
+        canSeeAns: false,
       });
       
       subscribers.push(subscriber);
@@ -89,21 +91,38 @@ const Webcam = () => {
     });
 
     mySession.on("streamDestroyed", (event) => {
-      var subscribers = [...subscribers];
+      // var subscribers = [...subscribers];
 
-      const deleteSubscriber = (streamManager, subscribers) => {
-        let index = subscribers.indexOf(streamManager, 0); 
-        
-        useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
-        
-        useStore.getState().setPlayerCount(useStore.getState().gamers.length);
-        if (index > -1) {
-          subscribers.splice(index, 1); 
-          return subscribers;
-        }
-      };
+      // 1. subscribers 배열에서 해당 subscriber 제거
+      const index = subscribers.indexOf(event.stream.streamManager);
+      if (index > -1) {
+        subscribers.splice(index, 1);
+        setSubscribers(subscribers);
+      }
 
-      setSubscribers(deleteSubscriber(event.stream.streamManager, subscribers));
+      // 2. gamers 정보에서 해당 subscriber 제거
+      useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
+
+      // 3. 방에 남아 있는 플레이어 수 업데이트
+      // JANG: setPlayerCount 갱신되기 전 삭제하는 시점의 플레이어 수로 갱신되는 문제 해결
+      // JANG: 일단 이거 없애니까, 지금까지 1) gamer 배열 중복 등록 방지 2) 세션 나가면 gamer 배열 갱신 성공 + 비디오 비워지고 새 유저 그 자리에
+      // useStore.getState().setPlayerCount(useStore.getState().gamers.filter((a) => event.stream.streamManager.clientData !== a.name).length);
+
+
+
+      // const deleteSubscriber = (streamManager, subscribers) => {
+      //   let index = subscribers.indexOf(streamManager, 0); 
+        
+      //   useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
+      //   useStore.getState().setPlayerCount(useStore.getState().gamers.length);
+
+      //   if (index > -1) {
+      //     subscribers.splice(index, 1);  // subscribers 배열에서 해당 streamManager 삭제
+      //     return subscribers;
+      //   }
+      // };
+
+      // setSubscribers(deleteSubscriber(event.stream.streamManager, subscribers));
     });
 
     mySession.on('exception', (exception) => {
@@ -161,7 +180,6 @@ const Webcam = () => {
     setMySessionId('SessionA');
     setMyUserName('Participant' + Math.floor(Math.random() * 100));
     setPublisher(undefined);
-
   };
 
   // MRSEO: 정답 제출
@@ -288,7 +306,8 @@ const Webcam = () => {
                         PASS
                       </Button>
 
-                      {/* 참가자 수 출력 테스트 */}
+                      {/* MRSEO: 참가자 수 출력 테스트 */}
+                      {/* JANG: 나중에 확인하고 버릴 거! */}
                       <button onClick={consoleCommand}>test</button>
 
                       {useStore.getState().gamers.map((gamer) => 
