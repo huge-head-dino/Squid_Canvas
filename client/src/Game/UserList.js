@@ -7,6 +7,8 @@ import "./UserList.css";
 // React의 Virtual DOM 업데이트 최적화 전략 때문에, 부모 컴포넌트가 렌더링 되더라도, 자식 컴포넌트의 props가 변경되지 않으면, 자식 컴포넌트는 렌더링 되지 않는다.
 // 이를 해결하기 위해 1) 해당 컴포넌트의 고유한 key 할당 or 2) 새로운 props 전달 (ex. forceUpdate={Date.now()} )
 
+import WhiteCanvas from "./WhiteCanvas";
+
 function UserList() {
     const {
       gamers,
@@ -26,66 +28,64 @@ function UserList() {
     }, [gamers]);
   
     return (
+    
+    // JANG: 유저들 렌더링 되는 부분은 GamePlay.js로 옮김. (함수만 이곳에서 처리)
       
-        <div>
+    //   <div className="GameCanvas_Left">
+    //   <div className="VideoBox">
+    //     <div id={0} className="VideoFrame_Out">
+    //       {gamers[0] && (
+    //         <div className="VideoFrame_In">
+    //           <UserVideoComponent
+    //             streamManager={gamers[0].streamManager}
+    //             my_name={gamers[0].name}
+    //           />
+    //         </div>
+    //       )}
+    //     </div>
+    //   </div>
 
-            <div className="VideoBox">
-              <div id={0} className="VideoFrame_Out">
-                {gamers[0] && (
-                  <div className="VideoFrame_In">
-                    <UserVideoComponent
-                      streamManager={gamers[0].streamManager}
-                      my_name={gamers[0].name}
-                      key={gamers[0].name}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
+    //   <div className="VideoBox">
+    //     <div id={2} className="VideoFrame_Out">
+    //       {gamers[2] && (
+    //         <div className="VideoFrame_In">
+    //           <UserVideoComponent
+    //             streamManager={gamers[1].streamManager}
+    //             my_name={gamers[1].name}
+    //           />
+    //         </div>
+    //       )}
+    //     </div>
+    //   </div>
 
-            <div className="VideoBox">
-              <div id={1} className="VideoFrame_Out">
-                {gamers[1] && (
-                  <div className="VideoFrame_In">
-                    <UserVideoComponent
-                      streamManager={gamers[1].streamManager}
-                      my_name={gamers[1].name}
-                      key={gamers[1].name}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
 
-            <div className="VideoBox">
-              <div id={2} className="VideoFrame_Out">
-                {gamers[2] && (
-                  <div className="VideoFrame_In">
-                    <UserVideoComponent
-                      streamManager={gamers[2].streamManager}
-                      my_name={gamers[2].name}
-                      key={gamers[2].name}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
+    //   <div className="VideoBox">
+    //     <div id={1} className="VideoFrame_Out">
+    //       {gamers[1] && (
+    //         <div className="VideoFrame_In">
+    //           <UserVideoComponent
+    //             streamManager={gamers[1].streamManager}
+    //             my_name={gamers[1].name}
+    //           />
+    //         </div>
+    //       )}
+    //     </div>
+    //   </div>
 
-            <div className="VideoBox">
-              <div id={3} className="VideoFrame_Out">
-                {gamers[3] && (
-                  <div className="VideoFrame_In">
-                    <UserVideoComponent
-                      streamManager={gamers[3].streamManager}
-                      my_name={gamers[3].name}
-                      key={gamers[3].name}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
+    //   <div className="VideoBox">
+    //     <div id={3} className="VideoFrame_Out">
+    //       {gamers[3] && (
+    //         <div className="VideoFrame_In">
+    //           <UserVideoComponent
+    //             streamManager={gamers[3].streamManager}
+    //             my_name={gamers[3].name}
+    //           />
+    //         </div>
+    //       )}
+    //     </div>
+    //   </div>
 
-        </div>
+    // </div>
 
     );
   }

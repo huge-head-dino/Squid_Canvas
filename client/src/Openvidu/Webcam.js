@@ -15,9 +15,12 @@ import Button from 'react-bootstrap/Button';
 // GamePlay
 import GamePlay from '../Game/GamePlay';
 
+// react-bootstrap
+import { Row, Col } from 'react-bootstrap';
+
 // ★ TODO: 서버 url 변경 필요
-const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
   const [mySessionId, setMySessionId] = useState('SessionA');
@@ -178,19 +181,18 @@ const Webcam = () => {
 
       {session === undefined ? (
         
-        <div className="1_JoinForm">
+        <div className="JoinForm">
 
-            <div className="1_JoinForm_Header">
+            {/* <div className="JoinForm_Header" id="img-div">
                 <img src="resources/images/main-card.jpeg" alt="logo" />
-            </div>
+            </div> */}
 
                 <h1> 게임 참가 </h1>
-
-                <form className="1_JoinForm_Body" onSubmit={joinSession}>
+                <form className="form-group" onSubmit={joinSession}>
                     <p>
                         <label>Participant: </label>
                         <input
-                            className="1_JoinForm_Input"
+                            className="form-control"
                             type="text"
                             id="userName"
                             value={myUserName}
@@ -201,7 +203,7 @@ const Webcam = () => {
                     <p>
                         <label> Session: </label>
                         <input
-                            className="1_JoinForm_Input"
+                            className="form-control"
                             type="text"
                             id="sessionId"
                             value={mySessionId}
@@ -209,7 +211,7 @@ const Webcam = () => {
                             required
                         />
                     </p>
-                    <div className="1_JoinForm_Button">
+                    <div className="JoinForm_Button">
                         <input name="commit" type="submit" value="JOIN" />
                     </div>
                 </form>
@@ -221,51 +223,67 @@ const Webcam = () => {
             <>
             {useStore.getState().gameStart === false ? (
               // JANG: 게임 대기방으로 만들기!
-                <div className="2_GameForm">
+                <div className="GameForm">
 
-                    <div className="2_GameForm_Header">
-
-                        <div className="2_GameForm_Button">
-                            <Button
-                            className="2_GameForm_Button_1"
-                            onClick={leaveSession}
-                            value="Exit"
-                            >
-                            Exit
-                            </Button>
-
-                            {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                            <Button
-                            type="submit"
-                            className="2_GameForm_Button_2"
-                            onClick={handleGameStart}
-                            >
-                            Start
-                            </Button>
-                        </div>
-
-                    </div>
-
-                    <div className="2_GameForm_Body">
-                      {/* JANG: 게임 진행 창*/}
+                      {/* JANG: 게임 대기방 */}
                       <GamePlay />
+
+                      <Row>
+                      <Col xs={3}></Col>
+                      <Col xs={2}></Col>
+                      <Col xs={2}>
+                      {/* <div className="GameForm_Button"> */}
+                          <Button
+                          variant='danger'
+                          size='lg'
+                          className="exit_button"
+                          onClick={leaveSession}
+                          value="Exit"
+                          >
+                          Exit
+                          </Button>
+                          {' '}
+                          {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
+                          <Button
+                          variant='primary'
+                          size='lg'                          
+                          type="submit"
+                          className="gameStart_button"
+                          onClick={handleGameStart}
+                          >
+                          Start
+                          </Button>
+                      {/* </div> */}
+                      </Col>
+                      <Col xs={2}></Col>
+                      <Col xs={3}></Col>
+                      </Row>
+
                     </div>
+                    ) : null }
 
-                </div>
-                ) : null }
-
-                {/* JANG: 게임 끝난 창..? */}
-                {useStore.getState().gameStart === true && useStore.getState().gameEnd === false ? (
-                  
-                  <div className="3_GameForm_Body">
-                      {/* useStore.getState().gameStart -> false이면, 캔버스 lock 걸고
-                          useStore.getState().gameStart -> true이면, 캔버스 lokc 풀기 + 게임 시작
-                      */}
-
-                  </div>
-              ):null}
+                  {useStore.getState().gameStart === true && useStore.getState().gameEnd === false ? (
+                    
+                    // JANG: 게임 시작 방으로 만들기!
+                    <div className="GameForm_Body">
+                        {/* useStore.getState().gameStart -> false이면, 캔버스 lock 걸고
+                            useStore.getState().gameStart -> true이면, 캔버스 lokc 풀기 + 게임 시작
+                        */}
+                        <div className="GameForm_Content">
+                            <GamePlay />
+                        </div>
+                    </div>
+                ):null}
           </>
           ) : null}
+
+                  
+                {/* useStore.getState().gameEnd === false ? 
+                useStore.getState().gameEnd === true ? ( */}
+                    <>
+                    {/* 게임 끝났을 때 */}
+                    </>
+
     </div>
 
     )

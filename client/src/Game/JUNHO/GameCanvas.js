@@ -1,24 +1,27 @@
 import React from 'react'
 import { Canvas } from './Canvas'
-import { ClearCanvasButton } from './ClearCanvasButton';
+import { ClearCanvasButton } from './painter_tool';
 import { ColorPicker } from './painter_tool';
 import { LineWidthButtons } from './painter_tool';
 
 import './GameCanvas.css'
 
+import {Col} from 'react-bootstrap'
+
+
 function GameCanvas() {
   return (
     <>
-      <Canvas/>
-      <div className='ButtonZone'>
-        <div className='ClearButton'>
-          <ClearCanvasButton/>
-        </div>
-        <div className='Tool'>
-          <LineWidthButtons/>
-          <ColorPicker/>
-        </div>
+      <Col>
+      <div className='Canvas'>
+        <Canvas/>
       </div>
+      <div className='ButtonZone'>
+          <LineWidthButtons/>
+          <ClearCanvasButton/>
+          <ColorPicker/>
+      </div>
+      </Col>
     </>
   );
 }

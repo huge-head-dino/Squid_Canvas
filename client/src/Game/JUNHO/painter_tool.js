@@ -2,14 +2,16 @@ import React from 'react';
 import { useCanvas } from './CanvasContext';
 import './painter_tool.css';
 
+import {ButtonGroup, Button} from 'react-bootstrap';
+
 export const LineWidthButtons = () => {
   const { lineWidth, setLineWidth } = useCanvas();
 
   return (
-    <div className='LineWidthButtons'>
-      <button className='' onClick={() => setLineWidth(lineWidth + 3)}>Increase line width</button>
-      <button className='' onClick={() => setLineWidth(lineWidth - 3)}>Decrease line width</button>
-    </div>
+    <ButtonGroup aria-label="Basic example" className='LineWidthButtons'>
+      <Button variant="secondary" onClick={() => setLineWidth(lineWidth + 3)}>펜 굵기 증가</Button>
+      <Button variant="dark" onClick={() => setLineWidth(lineWidth - 3)}>펜 굵기 감소</Button>
+    </ButtonGroup>
   );
 };
 
@@ -21,14 +23,8 @@ export const ColorPicker = () => {
   );
 };
 
-export const ShapeButtons = () => {
-    const { drawCircle, drawSquare, drawTriangle } = useCanvas();
-  
-    return (
-      <div className='ShapeButtons'>
-        <button className='' onClick={drawCircle}>Draw Circle</button>
-        <button className='' onClick={drawSquare}>Draw Square</button>
-        <button className='' onClick={drawTriangle}>Draw Triangle</button>
-      </div>
-    );
-  };
+export const ClearCanvasButton = () => {
+  const { clearCanvas } = useCanvas()
+
+  return <Button variant="warning" onClick={clearCanvas}>캔버스 초기화</Button>
+}

@@ -39,7 +39,7 @@ export function Canvas() {
 
 
   return (
-    <div>
+    <div className="BigCanvas" style={{ height: "100%"}}>
     <canvas
       onMouseDown={startDrawing}
       onMouseUp={finishDrawing}

@@ -1,6 +1,10 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
 import io from 'socket.io-client';
 
+//JANG: 캔버스 크기 조정 때문에 추가
+import { useCallback } from "react";
+
+
 const CanvasContext = React.createContext();
 
 export const CanvasProvider = ({ children }) => {
@@ -46,24 +50,54 @@ export const CanvasProvider = ({ children }) => {
     });
   }, []);
 
-
-
   // 캔버스 준비
-  const prepareCanvas = () => {
-    const canvas = canvasRef.current
-    canvas.width = window.innerWidth * 2;
-    canvas.height = window.innerHeight * 2;
-    canvas.style.width = `${window.innerWidth*0.7}px`;
-    canvas.style.height = `${window.innerHeight*0.7}px`;
-    canvas.style.boxShadow = "10px 10px 5px grey"; // 그림자 추가
+  // const prepareCanvas = () => {
+  //   const canvas = canvasRef.current
+  //   canvas.width = window.innerWidth * 2;
+  //   canvas.height = window.innerHeight * 2;
+  //   canvas.style.width = `${window.innerWidth*0.7}px`;
+  //   canvas.style.height = `${window.innerHeight*0.7}px`;
+  //   canvas.style.boxShadow = "10px 10px 5px grey"; // 그림자 추가
 
-    const context = canvas.getContext("2d")
-    context.scale(1.42, 1.42);
-    context.lineCap = "round";
-    context.strokeStyle = strokeColor;  
-    context.lineWidth = lineWidth;  
-    contextRef.current = context;
-  };
+  //   const context = canvas.getContext("2d")
+  //   context.scale(1.42, 1.42);
+  //   context.lineCap = "round";
+  //   context.strokeStyle = strokeColor;  
+  //   context.lineWidth = lineWidth;  
+  //   contextRef.current = context;
+  // };
+
+  // 캔버스 준비 -> 이거 원본은 위에 
+  const prepareCanvas = useCallback(() => {
+    // 4) prepareCanvas 함수를 useCallback 훅을 사용해, 함수의 참조가 변경되지 않도록 해야 함
+    const canvas = canvasRef.current;
+  // 1) 캔버스에서 부모 요소의 크기를 직접 읽어와 캔버스의 크기를 설정함
+  const parent = canvas.parentElement;
+
+  // 2) 캔버스의 크기를 부모 요소에 맞춰서 자동으로 조정 -> 3)으로 이동
+  const width = parent.offsetWidth * 0.95;
+  const height = parent.offsetHeight * 0.95;
+
+  canvas.width = width * 2;
+  canvas.height = height * 2;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  canvas.style.boxShadow = "10px 10px 5px grey";
+
+  const context = canvas.getContext("2d");
+  context.scale(1, 1);
+
+  context.lineCap = "round";
+  context.strokeStyle = strokeColor;
+  context.lineWidth = lineWidth;
+  contextRef.current = context;
+  }, [strokeColor, lineWidth]);
+
+  // 3) 앞선 2)는 부모의 크기가 변경될 때마다 캔버스 크기가 업데이트 되어야 하므로
+  //   부모의 크기가 변경될 때마다 캔버스의 크기를 업데이트하는 함수를 작성함
+  useEffect(() => {
+    prepareCanvas();
+  }, [prepareCanvas]);
 
   // 마우스 다운시 실행되는 함수
   const startDrawing = ({ nativeEvent }) => {
@@ -82,6 +116,7 @@ export const CanvasProvider = ({ children }) => {
     }
     
   };
+
 
   //마우스 업시 실행되는 함수
   const finishDrawing = () => {
@@ -112,36 +147,6 @@ export const CanvasProvider = ({ children }) => {
     
   };
 
-  // 도형을 그리는 함수들 //JUNHO: 일단 도형 그리는 코드는 복잡성 증가때문에 보류
-  // const drawCircle = ({ nativeEvent }) => {
-  //   const { clientX, clientY } = nativeEvent;
-  //   const canvas = canvasRef.current;
-  //   const context = canvas.getContext("2d");
-  //   const radius = 50;  // Set the radius of the circle
-  //   context.arc(clientX, clientY, radius, 0, 2 * Math.PI);
-  //   context.stroke();
-  // };
-
-  // const drawSquare = ({ nativeEvent }) => {
-  //   const { clientX, clientY } = nativeEvent;
-  //   const canvas = canvasRef.current;
-  //   const context = canvas.getContext("2d");
-  //   const sideLength = 100;  // Set the length of the square's sides
-  //   context.rect(clientX - sideLength / 2, clientY - sideLength / 2, sideLength, sideLength);
-  //   context.stroke();
-  // };
-
-  // const drawTriangle = ({ nativeEvent }) => {
-  //   const { clientX, clientY } = nativeEvent;
-  //   const canvas = canvasRef.current;
-  //   const context = canvas.getContext("2d");
-  //   const sideLength = 100;  // Set the length of the triangle's sides
-  //   context.moveTo(clientX, clientY - sideLength / 2);
-  //   context.lineTo(clientX - sideLength / 2, clientY + sideLength / 2);
-  //   context.lineTo(clientX + sideLength / 2, clientY + sideLength / 2);
-  //   context.closePath();
-  //   context.stroke();
-  // };
 
   
   // 캔버스 초기화 버튼 관련 함수

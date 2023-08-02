@@ -1,10 +1,11 @@
-
 .ButtonZone{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-  }
-  
-  .ButtonZone .Tool{
-    margin: 10px 0;
-  }
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.Canvas {
+  height: 90%;
+}
