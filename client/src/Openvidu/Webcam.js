@@ -17,6 +17,8 @@ import GamePlay from '../Game/GamePlay';
 
 // react-bootstrap
 import { Row, Col } from 'react-bootstrap';
+// MRSEO:
+import { GameInitializer } from './GameInitializer';
 
 // ★ TODO: 서버 url 변경 필요
 // const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
@@ -28,6 +30,19 @@ const Webcam = () => {
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
+
+  // MRSEO: ZUSTAND 상태 변수 선언
+  const { 
+    setCanSeeAns, 
+    setDrawable, 
+    ans, 
+    setAns, 
+    round, 
+    redScoreCnt, 
+    setRedScoreCnt,
+    blueScoreCnt,
+    setBlueScoreCnt,
+   } = useStore();
 
   useEffect(() => {
 
@@ -60,19 +75,11 @@ const Webcam = () => {
     mySession.on('streamCreated', (event) => {
       var subscriber = mySession.subscribe(event.stream, undefined); 
       // mySession.subscribe : openvidu 세션(mySession)에 대해 스트림 구독
-     
-      var subscribers = [...subscribers];
-
-      const addSubscriber = (subscriber, subscribers) => {
-        subscribers.push(subscriber);
-        useStore.getState().setGamers({
-          name: JSON.parse(event.stream.connection.data).clientData,
-          streamManager: subscriber,
-        });
-        return subscribers;
-      };
       
-      setSubscribers(addSubscriber(subscriber, subscribers));
+      // MRSEO: SUBSCRIBER 로직 업데이트
+      var subscribers = [...subscribers];
+      subscribers.push(subscriber);
+      setSubscribers(subscribers);
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -117,6 +124,9 @@ const Webcam = () => {
             useStore.getState().setGamers({
               name: myUserName,
               streamManager: publisher,
+              // MRSEO: gamer의 drawable, canSeeAns 상태 변수 추가
+              drawable: false,
+              canSeeAns: false,
             });
   
             // useStore.getState().setMyUserID(myUserName);
@@ -148,9 +158,40 @@ const Webcam = () => {
 
   };
 
+  // MRSEO: 정답 제출
+  const submitAns = () => {
+    if ( round === 1 ){
+      if ( ans === '제시어' ){
+        
+        setCanSeeAns(!useStore.getState().gamers[0].canSeeAns, useStore.getState().gamers[0].name);
+        setDrawable(!useStore.getState().gamers[0].drawable, useStore.getState().gamers[0].name);
+
+        // setCanSeeAns(!useStore.getState().gamers[2].canSeeAns, useStore.getState().gamers[2].name);
+        // setdrawable(!useStore.getState().gamers[2].drawable, useStore.getState().gamers[2].name);
+
+        setRedScoreCnt(redScoreCnt + 1);
+
+      }
+    }
+    if ( round === 2 ){
+      if ( ans === '제시어' ){
+
+        setCanSeeAns(!useStore.getState().gamers[1].canSeeAns, useStore.getState().gamers[1].name);
+        setDrawable(!useStore.getState().gamers[1].drawable, useStore.getState().gamers[1].name);
+
+        setCanSeeAns(!useStore.getState().gamers[3].canSeeAns, useStore.getState().gamers[3].name);
+        setDrawable(!useStore.getState().gamers[3].drawable, useStore.getState().gamers[3].name);
+          }
+
+          setBlueScoreCnt(blueScoreCnt + 1);
+        }
+      setAns('');
+  };
+
   const handleGameStart = () => {
-    // 4명이 다 찼을 때만 실행 가능하게끔!
-    useStore.getState().setGameStart(true);
+    // MRSEO: 게임 시작 버튼 누르면, 게임 시작
+      useStore.getState().setPhase('Game');
+      GameInitializer();
   };
 
   const getToken = async () => {
@@ -221,7 +262,8 @@ const Webcam = () => {
 
         {session !== undefined ? (
             <>
-            {useStore.getState().gameStart === false ? (
+            {/* MRSEO:  ZUSTAND 상태 변수 변경에 따른렌더링 조건 변경 */}
+            {useStore.getState().phase === 'Ready' || useStore.getState().phase === 'Game' ? (
               // JANG: 게임 대기방으로 만들기!
                 <div className="GameForm">
 
@@ -232,6 +274,17 @@ const Webcam = () => {
                       <Col xs={3}></Col>
                       <Col xs={2}></Col>
                       <Col xs={2}>
+                      {/* MRSEO: PASS 버튼 추가 */}
+                      <Button>
+                        PASS
+                      </Button>
+                      {/* MRSEO: 정답 제출 추가 */}
+                      {useStore.getState().gamers.map((gamer) => 
+                            ( gamer.drawable === false && gamer.canSeeAns === false ? (
+                            <div>
+                              <input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
+                              <button onClick={submitAns}>제출</button>
+                            </div>):null))}
                       {/* <div className="GameForm_Button"> */}
                           <Button
                           variant='danger'
@@ -244,6 +297,7 @@ const Webcam = () => {
                           </Button>
                           {' '}
                           {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
+                        {useStore.getState().gamers.length === 4 ? (
                           <Button
                           variant='primary'
                           size='lg'                          
@@ -253,6 +307,7 @@ const Webcam = () => {
                           >
                           Start
                           </Button>
+                        ):null} 
                       {/* </div> */}
                       </Col>
                       <Col xs={2}></Col>

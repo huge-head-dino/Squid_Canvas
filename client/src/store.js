@@ -24,9 +24,23 @@ const useStore = create((set) => ({
       gamers: [],
     }));
   },
-  // JANG: playerCount를 Gamer 함수로 처리
-  playerCount: 0,
-  setPlayerCount: (playerCount) => { set({playerCount: playerCount}) },
+
+  // MRSEO:
+  setDrawable: (drawable, myUserName) => {
+    set((state) => ({
+      gamers: state.gamers.map((gamer) =>
+        gamer.name === myUserName ? { ...gamer, drawable: drawable } : gamer
+      ),
+    }));
+  },
+
+  setCanSeeAns: (canSeeAns, myUserName) => {
+    set((state) => ({
+      gamers: state.gamers.map((gamer) =>
+        gamer.name === myUserName ? { ...gamer, canSeeAns: canSeeAns } : gamer
+      ),
+    }));
+  },
 
   // 추가!
   curSession: undefined,
@@ -35,11 +49,27 @@ const useStore = create((set) => ({
   myUserId: undefined,
   setMyUserId: (myUserId) => { set({myUserId: myUserId}) },
 
-  gameStart: false,
-  setGameStart: (gameStart) => { set({gameStart: gameStart}) },
+  playerCnt: 0,
+  setPlayerCount: (playerCnt) => { set({playerCnt: playerCnt}) },
 
-  gameEnd: false,
-  setGameEnd: (gameEnd) => { set({gameEnd: gameEnd}) },
+  // MRSEO:
+  phase: 'Ready',
+  setPhase: (phase) => { set({phase: phase}) },
+
+  whoIsPainter: undefined,
+  setWhoIsPainter: (whoIsPainter) => { set({whoIsPainter: whoIsPainter}) },
+
+  redScoreCnt: 0,
+  setRedScoreCnt: (redScoreCnt) => { set({redScoreCnt: redScoreCnt}) },
+
+  blueScoreCnt: 0,
+  setBlueScoreCnt: (blueScoreCnt) => { set({blueScoreCnt: blueScoreCnt}) },
+
+  round: 1,
+  setRound: (round) => { set({round: round}) },
+  
+  ans: '',
+  setAns: (ans) => { set({ans: ans}) },
 
 }));
 

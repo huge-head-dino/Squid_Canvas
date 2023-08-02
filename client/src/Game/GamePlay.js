@@ -19,13 +19,14 @@ import WhiteCanvas from "./WhiteCanvas";
 // 게임 훅
 import useGamePlay from "../Hook/GamePlayHook";
 
-function GamePlay() {
+function GamePlay(props) {
 
   const [
     gameState,
     gameStateDispatch,
     initialQuestionWordState,
   ] = useGamePlay();
+
 
   // JANG: 유저들 관리
   const {
@@ -35,6 +36,9 @@ function GamePlay() {
     myUserID,
     setMyIndex,
     curSession,
+    redScoreCnt,
+    blueScoreCnt,
+    round,
   } = useStore();
 
   // JANG: 유저들 관리 (useEffect)
@@ -53,16 +57,18 @@ function GamePlay() {
       <div>
       <Row>
         <Col xs={3} style={{ color: 'white', textAlign: 'center' }}>
-          <Button variant="outline-danger"><h1 style={{ fontWeight: 'bold' }}>RED SCORE</h1></Button>
+          {/* MRSEO: */}
+          <Button variant="outline-danger"><h1 style={{ fontWeight: 'bold' }}>RED SCORE : {redScoreCnt}</h1></Button>
         </Col>
         <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
-          <Button variant="outline-success"><h1 style={{ fontWeight: 'bold' }}>라운드</h1></Button>
+          <Button variant="outline-success"><h1 style={{ fontWeight: 'bold' }}>라운드 : {round}</h1></Button>
         </Col>
         <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
           <Button variant="outline-warning"><h1 style={{ fontWeight: 'bold' }}>타이머</h1></Button>
         </Col>
         <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
-          <Button variant="outline-primary"><h1 style={{ fontWeight: 'bold' }}>BLUE SCORE</h1></Button>
+          {/* MRSEO: */}
+          <Button variant="outline-primary"><h1 style={{ fontWeight: 'bold' }}>BLUE SCORE : {blueScoreCnt}</h1></Button>
         </Col>
       </Row>
 
