@@ -3,14 +3,13 @@ import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
 import "./GamePlay.css";
 
-// JANG: 유저 리스트를 밖으로 뺌
+// JANG: 여기부터 ~~
+// 유저 리스트를 밖으로 뺌
 // import "./UserList.css";
-// JANG: 유저 플레이 게임 훅 추가 (아래 없길래)
+// 유저 플레이 게임 훅 추가 (아래 없길래)
 // import useGamePlay from "../Hook/GamePlayHook";
-// JANG: bootstrap react
 import {Row, Col, Button, Badge } from "react-bootstrap";
-
-
+// JANG: ~~ 여기까지
 
 // import GamePlayContext from "../Context/GamePlayContext";
 
@@ -44,7 +43,6 @@ function GamePlay() {
       setPlayerCount(gamers.length);
     }
     // 재 렌더링 되는 건 맞지만, 자식 요소가 재 렌더링 되지는 않음
-
     
   }, [gamers]);
 

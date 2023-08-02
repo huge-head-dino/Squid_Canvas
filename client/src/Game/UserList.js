@@ -29,7 +29,7 @@ function UserList() {
   
     return (
     
-    // JANG: 유저들 렌더링 되는 부분은 GamePlay.js로 옮김. (함수만 이곳에서 처리)
+    // JANG: 유저들 렌더링 되는 부분은 GamePlay.js로 옮김 (유저2 - 캔버스 - 유저2 이렇게 되어 있음)
       
     //   <div className="GameCanvas_Left">
     //   <div className="VideoBox">

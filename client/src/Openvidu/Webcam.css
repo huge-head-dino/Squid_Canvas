@@ -52,14 +52,3 @@
 .GameForm_Body {
 
 }
-
-/* JANG: 여기에 bootstrap react 사용 */
-/* .GameForm_Content {
-	width: 90%;
-	height: 80%;
-	margin: auto;
-	padding: auto;
-
-	display: flex; /* 자식 요소를 가로로 정렬 */
-	/* background-color: grey; */
-/* } */
