@@ -9,8 +9,10 @@ const startTimer = (io) => {
     timerSeconds--;
 
     if (timerSeconds < 0) {
-        clearInterval(intervalId); // 타이머 중지
-        // TODO: 게임 종료 처리
+      clearInterval(intervalId); // 타이머 중지
+      // TODO: 게임 종료 처리
+      // MRSEO: 타이머 값 초기화
+      timerSeconds = 50;
     }
   }, 1000);
 };
@@ -27,6 +29,7 @@ const sendTimerValueToClients = (io) => {
 const getTimerValue = () => {
   return timerSeconds;
 };
+
 
 module.exports = {
   startTimer,

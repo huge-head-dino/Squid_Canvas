@@ -17,7 +17,7 @@ import useGamePlay from "../Hook/GamePlayHook";
 
 function GamePlay(props) {
     // MRSEO: 타이머 값 상태
-    const [timerValue, setTimerValue] = useState(0);
+    const [timerValue, setTimerValue] = useState(100);
 
   const [
     gameState,
@@ -54,7 +54,15 @@ function GamePlay(props) {
         console.log('timerUpdate_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
         setTimerValue(value);
       })
+
      }, []);
+
+     const game_loop = () => {
+      // MRSEO: 타이머 값 초기화
+      setTimerValue(100);
+      // MRSEO: 타이머 시작
+      socket.emit('startTimer', 100);
+     };
 
   
     return (

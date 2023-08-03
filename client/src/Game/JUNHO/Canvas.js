@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCanvas } from "./CanvasContext";
+import Countdown from "../Countdown";
+
 
 export function Canvas() {
   const {
@@ -38,6 +40,8 @@ export function Canvas() {
   }, [socketRef]);  // NOTE: socketRef를 dependency로 추가
 
 
+
+
   return (
     <div className="BigCanvas" style={{ height: "100%"}}>
     <canvas
@@ -48,7 +52,9 @@ export function Canvas() {
     />
     <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
       <h1 style={{ fontWeight: "bold" }}>사과</h1>
+      < Countdown />
     </div>
+
     </div>
   );
 }

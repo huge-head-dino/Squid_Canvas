@@ -21,8 +21,8 @@ import { Row, Col } from 'react-bootstrap';
 import socket from './socket';
 
 // NOTE: 배포 전 확인!
-const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
   const [mySessionId, setMySessionId] = useState('SessionA');
@@ -33,12 +33,12 @@ const Webcam = () => {
 
   // MRSEO: ZUSTAND 상태 변수 선언
   const { 
-    setCanSeeAns, 
-    setDrawable, 
-    ans, 
-    setAns, 
-    round, 
-    redScoreCnt, 
+    setCanSeeAns,
+    setDrawable,
+    ans,
+    setAns,
+    round,
+    redScoreCnt,
     setRedScoreCnt,
     blueScoreCnt,
     setBlueScoreCnt,
@@ -190,11 +190,11 @@ const Webcam = () => {
     if ( round === 1 ){
       if ( ans === '사과' ){
         
-        setCanSeeAns(!useStore.getState().gamers[0].canSeeAns, useStore.getState().gamers[0].name);
-        setDrawable(!useStore.getState().gamers[0].drawable, useStore.getState().gamers[0].name);
+        setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
+        setDrawable(!gamers[0].drawable, gamers[0].name);
 
-        setCanSeeAns(!useStore.getState().gamers[2].canSeeAns, useStore.getState().gamers[2].name);
-        setDrawable(!useStore.getState().gamers[2].drawable, useStore.getState().gamers[2].name);
+        setCanSeeAns(!gamers[2].canSeeAns, gamers[2].name);
+        setDrawable(!gamers[2].drawable, gamers[2].name);
 
         setRedScoreCnt(redScoreCnt + 1);
 
@@ -203,22 +203,21 @@ const Webcam = () => {
     if ( round === 2 ){
       if ( ans === '제시어' ){
 
-        setCanSeeAns(!useStore.getState().gamers[1].canSeeAns, useStore.getState().gamers[1].name);
-        setDrawable(!useStore.getState().gamers[1].drawable, useStore.getState().gamers[1].name);
+        setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
+        setDrawable(!gamers[1].drawable, gamers[1].name);
 
-        setCanSeeAns(!useStore.getState().gamers[3].canSeeAns, useStore.getState().gamers[3].name);
-        setDrawable(!useStore.getState().gamers[3].drawable, useStore.getState().gamers[3].name);
-          }
+        setCanSeeAns(!gamers[3].canSeeAns, gamers[3].name);
+        setDrawable(!gamers[3].drawable, gamers[3].name);
 
-          setBlueScoreCnt(blueScoreCnt + 1);
-        }
+        setBlueScoreCnt(blueScoreCnt + 1);
+      }
+    }
       setAns('');
   };
 
 // MRSEO: 게임 초기화
 const GameInitializer = () => {
-
-  if ( phase === 'Game' && round === 1 ){
+  if ( round === 1 ){
       for (let i = 0; i < gamers.length; i++) {
           if ( i === 0 ){
               setCanSeeAns(true, gamers[i].name);
@@ -233,7 +232,7 @@ const GameInitializer = () => {
       }
   }
 
-  if ( phase === 'Game' && round === 2 ){
+  if ( round === 2 ){
       for (let i = 0; i < gamers.length; i++) {
           if ( i === 1 ){
               setCanSeeAns(true, gamers[i].name);
@@ -247,13 +246,14 @@ const GameInitializer = () => {
           }
       }
   }
+  // console.log(gamers);
 }
 
 
-  const handleGameStart = async () => {
-    // MRSEO: 게임 시작 버튼 누르면, 게임 시작
-    await GameInitializer();
-    useStore.getState().setPhase('Game');
+  const handleGameStart = () => {
+    // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
+    GameInitializer();
+    setPhase('Game');
     socket.emit('gameStart');
   };
 
@@ -281,7 +281,9 @@ const GameInitializer = () => {
 
   
   const consoleCommand = () => {
-    console.log(useStore.getState().gamers);
+    console.log(gamers);
+    // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
+    // setDrawable(!gamers[0].drawable, gamers[0].name);
   }
 
   return (
@@ -330,7 +332,8 @@ const GameInitializer = () => {
 
         {session !== undefined ? (
             <>
-            {useStore.getState().phase === 'Ready' || useStore.getState().phase === 'Game' ? (
+            {/* MRSEO: useStore.getState()지움 */}
+            {phase === 'Ready' || phase === 'Game' ? (
               // JANG: 게임 대기방으로 만들기!
                 <div className="GameForm">
 
@@ -351,6 +354,7 @@ const GameInitializer = () => {
 
                       {phase === 'Game' ? (
                         <>
+                        {/* MRSEO: useStore.getState()지움 */}
                         {gamers.map((gamer) =>
                           ( gamer.drawable === false && gamer.canSeeAns === false ? (
                           // JANG: TODO - 정답 입력창 css 수정
@@ -372,7 +376,7 @@ const GameInitializer = () => {
                           </Button>
                           {' '}
                           {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                        {useStore.getState().gamers.length === 4 ? (
+                        {gamers.length === 1 ? (
                           <Button
                           variant='primary'
                           size='lg'                          
