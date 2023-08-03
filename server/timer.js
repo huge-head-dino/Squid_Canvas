@@ -8,7 +8,7 @@ const startTimer = (io) => {
     sendTimerValueToClients(io);
     timerSeconds--;
 
-    if (timerSeconds < -1) {
+    if (timerSeconds < 0) {
         clearInterval(intervalId); // 타이머 중지
         // TODO: 게임 종료 처리
     }
