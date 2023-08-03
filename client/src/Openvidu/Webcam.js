@@ -20,7 +20,7 @@ import { Row, Col } from 'react-bootstrap';
 // MRSEO: 
 import socket from './socket';
 
-// ★ TODO: 서버 url 변경 필요
+// NOTE: 배포 전 확인!
 const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
 // const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
@@ -193,8 +193,8 @@ const Webcam = () => {
         setCanSeeAns(!useStore.getState().gamers[0].canSeeAns, useStore.getState().gamers[0].name);
         setDrawable(!useStore.getState().gamers[0].drawable, useStore.getState().gamers[0].name);
 
-        setCanSeeAns(!useStore.getState().gamers[2].canSeeAns, useStore.getState().gamers[2].name);
-        setDrawable(!useStore.getState().gamers[2].drawable, useStore.getState().gamers[2].name);
+        // setCanSeeAns(!useStore.getState().gamers[2].canSeeAns, useStore.getState().gamers[2].name);
+        // setDrawable(!useStore.getState().gamers[2].drawable, useStore.getState().gamers[2].name);
 
         setRedScoreCnt(redScoreCnt + 1);
 
@@ -349,13 +349,17 @@ const GameInitializer = () => {
                       {/* JANG: 나중에 확인하고 버릴 거! */}
                       <button onClick={consoleCommand}>test</button>
 
-                      {useStore.getState().gamers.map((gamer) => 
-                            ( gamer.drawable === false && gamer.canSeeAns === false ? (
-                            // JANG: TODO - 정답 입력창 css 수정
-                            <div>
-                              <input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
-                              <button onClick={submitAns}>제출</button>
-                            </div>):null))}
+                      {phase === 'Game' ? (
+                        <>
+                        {gamers.map((gamer) =>
+                          ( gamer.drawable === false && gamer.canSeeAns === false ? (
+                          // JANG: TODO - 정답 입력창 css 수정
+                          <div>
+                            <input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
+                            <button onClick={submitAns}>제출</button>
+                          </div>):null))}
+                        </>
+                      ):null}
                       {/* <div className="GameForm_Button"> */}
                           <Button
                           variant='danger'
@@ -368,7 +372,8 @@ const GameInitializer = () => {
                           </Button>
                           {' '}
                           {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                        {useStore.getState().gamers.length === 4 ? (
+                          {/* JANG: 푸시 전 수정!! 4로 */}
+                        {useStore.getState().gamers.length === 1 ? (
                           <Button
                           variant='primary'
                           size='lg'                          

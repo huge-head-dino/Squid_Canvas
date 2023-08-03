@@ -2,7 +2,9 @@
 import {create} from "zustand";
 import axios from "axios";
 
-const APPLICATION_SERVER_URL = 'https://mysquidcanvas.shop';
+// NOTE: 배포 시, 주소 확인!
+const APPLICATION_SERVER_URL = 'https://mysquidcanvas.shop'
+// const APPLICATION_SERVER_URL = 'http://localhost:5050';
 
 const useStore = create((set) => ({
 // 상태와 관련된 변수와 함수들을 정의 : create 함수
@@ -32,6 +34,22 @@ const useStore = create((set) => ({
       gamers: [],
     }));
   },
+  // JANG: sortGamer 추가
+  sortGamer: () => {
+    set((state) => ({
+      gamers: state.gamers.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        } else if (a.name > b.name) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }),
+    }));
+  },
+
+
 
   // MRSEO:
   setDrawable: (drawable, myUserName) => {

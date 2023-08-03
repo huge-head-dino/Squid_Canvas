@@ -21,7 +21,9 @@ export const CanvasProvider = ({ children }) => {
 
   useEffect(() => {
 
+    // NOTE: 배포 시, 주소 확인!
     socketRef.current = io.connect('https://mysquidcanvas.shop');
+    // socketRef.current = io.connect('http://localhost:5050');
 
     socketRef.current.on('startDrawing', data => {  // Listen for 'startDrawing' events
       const { offsetX, offsetY, lineWidth, strokeColor } = data;

@@ -35,6 +35,7 @@ function GamePlay(props) {
     redScoreCnt,
     blueScoreCnt,
     round,
+    sortGamer,
   } = useStore();
 
   useEffect(() => {
@@ -42,7 +43,8 @@ function GamePlay(props) {
       setPlayerCount(gamers.length);
     }
     // 재 렌더링 되는 건 맞지만, 자식 요소가 재 렌더링 되지는 않음
-    
+    sortGamer();
+
   }, [gamers]);
 
     // MRSEO: 
