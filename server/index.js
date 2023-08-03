@@ -5,6 +5,8 @@ var http = require("http");
 var OpenVidu = require("openvidu-node-client").OpenVidu;
 var cors = require("cors");
 var app = express();
+// MRSEO: timer 추가
+const timerModule = require('./timer'); 
 
 // Environment variable: PORT where the node server is listening
 var SERVER_PORT = process.env.SERVER_PORT || 5050;
@@ -55,6 +57,14 @@ io.on('connection', socket => {
   socket.on('clearCanvas', () => {
       socket.broadcast.emit('clearCanvas');
     });
+
+    // MRSEO: 
+  socket.on('gameStart', () => {
+    console.log('gameStart_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    timerModule.startTimer(io, () => {
+      console.log('타이머 종료');
+    });
+  });
 });
 
 
