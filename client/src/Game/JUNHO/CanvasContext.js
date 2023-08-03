@@ -1,5 +1,6 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
 import io from 'socket.io-client';
+import socket from '../../Openvidu/socket'
 
 //JANG: 캔버스 크기 조정 때문에 추가
 import { useCallback } from "react";

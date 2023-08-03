@@ -24,6 +24,7 @@ app.use(
 
 var server = http.createServer(app);
 var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+let numClients = 0; 
 
 const socketIO = require('socket.io');
 const io = socketIO(server, {
@@ -35,6 +36,11 @@ const io = socketIO(server, {
 
 io.on('connection', socket => {
   console.log('User connected');
+
+  // 클라이언트가 연결될 때마다 클라이언트 수 증가
+  numClients++;
+  console.log('현재 클라이언트 수:', numClients);
+
 
   socket.on('startDrawing', (data) => {
     console.log(data);
@@ -52,19 +58,38 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
+
+    // 클라이언트가 연결 해제될 때마다 클라이언트 수 감소
+    numClients--;
+    console.log('현재 클라이언트 수:', numClients);
+
   });
 
   socket.on('clearCanvas', () => {
       socket.broadcast.emit('clearCanvas');
     });
 
-    // MRSEO: 
+    // MRSEO: 시작
   socket.on('gameStart', () => {
     console.log('gameStart_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    socket.emit('round1Countdown');
+  });
+
+  socket.on('startTimer1', () => {
+    console.log('startTimer1_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    timerModule.startTimer(io, () => {
+      console.log('타이머 종료');
+      io.emit('round2Countdown');
+    });
+  });
+
+  socket.on('startTimer2', () => {
+    console.log('startTimer2_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     timerModule.startTimer(io, () => {
       console.log('타이머 종료');
     });
   });
+
 });
 
 

@@ -14,7 +14,7 @@ function GameCanvas() {
     <>
       <Col>
       <div className='Canvas'>
-        <Canvas/>
+        <Canvas />
       </div>
       <div className='ButtonZone'>
           <LineWidthButtons/>

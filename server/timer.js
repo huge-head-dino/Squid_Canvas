@@ -2,7 +2,7 @@
 let timerSeconds = 50;
 
 // 타이머 값을 1초마다 감소시키고 클라이언트들에게 전달하는 함수
-const startTimer = (io) => {
+const startTimer = (io, callback) => {
   console.log('타이머 시작');
   let intervalId = setInterval(() => { 
     sendTimerValueToClients(io);
@@ -13,6 +13,10 @@ const startTimer = (io) => {
       // TODO: 게임 종료 처리
       // MRSEO: 타이머 값 초기화
       timerSeconds = 50;
+      //MRSEO: 타이머 종료 후 콜백 함수 호출
+      if (typeof callback === 'function') {
+        callback(); // 콜백 함수 호출
+      }
     }
   }, 1000);
 };
@@ -22,7 +26,6 @@ const sendTimerValueToClients = (io) => {
   //JANG: 타이머 수정
   console.log("타이머 진행")
   io.emit('timerUpdate', timerSeconds);
-  
 };
 
 // 현재 타이머 값을 가져오는 함수

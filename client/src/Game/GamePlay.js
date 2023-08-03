@@ -15,7 +15,7 @@ import WhiteCanvas from "./WhiteCanvas";
 // 게임 훅
 import useGamePlay from "../Hook/GamePlayHook";
 
-function GamePlay(props) {
+function GamePlay() {
     // MRSEO: 타이머 값 상태
     const [timerValue, setTimerValue] = useState(100);
 
@@ -35,6 +35,7 @@ function GamePlay(props) {
     redScoreCnt,
     blueScoreCnt,
     round,
+    setRound,
     sortGamer,
   } = useStore();
 
@@ -55,14 +56,13 @@ function GamePlay(props) {
         setTimerValue(value);
       })
 
+      // MRSEO: 라운드를 2로 업데이트
+      socket.on('round2Countdown', () => {
+        setRound(2);
+      });
+
      }, []);
 
-     const game_loop = () => {
-      // MRSEO: 타이머 값 초기화
-      setTimerValue(100);
-      // MRSEO: 타이머 시작
-      socket.emit('startTimer', 100);
-     };
 
   
     return (

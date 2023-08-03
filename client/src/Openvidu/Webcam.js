@@ -257,6 +257,7 @@ const GameInitializer = () => {
     socket.emit('gameStart');
   };
 
+
   const getToken = async () => {
     const sessionId = await createSession(mySessionId);
     console.log('getToken' + sessionId);
@@ -376,7 +377,7 @@ const GameInitializer = () => {
                           </Button>
                           {' '}
                           {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                        {gamers.length === 1 ? (
+                        {gamers.length === 4 ? (
                           <Button
                           variant='primary'
                           size='lg'                          
