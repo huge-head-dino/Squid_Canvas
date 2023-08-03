@@ -4,7 +4,7 @@ let timerSeconds = 50;
 // 타이머 값을 1초마다 감소시키고 클라이언트들에게 전달하는 함수
 const startTimer = (io) => {
   console.log('타이머 시작');
-  let intervalId = setInterval(() => {
+  let intervalId = setInterval(() => { 
     sendTimerValueToClients(io);
     timerSeconds--;
 

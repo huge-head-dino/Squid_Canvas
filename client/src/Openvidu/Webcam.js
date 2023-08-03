@@ -250,10 +250,10 @@ const GameInitializer = () => {
 }
 
 
-  const handleGameStart = () => {
+  const handleGameStart = async () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작
       useStore.getState().setPhase('Game');
-      GameInitializer();
+      await GameInitializer();
       socket.emit('gameStart');
   };
 

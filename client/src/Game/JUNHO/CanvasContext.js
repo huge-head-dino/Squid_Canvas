@@ -93,7 +93,8 @@ export const CanvasProvider = ({ children }) => {
     context.strokeStyle = strokeColor;
     context.lineWidth = lineWidth;
     contextRef.current = context;
-  }, [strokeColor, lineWidth]);
+  }, []); 
+  // JANG: (08.03 11:54) 캔버스 굵기 증가, 감소 수정
 
   // 3) 앞선 2)는 부모의 크기가 변경될 때마다 캔버스 크기가 업데이트 되어야 하므로
   //   부모의 크기가 변경될 때마다 캔버스의 크기를 업데이트하는 함수를 작성함
