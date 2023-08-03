@@ -8,7 +8,7 @@ const startTimer = (io) => {
     sendTimerValueToClients(io);
     timerSeconds--;
 
-    if (timerSeconds === -1) {
+    if (timerSeconds < -1) {
         clearInterval(intervalId); // 타이머 중지
         // TODO: 게임 종료 처리
     }
@@ -17,7 +17,10 @@ const startTimer = (io) => {
 
 // 타이머 값을 클라이언트들에게 전달하는 함수
 const sendTimerValueToClients = (io) => {
+  //JANG: 타이머 수정
+  console.log("타이머 진행")
   io.emit('timerUpdate', timerSeconds);
+  
 };
 
 // 현재 타이머 값을 가져오는 함수
