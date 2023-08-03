@@ -1,3 +1,4 @@
+// FIXME: 폐기처분 예정 
 import React, { useEffect, useState } from "react";
 import { useCanvas } from "./CanvasContext";
 // MRSEO:

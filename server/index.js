@@ -41,28 +41,22 @@ io.on('connection', socket => {
   numClients++;
   console.log('현재 클라이언트 수:', numClients);
 
-
-  socket.on('startDrawing', (data) => {
-    console.log(data);
-    socket.broadcast.emit('startDrawing', data);  // Broadcast 'startDrawing' event
+  socket.on('joinRoom', (mySessionId) => {
+    // console.log('$$$$$$$$$$$$$$$$$$$$$$$joinRoom: ', mySessionId);
+    socket.join(mySessionId);
   });
 
   socket.on('drawing', (data) => {
-    console.log(data);
+    // console.log(data);
+    // socket.to(data.mySessionId).emit('drawing', data);
     socket.broadcast.emit('drawing', data);
   });
-
-  socket.on('endDrawing', () => {
-    socket.broadcast.emit('endDrawing');
-  });
-
+  
   socket.on('disconnect', () => {
     console.log('User disconnected');
-
     // 클라이언트가 연결 해제될 때마다 클라이언트 수 감소
     numClients--;
     console.log('현재 클라이언트 수:', numClients);
-
   });
 
   socket.on('clearCanvas', () => {

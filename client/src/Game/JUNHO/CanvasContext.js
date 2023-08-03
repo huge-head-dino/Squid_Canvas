@@ -1,3 +1,4 @@
+// FIXME: 폐기처분 예정
 import React, { useContext, useRef, useState, useEffect } from "react";
 import io from 'socket.io-client';
 import socket from '../../Openvidu/socket'

@@ -121,7 +121,7 @@ function GamePlay() {
       
       <Col xs={6}>
         <div className="GameCanvas_Right">
-          <WhiteCanvas />
+          <WhiteCanvas/>
         </div>
       </Col>
       

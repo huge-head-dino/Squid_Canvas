@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './Webcam.css';
 import axios from 'axios';
 
+// YEONGWOO: provider 생성
+import SessionContext from './SessionContext';
+
 // OpenVidu
 import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from './UserVideoComponent';
@@ -21,8 +24,8 @@ import { Row, Col } from 'react-bootstrap';
 import socket from './socket';
 
 // NOTE: 배포 전 확인!
-// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
   const [mySessionId, setMySessionId] = useState('SessionA');
@@ -339,7 +342,10 @@ const GameInitializer = () => {
                 <div className="GameForm">
 
                       {/* JANG: 게임 대기방 */}
-                      <GamePlay />
+                      <SessionContext.Provider value={{ mySessionId, myUserName }}>
+                        <GamePlay />
+                      </SessionContext.Provider>
+                      
 
                       <Row>
                       <Col xs={3}></Col>
@@ -405,7 +411,9 @@ const GameInitializer = () => {
                             useStore.getState().gameStart -> true이면, 캔버스 lokc 풀기 + 게임 시작
                         */}
                         <div className="GameForm_Content">
-                            <GamePlay />
+                          
+                            
+              
                         </div>
                     </div>
                 ):null}
