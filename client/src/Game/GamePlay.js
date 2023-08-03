@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
 import "./GamePlay.css";
 
 import {Row, Col, Button, Badge } from "react-bootstrap";
+import socket from "../Openvidu/socket";
 
 
 // import GamePlayContext from "../Context/GamePlayContext";
@@ -15,6 +16,8 @@ import WhiteCanvas from "./WhiteCanvas";
 import useGamePlay from "../Hook/GamePlayHook";
 
 function GamePlay(props) {
+    // MRSEO: 타이머 값 상태
+    const [timerValue, setTimerValue] = useState(0);
 
   const [
     gameState,
@@ -42,6 +45,15 @@ function GamePlay(props) {
     
   }, [gamers]);
 
+    // MRSEO: 
+    useEffect(() => {
+      // 서버로부터 타이머 값을 수신하는 이벤트 리스너
+      socket.on('timerUpdate', (value) => {
+        console.log('timerUpdate_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+        setTimerValue(value);
+      })
+     }, []);
+
   
     return (
       // <GamePlayContext.Provider value={{ gameState, gameStateDispatch }}>
@@ -55,7 +67,7 @@ function GamePlay(props) {
           <Button variant="outline-success"><h1 style={{ fontWeight: 'bold' }}>라운드 : {round}</h1></Button>
         </Col>
         <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
-          <Button variant="outline-warning"><h1 style={{ fontWeight: 'bold' }}>타이머</h1></Button>
+          <Button variant="outline-warning"><h1 style={{ fontWeight: 'bold' }}>타이머 : {timerValue}</h1></Button>
         </Col>
         <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
           <Button variant="outline-primary"><h1 style={{ fontWeight: 'bold' }}>BLUE SCORE : {blueScoreCnt}</h1></Button>

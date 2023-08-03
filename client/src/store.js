@@ -2,7 +2,7 @@
 import {create} from "zustand";
 import axios from "axios";
 
-const APPLICATION_SERVER_URL = 'https://mysquidcanvas.shop/';
+const APPLICATION_SERVER_URL = 'http://localhost:5050';
 
 const useStore = create((set) => ({
 // 상태와 관련된 변수와 함수들을 정의 : create 함수

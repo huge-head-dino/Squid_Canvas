@@ -16,11 +16,11 @@ function GameCanvas() {
       <div className='Canvas'>
         <Canvas/>
       </div>
-      {/* <div className='ButtonZone'> */}
+      <div className='ButtonZone'>
           <LineWidthButtons/>
           <ClearCanvasButton/>
           <ColorPicker/>
-      {/* </div> */}
+      </div>
       </Col>
     </>
   );
