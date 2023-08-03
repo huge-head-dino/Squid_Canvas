@@ -188,7 +188,7 @@ const Webcam = () => {
   // MRSEO: 정답 제출
   const submitAns = () => {
     if ( round === 1 ){
-      if ( ans === '제시어' ){
+      if ( ans === '사과' ){
         
         setCanSeeAns(!useStore.getState().gamers[0].canSeeAns, useStore.getState().gamers[0].name);
         setDrawable(!useStore.getState().gamers[0].drawable, useStore.getState().gamers[0].name);
@@ -252,9 +252,9 @@ const GameInitializer = () => {
 
   const handleGameStart = async () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작
-      useStore.getState().setPhase('Game');
-      await GameInitializer();
-      socket.emit('gameStart');
+    await GameInitializer();
+    useStore.getState().setPhase('Game');
+    socket.emit('gameStart');
   };
 
   const getToken = async () => {

@@ -47,7 +47,7 @@ export function Canvas() {
       ref={canvasRef}
     />
     <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
-      <h1 style={{ fontWeight: "bold" }}>제시어</h1>
+      <h1 style={{ fontWeight: "bold" }}>사과</h1>
     </div>
     </div>
   );
