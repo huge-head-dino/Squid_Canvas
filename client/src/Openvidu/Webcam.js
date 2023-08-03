@@ -193,8 +193,8 @@ const Webcam = () => {
         setCanSeeAns(!useStore.getState().gamers[0].canSeeAns, useStore.getState().gamers[0].name);
         setDrawable(!useStore.getState().gamers[0].drawable, useStore.getState().gamers[0].name);
 
-        // setCanSeeAns(!useStore.getState().gamers[2].canSeeAns, useStore.getState().gamers[2].name);
-        // setDrawable(!useStore.getState().gamers[2].drawable, useStore.getState().gamers[2].name);
+        setCanSeeAns(!useStore.getState().gamers[2].canSeeAns, useStore.getState().gamers[2].name);
+        setDrawable(!useStore.getState().gamers[2].drawable, useStore.getState().gamers[2].name);
 
         setRedScoreCnt(redScoreCnt + 1);
 
@@ -372,8 +372,7 @@ const GameInitializer = () => {
                           </Button>
                           {' '}
                           {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                          {/* JANG: 푸시 전 수정!! 4로 */}
-                        {useStore.getState().gamers.length === 1 ? (
+                        {useStore.getState().gamers.length === 4 ? (
                           <Button
                           variant='primary'
                           size='lg'                          
