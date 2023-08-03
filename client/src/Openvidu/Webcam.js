@@ -194,7 +194,7 @@ const Webcam = () => {
         setDrawable(!useStore.getState().gamers[0].drawable, useStore.getState().gamers[0].name);
 
         setCanSeeAns(!useStore.getState().gamers[2].canSeeAns, useStore.getState().gamers[2].name);
-        setdrawable(!useStore.getState().gamers[2].drawable, useStore.getState().gamers[2].name);
+        setDrawable(!useStore.getState().gamers[2].drawable, useStore.getState().gamers[2].name);
 
         setRedScoreCnt(redScoreCnt + 1);
 
