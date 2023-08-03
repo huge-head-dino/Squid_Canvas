@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5050", {
+const socket = io("https://mysquidcanvas.shop", {
   // CORS 설정 (클라이언트와 다른 도메인에서 접근 가능하도록 설정)
   cors: {
     origin: "*",

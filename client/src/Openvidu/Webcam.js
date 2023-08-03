@@ -21,8 +21,8 @@ import { Row, Col } from 'react-bootstrap';
 import socket from './socket';
 
 // ★ TODO: 서버 url 변경 필요
-// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
   const [mySessionId, setMySessionId] = useState('SessionA');
