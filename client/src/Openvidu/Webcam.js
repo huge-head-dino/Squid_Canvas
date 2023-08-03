@@ -220,8 +220,8 @@ const GameInitializer = () => {
   if ( round === 1 ){
       for (let i = 0; i < gamers.length; i++) {
           if ( i === 0 ){
-              setCanSeeAns(true, gamers[i].name);
-              setDrawable(true, gamers[i].name);
+              setCanSeeAns(false, gamers[i].name);
+              setDrawable(false, gamers[i].name);
           } else if ( i === 1 || i === 3) {
               setCanSeeAns(true, gamers[i].name);
               setDrawable(false, gamers[i].name);

@@ -25,6 +25,8 @@ export function Canvas() {
 
   const {
     gamers,
+    redScoreCnt,
+    blueScoreCnt,
   } = useStore()
 
   // MRSEO: 카운트 조건 초기화
@@ -64,11 +66,22 @@ export function Canvas() {
         socket.emit('startTimer2');
       }, 5000)
     });
+
+    socket.on('gameEnd', () => {
+      setRound2Countdown(false);
+      console.log('gameEnd_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      // TODO: 게임 종료 후 결과 페이지로 이동
+      if (redScoreCnt > blueScoreCnt) {
+        alert('레드팀 승리');
+      } else if (redScoreCnt < blueScoreCnt) {
+        alert('블루팀 승리');
+      } else{
+        alert('무승부');
+      }
+    });
   }, [socketRef]);  // NOTE: socketRef를 dependency로 추가
 
   // MRSEO: game loop 추가
-
-  
 
 
   return (

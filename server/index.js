@@ -87,6 +87,7 @@ io.on('connection', socket => {
     console.log('startTimer2_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     timerModule.startTimer(io, () => {
       console.log('타이머 종료');
+      socket.emit('gameEnd');
     });
   });
 
