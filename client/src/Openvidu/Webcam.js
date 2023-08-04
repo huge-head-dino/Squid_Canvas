@@ -48,6 +48,7 @@ const Webcam = () => {
     phase,
     setPhase,
     gamers,
+    setGamers,
     canSubmitAns,
    } = useStore();
 
@@ -85,12 +86,13 @@ const Webcam = () => {
       
       // MRSEO: SUBSCRIBER 로직 업데이트 -> 다시 확인!
       // var subscribers = [...subscribers];
-      useStore.getState().setGamers({
+      setGamers({
         name: JSON.parse(event.stream.connection.data).clientData,
         streamManager: subscriber,
         // JANG: publisher와 동일하게 속성 두 개 추가
-        drawable: false,
-        canSeeAns: false,
+        // MRSEO: 08.04 상태를 true로 초기화
+        drawable: true,
+        canSeeAns: true,
       });
       
       subscribers.push(subscriber);
@@ -153,12 +155,13 @@ const Webcam = () => {
   
             mySession.publish(publisher);
   
-            useStore.getState().setGamers({
+            setGamers({
               name: myUserName,
               streamManager: publisher,
               // MRSEO: gamer의 drawable, canSeeAns 상태 변수 추가
-              drawable: false,
-              canSeeAns: false,
+              // MRSEO: 08.04 상태를 true로 초기화
+              drawable: true,
+              canSeeAns: true,
             });
   
             // useStore.getState().setMyUserID(myUserName);
@@ -339,7 +342,7 @@ const GameInitializer = () => {
         {session !== undefined ? (
             <>
             {/* MRSEO: useStore.getState()지움 */}
-            {phase === 'Ready' || phase === 'Game' ? (
+            {useStore.getState().phase === 'Ready' || useStore.getState().phase === 'Game' ? (
               // JANG: 게임 대기방으로 만들기!
                 <div className="GameForm">
 
@@ -361,10 +364,10 @@ const GameInitializer = () => {
                       {/* JANG: 나중에 확인하고 버릴 거! */}
                       <button onClick={consoleCommand}>test</button>
 
-                      {phase === 'Game' ? (
+                      {useStore.getState().phase === 'Game' ? (
                         <>
                         {/* MRSEO: useStore.getState()지움 */}
-                        {gamers.map((gamer) =>
+                        {useStore.getState().gamers.map((gamer) =>
                           ( gamer.drawable === false && gamer.canSeeAns === false ? (
                           // JANG: TODO - 정답 입력창 css 수정
                           <div>
@@ -385,7 +388,7 @@ const GameInitializer = () => {
                           </Button>
                           {' '}
                           {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                        {gamers.length === 1 ? (
+                        {useStore.getState().gamers.length === 4 ? (
                           <Button
                           variant='primary'
                           size='lg'                          

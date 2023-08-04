@@ -26,6 +26,8 @@ function BasicUI() {
     round,
     setRound,
     sortGamer,
+    setCanSeeAns,
+    setDrawable,
   } = useStore();
 
   useEffect(() => {
@@ -48,9 +50,45 @@ function BasicUI() {
       // MRSEO: 라운드를 2로 업데이트
       socket.on('round2Countdown', () => {
         setRound(2);
+        // MRSEO: 게임 초기화
+        GameInitializer();
       });
 
      }, []);
+
+     // MRSEO: 게임 초기화
+const GameInitializer = () => {
+  if ( round === 1 ){
+      for (let i = 0; i < gamers.length; i++) {
+          if ( i === 0 ){
+              setCanSeeAns(false, gamers[i].name);
+              setDrawable(false, gamers[i].name);
+          } else if ( i === 1 || i === 3) {
+              setCanSeeAns(true, gamers[i].name);
+              setDrawable(false, gamers[i].name);
+          } else {
+              setCanSeeAns(false, gamers[i].name);
+              setDrawable(false, gamers[i].name);
+          }
+      }
+  }
+
+  if ( round === 2 ){
+      for (let i = 0; i < gamers.length; i++) {
+          if ( i === 1 ){
+              setCanSeeAns(true, gamers[i].name);
+              setDrawable(true, gamers[i].name);
+          } else if ( i === 0 || i === 2) {
+              setCanSeeAns(true, gamers[i].name);
+              setDrawable(false, gamers[i].name);
+          } else {
+              setCanSeeAns(false, gamers[i].name);
+              setDrawable(false, gamers[i].name);
+          }
+      }
+  }
+  // console.log(gamers);
+}
 
 
   

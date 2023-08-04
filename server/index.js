@@ -63,10 +63,10 @@ io.on('connection', socket => {
       socket.broadcast.emit('clearCanvas');
     });
 
-    // MRSEO: 시작
+    // MRSEO: 게임 시작
   socket.on('gameStart', () => {
     console.log('gameStart_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    socket.emit('round1Countdown');
+    io.emit('round1Countdown');
   });
 
   socket.on('startTimer1', () => {
@@ -81,7 +81,7 @@ io.on('connection', socket => {
     console.log('startTimer2_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     timerModule.startTimer(io, () => {
       console.log('타이머 종료');
-      socket.emit('gameEnd');
+      io.emit('gameEnd');
     });
   });
 
