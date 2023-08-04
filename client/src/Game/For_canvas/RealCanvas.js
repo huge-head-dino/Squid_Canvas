@@ -8,8 +8,20 @@ import {ButtonGroup, Button} from 'react-bootstrap';
 // import io, { Socket } from 'socket.io-client';
 // import { relative } from "path";
 import useStore from "../../store";
+// YEONGWOO: 색상 선택, 아이콘 추가
+import { GithubPicker } from 'react-color';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 
 const RealCanvas = ({mySessionId, myUserName}) => {
+    const current = useRef({
+        color: 'black',
+        // lineWidth: 2,
+        x: 0,
+        y: 0,
+    });
+    const [color, setColor] = useState('#000000');
+    // Add state for the pen's thickness
+    const [thickness, setThickness] = useState(2);
 
     const canvasRef = useRef(null);
     const socketRef = useRef(null);
@@ -19,11 +31,23 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         })
     );
 
+     // Add functions to increase and decrease the pen's thickness
+    const increaseThickness = () => {
+        setThickness(thickness + 1);
+        current.lineWidth = thickness + 1;
+    }
+    const decreaseThickness = () => {
+        if (thickness > 1) {
+            setThickness(thickness - 1);
+            current.lineWidth = thickness - 1;
+        }
+    }
+
     //MRSEO: drawable 여부 확인
     const drawableValue = useMemo(() => {
         const currentGamer = gamers.find(gamer => gamer.name === myUserName);
         return currentGamer ? currentGamer.drawable : false;
-      }, [gamers, myUserName]);
+    }, [gamers, myUserName]);
     
 
     
@@ -44,11 +68,17 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         const context = canvas.getContext("2d");       
 
-        const current = {
-            color: 'black',
-            x: 0,
-            y: 0,
+        //YEONGWOO: 색상 선택
+        const colors = document.getElementsByClassName('color');
+        const onColorUpdate = (e) => {
+            console.log(e);
+            let arr = e.target.style.MozBoxShadow.split(' ');
+            current.color = arr[arr.length - 1];
         };
+        // loop through the color elements and add the click event listeners
+        for (let i = 0; i < colors.length; i++) {
+            colors[i].addEventListener('click', onColorUpdate, false);
+        }
 
         const clearCanvas = () => {
             canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
@@ -60,12 +90,12 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         //create the drawing
 
-        const draw = (x0,y0,x1,y1,emit) => {
+        const draw = (x0,y0,x1,y1,color,lineWidth,emit) => {
             context.beginPath();
             context.moveTo(x0,y0);
             context.lineTo(x1,y1);
-            context.strokeStyle = 'black';
-            context.lineWidth = 2;
+            context.strokeStyle = color;
+            context.lineWidth = lineWidth;
             context.stroke();
             context.closePath();
 
@@ -82,6 +112,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 y0: y0 / h,
                 x1: x1 / w,
                 y1: y1 / h,
+                color,
+                lineWidth
             });
         };
 
@@ -102,7 +134,10 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 current.y,
                 e.clientX - rect.left, 
                 e.clientY - rect.top,
-                true);
+                current.color,
+                current.lineWidth,
+                true
+            );
             current.x = e.clientX - rect.left;
             current.y = e.clientY - rect.top;    
         };
@@ -116,7 +151,10 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 current.y,
                 e.clientX - rect.left,
                 e.clientY - rect.top,
-                true);
+                current.color,
+                current.lineWidth,
+                true
+            );
         };
 
         // FIXME: (2) 쓰로틀
@@ -170,8 +208,10 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 data.y0 * h, 
                 data.x1 * w, 
                 data.y1 * h,
+                data.color,
+                data.lineWidth,
                 false
-                );
+            );
         };
 
         socketRef.current = socket;
@@ -180,21 +220,63 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
          // Cleanup when the component is unmounted or drawable changes.
          // MRSEO: 
-         return () => {
+        return () => {
             socketRef.current.off('drawing', onDrawingEvent);
             canvas.removeEventListener('mousedown', onMouseDown, false);
             canvas.removeEventListener('mousemove', throttle(onMouseMove, 10), false);
             canvas.removeEventListener('mouseup', onMouseUp, false);
-          };
+        };
 
     }, [drawableValue]);
 
+    //YEONGWOO: 색상 선택 FIXME: toggle 수정 필요
+    let [toggle, setToggle] = useState(false);
+    const handleToggle = () => {
+        setToggle(!toggle);
+    };
+
+    const colors = [
+        '#F44336',
+        '#E91E63',
+        '#9C27B0',
+        '#673AB7',
+        '#3F51B5',
+        '#2196F3',
+        '#03A9F4',
+        '#00BCD4',
+        '#009688',
+        '#4CAF50',
+        '#8BC34A',
+        '#CDDC39',
+        '#FFEB3B',
+        '#FFC107',
+        '#FF9800',
+        '#FF5722',
+        '#795548',
+        '#607D8B',
+        '#000000',
+    ];
+
     return (
         <div className="RealCanvas_1">
-
             <canvas ref={canvasRef} className="whiteboard"/>
             <Button variant="warning" className="clearBtn">Clear</Button>
-            
+            <Button variant="primary" onClick={increaseThickness}>Increase Thickness</Button>
+            <Button variant="primary" onClick={decreaseThickness}>Decrease Thickness</Button>
+            <ColorLensIcon
+                onClick={handleToggle}
+                className="palleteBtn"
+                sx={{ fontSize: 40 }}
+            />
+            <GithubPicker
+                width="auto"
+                colors={colors}
+                className="color"
+                onChangeComplete={(colors)=> {
+                    setColor(colors.hex);
+                    current.color = colors.hex;
+                }}
+            />
         </div>
     );
 }
