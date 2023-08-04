@@ -1,30 +1,18 @@
 import React, { useEffect, useState } from "react";
 import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
-import "./GamePlay.css";
+import "./BasicUI.css";
 
 import {Row, Col, Button, Badge } from "react-bootstrap";
 import socket from "../Openvidu/socket";
 
-
-// import GamePlayContext from "../Context/GamePlayContext";
-
 // 게임 컴포넌트
-// import WhiteCanvas from "./WhiteCanvas";
-import GameCanvas from "./JUNHO/GameCanvas";
+import GameCanvas from "./For_canvas/GameCanvas";
 
-// 게임 훅
-import useGamePlay from "../Hook/GamePlayHook";
 
-function GamePlay() {
+function BasicUI() {
     // MRSEO: 타이머 값 상태
     const [timerValue, setTimerValue] = useState(100);
-
-  const [
-    gameState,
-    gameStateDispatch,
-    initialQuestionWordState,
-  ] = useGamePlay();
 
   const {
     gamers,
@@ -67,7 +55,7 @@ function GamePlay() {
 
   
     return (
-      // <GamePlayContext.Provider value={{ gameState, gameStateDispatch }}>
+
       <>
       <div>
       <Row>
@@ -160,7 +148,6 @@ function GamePlay() {
     </Row>
     </div>
     </>
-      // </GamePlayContext.Provider>
     );  
   }
-  export default GamePlay;
+  export default BasicUI;

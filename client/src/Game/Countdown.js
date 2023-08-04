@@ -1,4 +1,4 @@
-import './Canvas.css';
+import './For_canvas/RealCanvas.css'
 import { useEffect, useState } from "react";
 
 const Countdown = () => {

@@ -15,8 +15,8 @@ import useStore from '../store';
 // Bootstrap-react
 import Button from 'react-bootstrap/Button';
 
-// GamePlay
-import GamePlay from '../Game/GamePlay';
+// BasicUI
+import BasicUI from '../Game/BasicUI';
 
 // react-bootstrap
 import { Row, Col } from 'react-bootstrap';
@@ -345,7 +345,7 @@ const GameInitializer = () => {
 
                       {/* JANG: 게임 대기방 */}
                       <SessionContext.Provider value={{ mySessionId, myUserName }}>
-                        <GamePlay />
+                        <BasicUI />
                       </SessionContext.Provider>
                       
 

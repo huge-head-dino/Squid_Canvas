@@ -1,8 +1,10 @@
+import React,{ useRef, useEffect, useState} from "react";
+import socket from '../../Openvidu/socket';
+import {ButtonGroup, Button} from 'react-bootstrap';
+// YEONGWOO: 지금 안쓰지만 혹시 몰라서 남겨둔 import 
 import exp from "constants";
 import { emit } from "process";
-import React,{ useRef, useEffect, useState} from "react";
 import io, { Socket } from 'socket.io-client';
-import socket from '../../Openvidu/socket';
 import { relative } from "path";
 
 const RealCanvas = ({mySessionId, myUserName}) => {
@@ -165,29 +167,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         <div className="RealCanvas_1">
 
             <canvas ref={canvasRef} className="whiteboard"/>
-            <button className="clearBtn">Clear</button>
+            <Button variant="warning" className="clearBtn">Clear</Button>
             
-            <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
-        
-                <h1 style={{ fontWeight: "bold" }}>사과</h1>
-                {/* MRSEO: 조건 추가 */}
-
-                <div>
-                    {round1Countdown === true ? (
-                        <>
-                        <h1 style={{ fontWeight: "bold" }}>레드팀 준비해주세요~!</h1>
-                        < Countdown />
-                        </>
-                    ): null}
-                    {round2Countdown === true ? (
-                        <>
-                        <h1 style={{ fontWeight: "bold" }}>블루팀 준비해주세요~!</h1>
-                        < Countdown />
-                        </>
-                    ): null}
-                </div>
-      
-            </div>
         </div>
     );
 }
