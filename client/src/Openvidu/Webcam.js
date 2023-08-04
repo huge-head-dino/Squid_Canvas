@@ -311,7 +311,7 @@ const GameInitializer = () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
     console.log('게임 시작');
     setPhase('Game');
-    socket.emit('gameStart');
+    socket.emit('round1Start');
   };
 
 

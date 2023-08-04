@@ -24,7 +24,9 @@ app.use(
 
 var server = http.createServer(app);
 var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-let numClients = 0; 
+let numClients = 0;
+let redScore = 0;
+let blueScore = 0;
 
 const socketIO = require('socket.io');
 const io = socketIO(server, {
@@ -63,9 +65,9 @@ io.on('connection', socket => {
       socket.broadcast.emit('clearCanvas');
     });
 
-    // MRSEO: 게임 시작
-  socket.on('gameStart', () => {
-    console.log('gameStart_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  // MRSEO: 게임 시작
+  socket.on('round1Start', () => {
+    console.log('round1Start_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     io.emit('round1Countdown');
   });
 
@@ -73,16 +75,35 @@ io.on('connection', socket => {
     console.log('startTimer1_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
-      io.emit('round2Countdown');
+      io.emit('round1End');
     });
+  });
+
+  socket.on("round2Start", (redScoreCnt) => {
+    console.log('round2Start_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    redScore = redScoreCnt;
+    io.emit('round2Countdown');
   });
 
   socket.on('startTimer2', () => {
     console.log('startTimer2_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
-      io.emit('gameEnd');
+      io.emit('round2End');
     });
+  });
+
+
+  socket.on('gameEnd', (blueScoreCnt) => {
+    console.log('gameEnd_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    blueScore = blueScoreCnt;
+    if (redScore > blueScore) {
+      io.emit('result', 'red');
+    } else if (redScore < blueScore) {
+      io.emit('result', 'blue');
+    } else {
+      io.emit('result', 'draw');
+    }
   });
 
 });

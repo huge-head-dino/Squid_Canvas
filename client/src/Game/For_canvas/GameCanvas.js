@@ -19,10 +19,14 @@ function GameCanvas() {
   const {
     setCanSubmitAns,
     gamers,
+    redScoreCnt, 
+    blueScoreCnt,
   } = useStore(
     state => ({
       setCanSubmitAns: state.setCanSubmitAns,
       gamers: state.gamers,
+      redScoreCnt: state.redScoreCnt,
+      blueScoreCnt: state.blueScoreCnt,
     })
   )
 
@@ -48,6 +52,10 @@ function GameCanvas() {
       }, 5000)
     };
 
+    const round1EndHandler = () => {
+      socket.emit('round2Start', redScoreCnt);
+    };
+
     const round2CountdownHandler = () => {
       setCanSubmitAns(false);
       console.log('round2Countdown_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
@@ -63,16 +71,17 @@ function GameCanvas() {
       }, 5000)
     }
 
-    const gameEndHandler = () => {
-      console.log('gameEnd_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    const round2EndHandler = () => {
+      socket.emit('gameEnd', blueScoreCnt);
+    }
+
+    const resultHandler = (result) => {
+      console.log('result_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       // MRSEO: 게임 종료 후 결과 페이지로 이동
-      let redScoreCnt = useStore.getState().redScoreCnt;
-      let blueScoreCnt = useStore.getState().blueScoreCnt;
-      // console.log('redScoreCnt: ', redScoreCnt);
-      // console.log('blueScoreCnt: ', blueScoreCnt);
-      if (redScoreCnt > blueScoreCnt) {
+
+      if (result === 'red') {
         alert('레드팀 승리');
-      } else if (redScoreCnt < blueScoreCnt) {
+      } else if (result === 'blue') {
         alert('블루팀 승리');
       } else{
         alert('무승부');
@@ -80,13 +89,17 @@ function GameCanvas() {
     }
 
     socket.on('round1Countdown', round1CountdownHandler);
+    socket.on('round1End', round1EndHandler);
     socket.on('round2Countdown', round2CountdownHandler);
-    socket.on('gameEnd', gameEndHandler);
+    socket.on('round2End', round2EndHandler);
+    socket.on('result', resultHandler);
 
     return () => {
       socket.off('round1Countdown', round1CountdownHandler);
+      socket.off('round1End', round1EndHandler);
       socket.off('round2Countdown', round2CountdownHandler);
-      socket.off('gameEnd', gameEndHandler);
+      socket.off('round2End', round2EndHandler);
+      socket.off('result', resultHandler);
     }
   }, [socket]);
 
