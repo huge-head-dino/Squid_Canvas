@@ -1,8 +1,10 @@
 import exp from "constants";
 import { emit } from "process";
+import './RealCanvas.css'
 import React,{ useRef, useEffect, useState} from "react";
 import io, { Socket } from 'socket.io-client';
 import socket from '../../Openvidu/socket';
+import { relative } from "path";
 
 const RealCanvas = ({mySessionId, myUserName}) => {
 
@@ -12,8 +14,22 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
     useEffect(() => {
         const canvas = canvasRef.current;
+        //JUNHO: canvas 크기 조정
+        const parent = canvas.parentElement;
+        const width = parent.offsetWidth * 0.95;
+        const height = parent.offsetHeight * 0.95;
+
+        canvas.width = width * 2;
+        canvas.height = height * 2;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        canvas.style.boxShadow = "10px 10px 5px grey";
+
+        //JUNHO: canvas 크기 조정 끝
+
         const context = canvas.getContext("2d");
-        context.scale(100, 100);
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+       
 
         const current = {
             color: 'black',
@@ -42,8 +58,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
             if(!emit) {return;}
 
-            const w = canvas.width;
-            const h = canvas.height;
+            const w = canvas.width ;
+            const h = canvas.height ;
 
             if(!socketRef.current) return;
             socketRef.current.emit('drawing', {
@@ -60,30 +76,33 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         const onMouseDown = (e) => {
             drawing = true;
-            current.x = e.pageX
-            current.y = e.pageY 
+            const rect = canvas.getBoundingClientRect(); // get the bounding rectangle
+            current.x = e.clientX - rect.left
+            current.y = e.clientY - rect.top
         };
 
         const onMouseMove = (e) => {
             if(!drawing){return;}
+            const rect = canvas.getBoundingClientRect(); // get the bounding rectangle
             draw(
                 current.x,
                 current.y,
-                e.pageX, 
-                e.pageY,
+                e.clientX - rect.left, 
+                e.clientY - rect.top,
                 true);
-            current.x = e.pageX;
-            current.y = e.pageY;    
+            current.x = e.clientX - rect.left;
+            current.y = e.clientY - rect.top;    
         };
 
         const onMouseUp = (e) => {
             if(!drawing){return;}
             drawing = false;
+            const rect = canvas.getBoundingClientRect(); // get the bounding rectangle
             draw(
                 current.x,
                 current.y,
-                e.pageX,
-                e.pageY,
+                e.clientX - rect.left,
+                e.clientY - rect.top,
                 true);
         };
 
@@ -108,8 +127,15 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         // FIXME: (3) make the canvas fill its parent component
 
         const onResize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        const parent = canvas.parentElement;
+        const width = parent.offsetWidth * 0.95;
+        const height = parent.offsetHeight * 0.95;
+
+        canvas.width = width * 2;
+        canvas.height = height * 2;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        context.scale(2, 2);
         }
 
         window.addEventListener('resize', onResize, false);
@@ -137,8 +163,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     }, []);
 
     return (
-        <div>
-            <canvas ref={canvasRef} className="whiteboard" />
+        <div className="BigCanvas">
+            <canvas ref={canvasRef} className="whiteboard"/>
             <button className="clearBtn">Clear</button>
         </div>
     );

@@ -18,7 +18,7 @@ function GameCanvas() {
   return (
     <>
       <Col>
-      <div className='Canvas'>
+      <div className='Canvas' style={{ height: "100%"}}>
         <RealCanvas mySessionId = { mySessionId } myUserName = {myUserName}/>
       </div>
       {/* <div className='ButtonZone'>
