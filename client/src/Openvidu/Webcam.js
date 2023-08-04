@@ -48,6 +48,7 @@ const Webcam = () => {
     phase,
     setPhase,
     gamers,
+    canSubmitAns,
    } = useStore();
 
   useEffect(() => {
@@ -190,6 +191,7 @@ const Webcam = () => {
 
   // MRSEO: 정답 제출
   const submitAns = () => {
+    if ( !useStore.getState().canSubmitAns ) return;
     if ( round === 1 ){
       if ( ans === '사과' ){
         
@@ -204,7 +206,7 @@ const Webcam = () => {
       }
     }
     if ( round === 2 ){
-      if ( ans === '제시어' ){
+      if ( ans === '' ){
 
         setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
         setDrawable(!gamers[1].drawable, gamers[1].name);
@@ -383,7 +385,7 @@ const GameInitializer = () => {
                           </Button>
                           {' '}
                           {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                        {gamers.length === 4 ? (
+                        {gamers.length === 1 ? (
                           <Button
                           variant='primary'
                           size='lg'                          

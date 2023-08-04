@@ -97,6 +97,9 @@ const useStore = create((set) => ({
   ans: '',
   setAns: (ans) => { set({ans: ans}) },
 
+  canSubmitAns: false,
+  setCanSubmitAns: (canSubmitAns) => { set({canSubmitAns: canSubmitAns}) },
+
 }));
 
 export default useStore;

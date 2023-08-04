@@ -10,7 +10,8 @@ import socket from "../Openvidu/socket";
 // import GamePlayContext from "../Context/GamePlayContext";
 
 // 게임 컴포넌트
-import WhiteCanvas from "./WhiteCanvas";
+// import WhiteCanvas from "./WhiteCanvas";
+import GameCanvas from "./JUNHO/GameCanvas";
 
 // 게임 훅
 import useGamePlay from "../Hook/GamePlayHook";
@@ -121,7 +122,7 @@ function GamePlay() {
       
       <Col xs={6}>
         <div className="GameCanvas_Right">
-          <WhiteCanvas/>
+          <GameCanvas/>
         </div>
       </Col>
       

@@ -18,14 +18,16 @@ function GameCanvas() {
   return (
     <>
       <Col>
-      <div className='Canvas' style={{ height: "100%"}}>
-        <RealCanvas mySessionId = { mySessionId } myUserName = {myUserName}/>
+      <div className="RealCanvas_3">
+        <div className='RealCanvas_2' style={{ height: "100%"}}>
+          <RealCanvas mySessionId = { mySessionId } myUserName = {myUserName}/>
+        </div>
+        {/* <div className='ButtonZone'>
+            <LineWidthButtons/>
+            <ClearCanvasButton/>
+            <ColorPicker/>
+        </div> */}
       </div>
-      {/* <div className='ButtonZone'>
-          <LineWidthButtons/>
-          <ClearCanvasButton/>
-          <ColorPicker/>
-      </div> */}
       </Col>
     </>
   );

@@ -28,6 +28,8 @@ export function Canvas() {
     gamers,
     redScoreCnt,
     blueScoreCnt,
+    canSubmitAns,
+    setCanSubmitAns,
   } = useStore()
 
   // MRSEO: 카운트 조건 초기화
@@ -55,15 +57,18 @@ export function Canvas() {
       console.log('round1Countdown_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       setRound1Countdown(true);
       setTimeout(() => {
+        setCanSubmitAns(true);
         socket.emit('startTimer1');
       }, 5000)
     });
   
     socket.on('round2Countdown', () => {
+      setCanSubmitAns(false);
       setRound1Countdown(false);
       console.log('round2Countdown_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       setRound2Countdown(true);
       setTimeout(() => {
+        setCanSubmitAns(true);
         socket.emit('startTimer2');
       }, 5000)
     });
@@ -71,7 +76,11 @@ export function Canvas() {
     socket.on('gameEnd', () => {
       setRound2Countdown(false);
       console.log('gameEnd_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-      // TODO: 게임 종료 후 결과 페이지로 이동
+      // MRSEO: 게임 종료 후 결과 페이지로 이동
+      let redScoreCnt = useStore.getState().redScoreCnt;
+      let blueScoreCnt = useStore.getState().blueScoreCnt;
+      console.log('redScoreCnt: ', redScoreCnt);
+      console.log('blueScoreCnt: ', blueScoreCnt);
       if (redScoreCnt > blueScoreCnt) {
         alert('레드팀 승리');
       } else if (redScoreCnt < blueScoreCnt) {
@@ -82,28 +91,33 @@ export function Canvas() {
     });
   }, [socketRef]);  // NOTE: socketRef를 dependency로 추가
 
-  // MRSEO: game loop 추가
-
 
   return (
     <div className="BigCanvas" style={{ height: "100%"}}>
-    <canvas
-      onMouseDown={startDrawing}
-      onMouseUp={finishDrawing}
-      onMouseMove={draw}
-      ref={canvasRef}
-    />
-    <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
-      <h1 style={{ fontWeight: "bold" }}>사과</h1>
-      {/* MRSEO: 조건 추가 */}
-      {round1Countdown === true ? (
-        < Countdown />
-      ): null}
-      {round2Countdown === true ? (
-        < Countdown />
-      ): null}
+      <canvas onMouseDown={startDrawing} onMouseUp={finishDrawing} onMouseMove={draw} ref={canvasRef}/>
+    
+      <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
+        
+        <h1 style={{ fontWeight: "bold" }}>사과</h1>
+        {/* MRSEO: 조건 추가 */}
+
+        <div>
+          {round1Countdown === true ? (
+            <>
+            <h1 style={{ fontWeight: "bold" }}>레드팀 준비해주세요~!</h1>
+            < Countdown />
+            </>
+          ): null}
+          {round2Countdown === true ? (
+            <>
+            <h1 style={{ fontWeight: "bold" }}>블루팀 준비해주세요~!</h1>
+            < Countdown />
+            </>
+          ): null}
+        </div>
+      
     </div>
 
-    </div>
+  </div>
   );
 }

@@ -29,7 +29,7 @@ const Countdown = () => {
 
     return (
         <div>
-            <h1 className="countdown">{count === 0 ? '' : count}</h1>
+            <h1 className="countdown">{count === 0 ? 'START' : count}</h1>
         </div>
     )
 }

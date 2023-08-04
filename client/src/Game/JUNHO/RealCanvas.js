@@ -1,6 +1,5 @@
 import exp from "constants";
 import { emit } from "process";
-import './RealCanvas.css'
 import React,{ useRef, useEffect, useState} from "react";
 import io, { Socket } from 'socket.io-client';
 import socket from '../../Openvidu/socket';
@@ -163,9 +162,32 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     }, []);
 
     return (
-        <div className="BigCanvas">
+        <div className="RealCanvas_1">
+
             <canvas ref={canvasRef} className="whiteboard"/>
             <button className="clearBtn">Clear</button>
+            
+            <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
+        
+                <h1 style={{ fontWeight: "bold" }}>사과</h1>
+                {/* MRSEO: 조건 추가 */}
+
+                <div>
+                    {round1Countdown === true ? (
+                        <>
+                        <h1 style={{ fontWeight: "bold" }}>레드팀 준비해주세요~!</h1>
+                        < Countdown />
+                        </>
+                    ): null}
+                    {round2Countdown === true ? (
+                        <>
+                        <h1 style={{ fontWeight: "bold" }}>블루팀 준비해주세요~!</h1>
+                        < Countdown />
+                        </>
+                    ): null}
+                </div>
+      
+            </div>
         </div>
     );
 }
