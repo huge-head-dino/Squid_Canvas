@@ -20,7 +20,7 @@ import {
 
 function BasicUI() {
     // MRSEO: 타이머 값 상태
-    const [timerValue, setTimerValue] = useState(100);
+    const [timerValue, setTimerValue] = useState(0);
 
   const {
     gamers,
@@ -36,7 +36,23 @@ function BasicUI() {
     sortGamer,
     setCanSeeAns,
     setDrawable,
-  } = useStore();
+  } = useStore(
+    state => ({
+      gamers: state.gamers,
+      playerCount: state.playerCount,
+      setPlayerCount: state.setPlayerCount,
+      myUserID: state.myUserID,
+      setMyIndex: state.setMyIndex,
+      curSession: state.curSession,
+      redScoreCnt: state.redScoreCnt,
+      blueScoreCnt: state.blueScoreCnt,
+      round: state.round,
+      setRound: state.setRound,
+      sortGamer: state.sortGamer,
+      setCanSeeAns: state.setCanSeeAns,
+      setDrawable: state.setDrawable,
+    })
+  );
 
   useEffect(() => {
     if (curSession !== undefined) {
@@ -49,20 +65,30 @@ function BasicUI() {
 
     // MRSEO: 
     useEffect(() => {
-      // 서버로부터 타이머 값을 수신하는 이벤트 리스너
-      socket.on('timerUpdate', (value) => {
+
+      // MRSEO: 소켓 관리를 위한 함수 추가와 클린업 함수 추가
+      const timerUpdateHandler = (value) => {
         console.log('timerUpdate_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
         setTimerValue(value);
-      })
+      };
 
-      // MRSEO: 라운드를 2로 업데이트
-      socket.on('round2Countdown', () => {
+      const round2CountdownHandler = () => {
         setRound(2);
         // MRSEO: 게임 초기화
         GameInitializer();
-      });
+      }
+      // 서버로부터 타이머 값을 수신하는 이벤트 리스너
+      socket.on('timerUpdate', timerUpdateHandler);
 
-     }, []);
+      // MRSEO: 라운드를 2로 업데이트
+      socket.on('round2Countdown', round2CountdownHandler);
+
+      return () => {
+        socket.off('timerUpdate', timerUpdateHandler);
+        socket.off('round2Countdown', round2CountdownHandler);
+      }
+
+     }, [socket]);
 
      // MRSEO: 게임 초기화
 const GameInitializer = () => {

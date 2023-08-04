@@ -71,7 +71,7 @@ io.on('connection', socket => {
 
   socket.on('startTimer1', () => {
     console.log('startTimer1_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    timerModule.startTimer(io, () => {
+    timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
       io.emit('round2Countdown');
     });
@@ -79,7 +79,7 @@ io.on('connection', socket => {
 
   socket.on('startTimer2', () => {
     console.log('startTimer2_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    timerModule.startTimer(io, () => {
+    timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
       io.emit('gameEnd');
     });

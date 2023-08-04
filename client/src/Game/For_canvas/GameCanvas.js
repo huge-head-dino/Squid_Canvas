@@ -14,13 +14,17 @@ import {Col} from 'react-bootstrap'
 
 function GameCanvas() {
   const { mySessionId, myUserName } = useContext(SessionContext);
-  console.log("##########################sessionId : ", mySessionId, myUserName);
 
    // MRSEO:
   const {
-    canSubmitAns,
     setCanSubmitAns,
-  } = useStore()
+    gamers,
+  } = useStore(
+    state => ({
+      setCanSubmitAns: state.setCanSubmitAns,
+      gamers: state.gamers,
+    })
+  )
 
     // MRSEO: 카운트 조건 초기화
     const [round1Countdown, setRound1Countdown] = useState(false);
@@ -28,34 +32,44 @@ function GameCanvas() {
 
    // MRSEO:
   useEffect(() => {
-    socket.on('round1Countdown', () => {
+
+    // MRSEO: 이벤트 리스너 관리를 위한 함수 추가와 클린업 함수 추가
+    const round1CountdownHandler = () => {
       console.log('round1Countdown_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       setRound1Countdown(true);
       setTimeout(() => {
         setRound1Countdown(false);
         setCanSubmitAns(true);
-        socket.emit('startTimer1');
+        console.log(useStore.getState().host, myUserName);
+        if ( useStore.getState().host === myUserName ) {
+          console.log("b4startTimer1@@@@@@@@@@@@@@@@@@@@@");
+          socket.emit('startTimer1');
+        }
       }, 5000)
-    });
-  
-    socket.on('round2Countdown', () => {
+    };
+
+    const round2CountdownHandler = () => {
       setCanSubmitAns(false);
       console.log('round2Countdown_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       setRound2Countdown(true);
       setTimeout(() => {
         setRound2Countdown(false);
         setCanSubmitAns(true);
-        socket.emit('startTimer2');
+        console.log(useStore.getState().host, myUserName);
+        if ( useStore.getState().host ===  myUserName ) {
+          console.log("b4startTimer2@@@@@@@@@@@@@@@@@@@@@");
+          socket.emit('startTimer2');
+        }
       }, 5000)
-    });
+    }
 
-    socket.on('gameEnd', () => {
+    const gameEndHandler = () => {
       console.log('gameEnd_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       // MRSEO: 게임 종료 후 결과 페이지로 이동
       let redScoreCnt = useStore.getState().redScoreCnt;
       let blueScoreCnt = useStore.getState().blueScoreCnt;
-      console.log('redScoreCnt: ', redScoreCnt);
-      console.log('blueScoreCnt: ', blueScoreCnt);
+      // console.log('redScoreCnt: ', redScoreCnt);
+      // console.log('blueScoreCnt: ', blueScoreCnt);
       if (redScoreCnt > blueScoreCnt) {
         alert('레드팀 승리');
       } else if (redScoreCnt < blueScoreCnt) {
@@ -63,7 +77,17 @@ function GameCanvas() {
       } else{
         alert('무승부');
       }
-    });
+    }
+
+    socket.on('round1Countdown', round1CountdownHandler);
+    socket.on('round2Countdown', round2CountdownHandler);
+    socket.on('gameEnd', gameEndHandler);
+
+    return () => {
+      socket.off('round1Countdown', round1CountdownHandler);
+      socket.off('round2Countdown', round2CountdownHandler);
+      socket.off('gameEnd', gameEndHandler);
+    }
   }, [socket]);
 
 

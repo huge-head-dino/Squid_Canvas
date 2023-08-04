@@ -44,8 +44,6 @@ const Webcam = () => {
 
   // MRSEO: ZUSTAND 상태 변수 선언
   const { 
-    setCanSeeAns,
-    setDrawable,
     ans,
     setAns,
     round,
@@ -53,12 +51,35 @@ const Webcam = () => {
     setRedScoreCnt,
     blueScoreCnt,
     setBlueScoreCnt,
+    canSubmitAns,
     phase,
     setPhase,
     gamers,
     setGamers,
-    canSubmitAns,
-   } = useStore();
+    host,
+    setHost,
+    setCanSeeAns,
+    setDrawable,
+   } = useStore(
+    state => ({
+      ans: state.ans,
+      setAns: state.setAns,
+      round: state.round,
+      redScoreCnt: state.redScoreCnt,
+      setRedScoreCnt: state.setRedScoreCnt,
+      blueScoreCnt: state.blueScoreCnt,
+      setBlueScoreCnt: state.setBlueScoreCnt,
+      canSubmitAns: state.canSubmitAns,
+      phase: state.phase,
+      setPhase: state.setPhase,
+      gamers: state.gamers,
+      setGamers: state.setGamers,
+      host: state.host,
+      setHost: state.setHost,
+      setCanSeeAns: state.setCanSeeAns,
+      setDrawable: state.setDrawable
+    })
+   );
 
   useEffect(() => {
 
@@ -68,6 +89,22 @@ const Webcam = () => {
       window.removeEventListener('beforeunload', onBeforeUnload);
     };
   }, []);
+
+
+  //MRSEO: host 설정
+  useEffect(() => {
+    if (gamers.length === 0) return;
+    console.log("host 설정")
+    setHost(gamers[0].name);
+  }, [gamers]);
+
+  // MRSEO: 게임 시작 버튼을 누른 후, 플레이어 상태 초기화
+  useEffect(() => {
+    if (phase === 'Game') {
+      GameInitializer();
+    }
+  }, [phase]);  // `phase`가 변경될 때 마다 이 useEffect는 실행됩니다.
+  
 
   const onBeforeUnload = (event) => {
     leaveSession();
@@ -236,11 +273,12 @@ const Webcam = () => {
 
 // MRSEO: 게임 초기화
 const GameInitializer = () => {
+  console.log("GameInitializer 실행!!")
   if ( round === 1 ){
       for (let i = 0; i < gamers.length; i++) {
           if ( i === 0 ){
-              setCanSeeAns(false, gamers[i].name);
-              setDrawable(false, gamers[i].name);
+              setCanSeeAns(true, gamers[i].name);
+              setDrawable(true, gamers[i].name);
           } else if ( i === 1 || i === 3) {
               setCanSeeAns(true, gamers[i].name);
               setDrawable(false, gamers[i].name);
@@ -271,7 +309,7 @@ const GameInitializer = () => {
 
   const handleGameStart = () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
-    GameInitializer();
+    console.log('게임 시작');
     setPhase('Game');
     socket.emit('gameStart');
   };
@@ -301,7 +339,10 @@ const GameInitializer = () => {
 
   // JANG: 나중에 유저 입장이 안정적으로 처리되면 지울 것!
   const consoleCommand = () => {
-    console.log(gamers);
+    console.log(useStore.getState().gamers);
+    console.log(host);
+    console.log(gamers[0].name);
+    console.log(myUserName)
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }
@@ -376,7 +417,7 @@ const GameInitializer = () => {
       {session !== undefined ? (
             <>
             {/* MRSEO: useStore.getState()지움 */}
-            {useStore.getState().phase === 'Ready' || useStore.getState().phase === 'Game' ? (
+            {phase === 'Ready' || phase === 'Game' ? (
               // JANG: 게임 대기방으로 만들기!
               <div className="GameForm">
               
@@ -398,10 +439,10 @@ const GameInitializer = () => {
                   {/* JANG: 나중에 확인하고 버릴 거! */}
                   <Button onClick={consoleCommand}>test</Button>
 
-                  {useStore.getState().phase === 'Game' ? (
+                  {phase === 'Game' ? (
                         <>
                         {/* MRSEO: useStore.getState()지움 */}
-                        {useStore.getState().gamers.map((gamer) =>
+                        {gamers?.map((gamer) =>
                           ( gamer.drawable === false && gamer.canSeeAns === false ? (
                           // JANG: TODO - 정답 입력창 css 수정
                           <div>
@@ -419,23 +460,24 @@ const GameInitializer = () => {
                   <Spacer />
                   <ButtonGroup gap='2' mb="2">
                     <Button
-                    colorScheme='red'
-                    size='lg'
-                    onClick={leaveSession}
+                      colorScheme='red'
+                      size='lg'
+                      onClick={leaveSession}
                     >
-                    Exit
+                      Exit
                     </Button>
                     {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                    {useStore.getState().gamers.length === 4 ? (
-                    <Button
-                    colorScheme='Messenger'
-                    size='lg'     
-                    onClick={handleGameStart}
-                    marginRight="10px"
-                    >
-                    Start
-                    </Button>
-                    ):null} 
+                    {/* MRSEO: 푸시전 수정해야 함 */}
+                    {myUserName === host && gamers?.length === 4 ? (
+                      <Button
+                        colorScheme='Messenger'
+                        size='lg'     
+                        onClick={handleGameStart}
+                        marginRight="10px"
+                      >
+                        Start
+                      </Button>
+                    ):null}
                     <Spacer />
                     <Spacer />
                   </ButtonGroup>

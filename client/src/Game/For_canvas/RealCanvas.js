@@ -1,4 +1,4 @@
-import React,{ useRef, useEffect, useState} from "react";
+import React,{ useRef, useEffect, useState, useMemo } from "react";
 import socket from '../../Openvidu/socket';
 import {ButtonGroup, Button} from 'react-bootstrap';
 // YEONGWOO: 지금 안쓰지만 혹시 몰라서 남겨둔 import 
@@ -7,13 +7,26 @@ import {ButtonGroup, Button} from 'react-bootstrap';
 // import { emit } from "process";
 // import io, { Socket } from 'socket.io-client';
 // import { relative } from "path";
+import useStore from "../../store";
 
 const RealCanvas = ({mySessionId, myUserName}) => {
 
     const canvasRef = useRef(null);
     const socketRef = useRef(null);
+    const { gamers } = useStore(
+        state => ({
+            gamers: state.gamers
+        })
+    );
+
+    //MRSEO: drawable 여부 확인
+    const drawableValue = useMemo(() => {
+        const currentGamer = gamers.find(gamer => gamer.name === myUserName);
+        return currentGamer ? currentGamer.drawable : false;
+      }, [gamers, myUserName]);
     
 
+    
     useEffect(() => {
         const canvas = canvasRef.current;
         //JUNHO: canvas 크기 조정
@@ -29,9 +42,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         //JUNHO: canvas 크기 조정 끝
 
-        const context = canvas.getContext("2d");
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-       
+        const context = canvas.getContext("2d");       
 
         const current = {
             color: 'black',
@@ -122,9 +133,16 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         };
 
         // add event listeners
-        canvas.addEventListener('mousedown', onMouseDown, false);
-        canvas.addEventListener('mousemove', throttle(onMouseMove, 10), false);
-        canvas.addEventListener('mouseup', onMouseUp, false);
+        // MRSEO: drawable 여부에 따라 이벤트 리스너 추가
+        if (drawableValue) {
+            canvas.addEventListener('mousedown', onMouseDown, false);
+            canvas.addEventListener('mousemove', throttle(onMouseMove, 10), false);
+            canvas.addEventListener('mouseup', onMouseUp, false);
+        } else {
+            canvas.removeEventListener('mousedown', onMouseDown, false);
+            canvas.removeEventListener('mousemove', throttle(onMouseMove, 10), false);
+            canvas.removeEventListener('mouseup', onMouseUp, false);
+        }
 
         // FIXME: (3) make the canvas fill its parent component
 
@@ -145,7 +163,6 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         // socket.io connection
         const onDrawingEvent = (data) => {
-            console.log('$$$$$$$$$$$$$$$$$$$$$$$$',data);
             const w = canvas.width;
             const h = canvas.height;
             draw(
@@ -161,8 +178,16 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         socketRef.current.emit('joinRoom', { mySessionId, myUserName });  // Emit 'joinRoom' event
         socketRef.current.on('drawing', onDrawingEvent);
 
+         // Cleanup when the component is unmounted or drawable changes.
+         // MRSEO: 
+         return () => {
+            socketRef.current.off('drawing', onDrawingEvent);
+            canvas.removeEventListener('mousedown', onMouseDown, false);
+            canvas.removeEventListener('mousemove', throttle(onMouseMove, 10), false);
+            canvas.removeEventListener('mouseup', onMouseUp, false);
+          };
 
-    }, []);
+    }, [drawableValue]);
 
     return (
         <div className="RealCanvas_1">

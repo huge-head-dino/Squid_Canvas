@@ -98,6 +98,10 @@ const useStore = create((set) => ({
   mode: undefined,
   setMode: (mode) => { set({mode: mode}) },
 
+  // MRSEO: 방장 설정
+  host: undefined,
+  setHost: (host) => { set({host: host}) },
+
 }));
 
 export default useStore;
