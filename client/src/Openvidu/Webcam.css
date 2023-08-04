@@ -1,10 +1,10 @@
 .Wrapper {
 	padding: 0;
 	margin: 0;
-	width: 100%;
+	width: 100vw;
 	height: 100%;
 
-	background-image: url("../Images/bg1.jpg");
+	/* background-image: url("../Images/bg1.jpg"); */
 	background-size: cover;
 	background-position: center;
 
@@ -12,16 +12,18 @@
 
 /* 1) 게임 참가 전 창 */
 
-.JoinForm {
-	margin: auto;
-	width: 50%;
-	position: fixed;
-	top : 25%;
-	left : 25%;
+.BeforeGame {
+	background-image: url("../../public/resources/images/home-bg.png");
+	height: 100vh;
+	background-size: cover;
+	background-position: center;
+	
+}
 
-	border-color: gray;
-	border-radius: 5px;
-	border-style: solid;
+.JoinForm {
+	text-align: center;
+
+
 }
 
 /* .JoinForm_Header {
@@ -35,8 +37,9 @@
 
 /* 2) 게임 진행 창 */
 .GameForm{
-	background-image: url("../Images/main-bg.jpg");
+	background-image: url("../../public/resources/images/home-bg.png");
 	height: 100vh;
+	overflow: hidden;
 	background-size: cover;
 	background-position: center;
 }

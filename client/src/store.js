@@ -34,7 +34,6 @@ const useStore = create((set) => ({
       gamers: [],
     }));
   },
-  // JANG: sortGamer 추가
   sortGamer: () => {
     set((state) => ({
       gamers: state.gamers.sort((a, b) => {
@@ -49,8 +48,6 @@ const useStore = create((set) => ({
     }));
   },
 
-
-  // MRSEO:
   setDrawable: (drawable, myUserName) => {
     set((state) => ({
       gamers: state.gamers.map((gamer) =>
@@ -67,7 +64,6 @@ const useStore = create((set) => ({
     }));
   },
 
-  // 추가!
   curSession: undefined,
   setCurSession: (curSession) => { set({curSession: curSession}) },
 
@@ -77,7 +73,6 @@ const useStore = create((set) => ({
   playerCnt: 0,
   setPlayerCount: (playerCnt) => { set({playerCnt: playerCnt}) },
 
-  // MRSEO:
   phase: 'Ready',
   setPhase: (phase) => { set({phase: phase}) },
 
@@ -98,6 +93,10 @@ const useStore = create((set) => ({
 
   canSubmitAns: false,
   setCanSubmitAns: (canSubmitAns) => { set({canSubmitAns: canSubmitAns}) },
+
+  // JANG: 경쟁, 스파이 모드 추가 (임시)
+  mode: undefined,
+  setMode: (mode) => { set({mode: mode}) },
 
 }));
 

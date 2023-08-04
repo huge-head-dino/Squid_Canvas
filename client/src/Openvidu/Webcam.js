@@ -12,16 +12,24 @@ import UserVideoComponent from './UserVideoComponent';
 // Zustand
 import useStore from '../store';
 
-// Bootstrap-react
-import Button from 'react-bootstrap/Button';
-
 // BasicUI
 import BasicUI from '../Game/BasicUI';
 
-// react-bootstrap
-import { Row, Col } from 'react-bootstrap';
 // MRSEO: 
 import socket from './socket';
+
+// JANG: Chakra UI
+import { 
+  Button, ButtonGroup, Box,
+  Center,
+  FormLabel, Flex,
+  Heading,
+  Input,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalCloseButton,
+  Spacer, 
+  useDisclosure, // CHAKRA 제공 함수
+} from '@chakra-ui/react'
+
 
 // NOTE: 배포 전 확인!
 const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
@@ -89,7 +97,6 @@ const Webcam = () => {
       setGamers({
         name: JSON.parse(event.stream.connection.data).clientData,
         streamManager: subscriber,
-        // JANG: publisher와 동일하게 속성 두 개 추가
         // MRSEO: 08.04 상태를 true로 초기화
         drawable: true,
         canSeeAns: true,
@@ -99,6 +106,7 @@ const Webcam = () => {
       setSubscribers(subscribers);
     });
 
+    //JANG: deleteGamer 로직 수정할 것! (아래 주석 보면서)
     mySession.on("streamDestroyed", (event) => {
       // var subscribers = [...subscribers];
 
@@ -110,6 +118,7 @@ const Webcam = () => {
       }
 
       // 2. gamers 정보에서 해당 subscriber 제거
+      // JANG: 아래 useStore 쓰는 것보다, zustand로 불러와서 쓰면 바로 렌더링 됨! (확인 필요)
       useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
 
       // 3. 방에 남아 있는 플레이어 수 업데이트
@@ -117,8 +126,7 @@ const Webcam = () => {
       // JANG: 일단 이거 없애니까, 지금까지 1) gamer 배열 중복 등록 방지 2) 세션 나가면 gamer 배열 갱신 성공 + 비디오 비워지고 새 유저 그 자리에
       // useStore.getState().setPlayerCount(useStore.getState().gamers.filter((a) => event.stream.streamManager.clientData !== a.name).length);
 
-
-
+      //JANG: 아래 로직으로 가는 게 더 좋을 것 같다! (앞서 useStore로 수정 진행하고 -> setSubscriber로 한 번에 렌더링)
       // const deleteSubscriber = (streamManager, subscribers) => {
       //   let index = subscribers.indexOf(streamManager, 0); 
         
@@ -176,6 +184,9 @@ const Webcam = () => {
 
   };
 
+  // JANG: 이부분 수정해야 될 수도!
+  // 내가 나갈 때, 방에 남은 다른 유저들도 모두 게임에서 제거 되어 버림
+  // 그냥 창을 끌 때와, 직접 exit 버튼 누르는 것에 차이가 있을까?
   const leaveSession = () => {
     const mySession = session;
 
@@ -277,7 +288,7 @@ const GameInitializer = () => {
     const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
       headers: { 'Content-Type': 'application/json', },
     });
-    return response.data; // The sessionId
+    return response.data; // The sessionId (정확히는 session, sessionId)
   };
 
   const createToken = async (sessionId) => {
@@ -285,128 +296,154 @@ const GameInitializer = () => {
     const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
       headers: { 'Content-Type': 'application/json', },
     });
-    return response.data; // The token
+    return response.data; // The token (정확히는 connection.token)
   };
 
-  
+  // JANG: 나중에 유저 입장이 안정적으로 처리되면 지울 것!
   const consoleCommand = () => {
     console.log(gamers);
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }
 
+  //JANG: CHAKRA UI 제공 함수function
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
 
     <div className="Wrapper">
 
-      {session === undefined ? (
-        
-        <div className="JoinForm">
+        {session === undefined ? (
 
-            {/* <div className="JoinForm_Header" id="img-div">
-                <img src="resources/images/main-card.jpeg" alt="logo" />
-            </div> */}
+        <div className="BeforeGame">
 
-                <h1> 게임 참가 </h1>
-                <form className="form-group" onSubmit={joinSession}>
-                    <p>
-                        <label>Participant: </label>
-                        <input
-                            className="form-control"
-                            type="text"
-                            id="userName"
-                            value={myUserName}
-                            onChange={handleChangeUserName}
-                            required
-                        />
-                    </p>
-                    <p>
-                        <label> Session: </label>
-                        <input
-                            className="form-control"
-                            type="text"
-                            id="sessionId"
-                            value={mySessionId}
-                            onChange={handleChangeSessionId}
-                            required
-                        />
-                    </p>
-                    <div className="JoinForm_Button">
-                        <input name="commit" type="submit" value="JOIN" />
+          <Center h="100vh">
+
+            <Button colorScheme='teal' size='md' 
+                    height='150px' width='300px'  
+                    border='3px' borderColor='green.500'
+                    fontSize='4xl'
+                    onClick={onOpen}
+                    >
+              JOIN GAME
+            </Button>
+
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+              <ModalOverlay /> 
+              <ModalContent className="JoinForm"> 
+                <ModalHeader><h2 style={{textAlign: 'center'}}>게임 참가</h2></ModalHeader>
+                <ModalCloseButton />
+                  <form onSubmit={joinSession}>
+
+
+                  <div style={{width: '80%', margin: '0 auto'}}>
+                    <FormLabel>닉네임</FormLabel>
+                    <Input
+                        type="text"
+                        id="userName"
+                        value={myUserName}
+                        onChange={handleChangeUserName}
+                        required
+                        style={{marginBottom: "10px"}}
+                    />
+                    <FormLabel>ROOM 넘버</FormLabel>
+                    <Input 
+                        type="text"
+                        id="sessionId"
+                        value={mySessionId}
+                        onChange={handleChangeSessionId}
+                        required 
+                    />
                     </div>
-                </form>
+
+                    <ModalFooter>
+                      <Button onClick={onClose} colorScheme='teal' size='md' type="submit">
+                        입장하기
+                      </Button>
+                    </ModalFooter>
+
+                  </form>
+              </ModalContent>
+            </Modal>
+
+          </Center>
+
         </div>
+
 
         ) : null}
 
-        {session !== undefined ? (
+      {session !== undefined ? (
             <>
             {/* MRSEO: useStore.getState()지움 */}
             {useStore.getState().phase === 'Ready' || useStore.getState().phase === 'Game' ? (
               // JANG: 게임 대기방으로 만들기!
-                <div className="GameForm">
+              <div className="GameForm">
+              
+              <Flex flexDirection="column" height="100vh">
+                <Flex flex="8">
+                  {/* JANG: 게임 대기방 */}
+                  <SessionContext.Provider value={{ mySessionId, myUserName }}>
+                    <BasicUI />
+                  </SessionContext.Provider>
+                </Flex>
 
-                      {/* JANG: 게임 대기방 */}
-                      <SessionContext.Provider value={{ mySessionId, myUserName }}>
-                        <BasicUI />
-                      </SessionContext.Provider>
-                      
+                <Flex flex="1.7" minWidth='max-content' alignItems='center' justifyContent='center' gap='2'>
+                  
+                  <Button>
+                    PASS
+                  </Button>
 
-                      <Row>
-                      <Col xs={3}></Col>
-                      <Col xs={2}></Col>
-                      <Col xs={2}>
-                      <Button>
-                        PASS
-                      </Button>
+                  {/* MRSEO: 참가자 수 출력 테스트 */}
+                  {/* JANG: 나중에 확인하고 버릴 거! */}
+                  <Button onClick={consoleCommand}>test</Button>
 
-                      {/* MRSEO: 참가자 수 출력 테스트 */}
-                      {/* JANG: 나중에 확인하고 버릴 거! */}
-                      <button onClick={consoleCommand}>test</button>
-
-                      {useStore.getState().phase === 'Game' ? (
+                  {useStore.getState().phase === 'Game' ? (
                         <>
                         {/* MRSEO: useStore.getState()지움 */}
                         {useStore.getState().gamers.map((gamer) =>
                           ( gamer.drawable === false && gamer.canSeeAns === false ? (
                           // JANG: TODO - 정답 입력창 css 수정
                           <div>
-                            <input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
-                            <button onClick={submitAns}>제출</button>
-                          </div>):null))}
-                        </>
-                      ):null}
-                      {/* <div className="GameForm_Button"> */}
-                          <Button
-                          variant='danger'
-                          size='lg'
-                          className="exit_button"
-                          onClick={leaveSession}
-                          value="Exit"
-                          >
-                          Exit
-                          </Button>
-                          {' '}
-                          {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                        {useStore.getState().gamers.length === 4 ? (
-                          <Button
-                          variant='primary'
-                          size='lg'                          
-                          type="submit"
-                          className="gameStart_button"
-                          onClick={handleGameStart}
-                          >
-                          Start
-                          </Button>
-                        ):null} 
-                      {/* </div> */}
-                      </Col>
-                      <Col xs={2}></Col>
-                      <Col xs={3}></Col>
-                      </Row>
+                        <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
+                        <Button colorScheme='blue' onClick={submitAns}>제출</Button>
+                      </div> ):null))}
+                    </>
+                  ):null}
+                </Flex>
 
-                    </div>
-                    ) : null }
+                <Flex flex="0.3" minWidth='max-content' alignItems='center' gap='2'>
+                  <Box p='2'>
+                    <Heading size='md' color='white'>CopyRight@RED_TEAM_3</Heading>
+                  </Box>
+                  <Spacer />
+                  <ButtonGroup gap='2' mb="2">
+                    <Button
+                    colorScheme='red'
+                    size='lg'
+                    onClick={leaveSession}
+                    >
+                    Exit
+                    </Button>
+                    {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
+                    {useStore.getState().gamers.length === 4 ? (
+                    <Button
+                    colorScheme='Messenger'
+                    size='lg'     
+                    onClick={handleGameStart}
+                    marginRight="10px"
+                    >
+                    Start
+                    </Button>
+                    ):null} 
+                    <Spacer />
+                    <Spacer />
+                  </ButtonGroup>
+                </Flex>
+              </Flex>
+
+              </div>
+              ) : null }
 
                   {useStore.getState().gameStart === true && useStore.getState().gameEnd === false ? (
                     

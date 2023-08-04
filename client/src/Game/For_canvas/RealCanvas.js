@@ -2,10 +2,11 @@ import React,{ useRef, useEffect, useState} from "react";
 import socket from '../../Openvidu/socket';
 import {ButtonGroup, Button} from 'react-bootstrap';
 // YEONGWOO: 지금 안쓰지만 혹시 몰라서 남겨둔 import 
-import exp from "constants";
-import { emit } from "process";
-import io, { Socket } from 'socket.io-client';
-import { relative } from "path";
+// JANG: 아래 주석 해제하면 Chakra 사용 불가능!
+// import exp from "constants";
+// import { emit } from "process";
+// import io, { Socket } from 'socket.io-client';
+// import { relative } from "path";
 
 const RealCanvas = ({mySessionId, myUserName}) => {
 

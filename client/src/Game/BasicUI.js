@@ -3,11 +3,19 @@ import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
 import "./BasicUI.css";
 
-import {Row, Col, Button, Badge } from "react-bootstrap";
 import socket from "../Openvidu/socket";
 
 // 게임 컴포넌트
 import GameCanvas from "./For_canvas/GameCanvas";
+
+// Chakra UI
+import { 
+  Button, Box,
+  Center,
+  Flex, 
+  Grid, GridItem,
+  Spacer,
+} from "@chakra-ui/react";
 
 
 function BasicUI() {
@@ -85,106 +93,136 @@ const GameInitializer = () => {
               setCanSeeAns(false, gamers[i].name);
               setDrawable(false, gamers[i].name);
           }
+        }
       }
-  }
-  // console.log(gamers);
-}
+       // console.log(gamers);
+    }
 
+    // JANG: 경쟁, 스파이 모드 추가 (임시)
+    const {
+      mode,
+      setMode
+    } = useStore();
+    const cllickCompetitive = () => {
+      setMode('competitive');
+    }
+    const clickSpy = () => {
+      setMode('spy');
+    }
 
-  
     return (
 
       <>
-      <div>
-      <Row>
-        <Col xs={3} style={{ color: 'white', textAlign: 'center' }}>
-          <Button variant="outline-danger"><h1 style={{ fontWeight: 'bold' }}>RED SCORE : {redScoreCnt}</h1></Button>
-        </Col>
-        <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
-          <Button variant="outline-success"><h1 style={{ fontWeight: 'bold' }}>라운드 : {round}</h1></Button>
-        </Col>
-        <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
-          <Button variant="outline-warning"><h1 style={{ fontWeight: 'bold' }}>타이머 : {timerValue}</h1></Button>
-        </Col>
-        <Col xs ={3} style={{color: 'white', textAlign: 'center'}}>
-          <Button variant="outline-primary"><h1 style={{ fontWeight: 'bold' }}>BLUE SCORE : {blueScoreCnt}</h1></Button>
-        </Col>
-      </Row>
+      <Box height="100%">
+      {/* 게임 진행 방 - 1) 헤더 부분 */}
+        <Flex justifyContent="space-between" m="10px auto" p="2">
+          <Button colorScheme="red" flex="1" color="white" size="lg" m='10px'>
+            <h1 style={{ fontWeight: "bold" }}>RED SCORE : {redScoreCnt}</h1>
+          </Button>
+          <Spacer/>
+          <Flex flex="2" gap="4">
+            <Button colorScheme="yellow" flex="1" color="white" size="lg">
+              <h1 style={{ fontWeight: "bold" }}>라운드 : {round}</h1>
+            </Button>
+            <Button colorScheme="yellow" flex="1" color="white" size="lg">
+              <h1 style={{ fontWeight: "bold" }}>타이머 : {timerValue}</h1>
+            </Button>
+          </Flex>
+          <Spacer/>
+          <Button colorScheme="blue" flex="1" color="white" size="lg" m='10px'>
+            <h1 style={{ fontWeight: "bold" }}>BLUE SCORE : {blueScoreCnt}</h1>
+          </Button>
+        </Flex>
 
-      <Row style={{'width': '100%', margin: '10 auto'}}>
+
+      {/* 게임 진행 방 - 2) 유저 비디오 왼쪽 */}
+      {/* JANG: UserVideoComponent가 적절하게 렌더링 되는 시점 */}
+      {/* 1) gamers 배열에 변화가 생겼을 때 (sortGamer) */}
+      {/* 2) streamManager가 변경될 때 (사용자가 새로 입장하거나 나가면 streamManager 변경되므로 UserVideoComponenet도 재렌더링) */}
+
+      <Box p="2" height="100%">
+        <Grid templateColumns="2fr 5fr 2fr" gap={4} height="100%">
+          <GridItem>
+            <Box boxShadow="md" bg="transparent" p={4} borderRadius="md" height="40%">
+              {gamers[0] && (
+                <UserVideoComponent 
+                  streamManager={gamers[0].streamManager}
+                  my_name={gamers[0].name}
+                  key={gamers[0].name}
+                />
+              )}
+            </Box>
+            <Box boxShadow="md" bg="transparent" p={4} borderRadius="md" mt={4} height="40%">
+              {gamers[2] && (
+                <UserVideoComponent
+                  streamManager={gamers[2].streamManager}
+                  my_name={gamers[2].name}
+                  key={gamers[2].name}
+                />
+              )}
+            </Box>
+          </GridItem>
       
-      <Col xs={3} className="User_Left">
-        <div className="LeftVideoBox">
-            <div className="VideoBox">
-              <div id={0} className="VideoFrame_Out">
-                {gamers[0] && (
-                  <div className="VideoFrame_In">
-                    <UserVideoComponent
-                      streamManager={gamers[0].streamManager}
-                      my_name={gamers[0].name}
-                      key={gamers[0].name}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
+          <GridItem>
+            <div className="GameCanvas_Right">
+              {/* JANG: 경쟁 / 스파이 모드 추가 */}
+              {mode === undefined ? (
+                <>
+                  {/* 모드 선택하는 창 */}
+                    <Center w="100%" h="100%" justifyContent="center" bg="darkgray">
+                      <Button size='lg' width='150px'
+                              colorScheme="green"
+                              border='2px' borderColor='green' borderRadius='lg'
+                              m={2}
+                              onClick={cllickCompetitive}>
+                        경쟁 모드
+                      </Button>
+                      <Button size='lg' width='150px'
+                              colorScheme="green"
+                              border='2px' borderColor='green' borderRadius='lg' 
+                              onClick={clickSpy}>
+                        스파이 모드
+                      </Button>
+                    </Center>
+                </>
+              ): (
+                mode === 'competitive' ? ( 
+                // 경쟁 모드
+                  <GameCanvas />
+                ) : (
+                  // 스파이 모드
+                  <GameCanvas />
+                )
+              )}
+              {/* JANG: 경쟁/스파이 모드 */}
 
-            <div className="VideoBox">
-              <div id={2} className="VideoFrame_Out">
-                {gamers[2] && (
-                  <div className="VideoFrame_In">
-                    <UserVideoComponent
-                      streamManager={gamers[2].streamManager}
-                      my_name={gamers[2].name}
-                      key={gamers[2].name}
-                    />
-                  </div>
-                )}
-              </div>
             </div>
-        </div>
-      {/* </div> */}
-      </Col>
+          </GridItem>
       
-      <Col xs={6}>
-        <div className="GameCanvas_Right">
-          <GameCanvas/>
-        </div>
-      </Col>
-      
-      <Col xs={3} className="User_Right">
-        <div className="VideoBox">
-        <div id={1} className="VideoFrame_Out">
-          {gamers[1] && (
-            <div className="VideoFrame_In">
-              <UserVideoComponent
-                streamManager={gamers[1].streamManager}
-                my_name={gamers[1].name}
-                key={gamers[1].name}
+          <GridItem>
+            <Box boxShadow="md" bg="transparent" p={4} borderRadius="md" height="40%">
+              {gamers[1] && (
+                <UserVideoComponent
+                  streamManager={gamers[1].streamManager}
+                  my_name={gamers[1].name}
+                  key={gamers[1].name}
+                />
+              )}
+            </Box>
+            <Box boxShadow="md" bg="transparent" p={4} borderRadius="md" mt={4} height="40%">
+              {gamers[3] && (
+                <UserVideoComponent
+                  streamManager={gamers[3].streamManager}
+                  my_name={gamers[3].name}
+                  key={gamers[3].name}
+                />
+              )}
+            </Box>
+          </GridItem>
+        </Grid>
+      </Box>
 
-              />
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="VideoBox">
-        <div id={3} className="VideoFrame_Out">
-          {gamers[3] && (
-            <div className="VideoFrame_In">
-              <UserVideoComponent
-                streamManager={gamers[3].streamManager}
-                my_name={gamers[3].name}
-                key={gamers[3].name}
-
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    </Col>
-    </Row>
-    </div>
+    </Box>
     </>
     );  
   }
