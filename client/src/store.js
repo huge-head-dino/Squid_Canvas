@@ -76,7 +76,7 @@ const useStore = create((set) => ({
   phase: 'Ready',
   setPhase: (phase) => { set({phase: phase}) },
 
-  iAmPainter: false,
+  iAmPainter: true,
   setIAmPainter: (iAmPainter) => { set({iAmPainter: iAmPainter}) },
 
   iAmSolver: false,

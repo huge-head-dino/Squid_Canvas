@@ -48,7 +48,6 @@ function BasicUI() {
     phase,
     setPhase,
     myUserId,
-    setIAmSolver,
   } = useStore(
     state => ({
       gamers: state.gamers,
@@ -68,7 +67,6 @@ function BasicUI() {
       phase: state.phase,
       setPhase: state.setPhase,
       myUserId: state.myUserId,
-      setIAmSolver: state.setIAmSolver,
     })
   );
 

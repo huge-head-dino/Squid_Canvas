@@ -66,9 +66,9 @@ io.on('connection', (socket) => {
   });
 
   // MRSEO: 게임 시작
-  socket.on('startTeamSetting', () => {
+  socket.on('startSetting', () => {
     console.log('startTeamSetting_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    io.emit('teamSetting');
+    io.emit('setting');
   });
   socket.on('round1Start', () => {
     console.log('round1Start_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
@@ -109,7 +109,17 @@ io.on('connection', (socket) => {
       } else {
         io.emit('round2End', 'draw');
       }
+      redScore = 0;
+      blueScore = 0;
     });
+  });
+
+  // MRSEO: 게임 종료
+
+  // MRSEO: change Solver
+  socket.on('req_changeSolver', (team) => {
+    console.log('changeSolver_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    io.emit('res_changeSolver', team);
   });
 
   // SANGYOON: 2. Webcam.js에서 PASS 수신(on)
