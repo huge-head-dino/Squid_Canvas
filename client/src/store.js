@@ -108,6 +108,12 @@ const useStore = create((set) => ({
   team: undefined,
   setTeam: (team) => { set({team: team}) },
 
+  spyPainter: false,
+  setSpyPainter: (spyPainter) => { set({spyPainter: spyPainter}) },
+
+  iAmSpy: false,
+  setIAmSpy: (iAmSpy) => { set({iAmSpy: iAmSpy}) },
+
 }));
 
 export default useStore;

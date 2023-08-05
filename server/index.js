@@ -10,6 +10,7 @@ const app = express();
 const server = http.createServer(app);
 // MRSEO: timer 추가
 const timerModule = require('./timer');
+const spyTimerModule = require('./spyTimer');
 
 // ---- openvidu env
 const SERVER_PORT = process.env.SERVER_PORT || 5050;
@@ -113,6 +114,74 @@ io.on('connection', (socket) => {
       blueScore = 0;
     });
   });
+
+  // ------------------------ JUNHO: 스파이모드 시작 ------------------------
+  //TODO: 타이머 만들기
+  
+  //1번 대기
+  socket.on('spy1Ready', () => {
+    console.log('spy1Ready');
+    io.emit('spy1GO');
+  });
+  
+  //1번 타이머 시작
+  socket.on('startSpyTimer1', () => {
+    console.log('startSpyTimer1');
+    spyTimerModule.startTimer(io, 10, () => {
+      console.log('1번 타이머 종료');
+      io.emit('spyTimer1End');});
+  });
+
+  //2번 대기
+  socket.on('spy2Ready', () => {
+    console.log('spy2Ready');
+    io.emit('spy2GO');
+  });
+
+
+  //2번 타이머 시작
+  socket.on('startSpyTimer2', () => {
+    console.log('startSpyTimer2');
+    spyTimerModule.startTimer(io, 10, () => {
+      console.log('2번 타이머 종료');
+      io.emit('spyTimer2End');});
+
+  });
+
+  //3번 대기
+  socket.on('spy3Ready', () => {
+    console.log('spy3Ready');
+    io.emit('spy3GO');
+  });
+
+
+  //3번 타이머 시작
+  socket.on('startSpyTimer3', () => {
+    console.log('startSpyTimer3');
+    spyTimerModule.startTimer(io, 10, () => {
+      console.log('3번 타이머 종료');
+      io.emit('spyTimer3End');});
+
+  });
+
+  //4번 대기
+  socket.on('spy4Ready', () => {
+    console.log('spy4Ready');
+    io.emit('spy4GO');
+  });
+
+
+  //4번 타이머 시작
+  socket.on('startSpyTimer4', () => {
+    console.log('startSpyTimer4');
+    spyTimerModule.startTimer(io, 10, () => {
+      console.log('4번 타이머 종료');
+      io.emit('spyTimer4End');});
+
+  });
+
+  // ------------------------ JUNHO: 스파이모드 끝 --------------------
+
 
   // MRSEO: 게임 종료
 

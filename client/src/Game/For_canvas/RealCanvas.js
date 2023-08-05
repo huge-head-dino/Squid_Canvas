@@ -27,9 +27,10 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
     const canvasRef = useRef(null);
     const socketRef = useRef(null);
-    const { iAmPainter } = useStore(
+    const { iAmPainter, spyPainter } = useStore(
         state => ({
-            iAmPainter: state.iAmPainter
+            iAmPainter: state.iAmPainter,
+            spyPainter: state.spyPainter
         })
     );
 
@@ -169,7 +170,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         // add event listeners
         // MRSEO: drawable 여부에 따라 이벤트 리스너 추가
-        if (iAmPainter) {
+        if (iAmPainter || spyPainter) {
             canvas.addEventListener('mousedown', onMouseDown, false);
             canvas.addEventListener('mousemove', throttle(onMouseMove, 10), false);
             canvas.addEventListener('mouseup', onMouseUp, false);
