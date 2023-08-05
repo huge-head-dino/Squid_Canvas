@@ -122,6 +122,11 @@ io.on('connection', (socket) => {
     io.emit('res_changeSolver', team);
   });
 
+  // // MRSEO: hacking painting
+  // socket.on('req_hacking', (team) => {
+
+  // });
+
   // SANGYOON: 2. Webcam.js에서 PASS 수신(on)
   socket.on('updateQuestWords', () => {
     updateQuestWords();

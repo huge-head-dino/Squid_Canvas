@@ -457,6 +457,14 @@ const GameInitializer1 = () => {
         setAns('');
     };
 
+    const hacking = () => {
+      console.log("hacking@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      setIAmPainter(true);
+      setTimeout(() => {
+        setIAmPainter(false);
+      }, 5000)
+    }
+
   // JANG: 나중에 유저 입장이 안정적으로 처리되면 지울 것!
   const consoleCommand = () => {
     console.log("gamers : ", useStore.getState().gamers);
@@ -583,6 +591,16 @@ const GameInitializer1 = () => {
                 </Flex>
 
                 <Flex flex="1.7" minWidth='max-content' alignItems='center' justifyContent='center' gap='2'>
+                  
+                  { (round === 1 && team === 'blue' && gamers[3].name === myUserName) || (round === 2 && team === 'red' && gamers[2].name === myUserName) ? (
+                    <Button 
+                    colorScheme='green'
+                    size='lg'
+                    onClick = {hacking}
+                    >
+                      방해하기!
+                    </Button>
+                  ):null}
                   
                   {/* SANGYOON: PASS 버튼 기능 */}
                   <Button
