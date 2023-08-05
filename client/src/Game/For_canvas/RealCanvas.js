@@ -11,11 +11,13 @@ import useStore from "../../store";
 // YEONGWOO: 색상 선택, 아이콘 추가
 import { GithubPicker } from 'react-color';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
+import CircleIcon from '@mui/icons-material/Circle';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { red, green } from '@mui/material/colors';
 
 const RealCanvas = ({mySessionId, myUserName}) => {
     const current = useRef({
         color: 'black',
-        // lineWidth: 2,
         x: 0,
         y: 0,
     });
@@ -31,17 +33,11 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         })
     );
 
-     // Add functions to increase and decrease the pen's thickness
-    const increaseThickness = () => {
-        setThickness(thickness + 1);
-        current.lineWidth = thickness + 1;
-    }
-    const decreaseThickness = () => {
-        if (thickness > 1) {
-            setThickness(thickness - 1);
-            current.lineWidth = thickness - 1;
-        }
-    }
+    // YEONGWOO: 굵기 선택 방식 수정
+    const changeLineWidth = (newWidth) => {
+        setThickness(newWidth);
+        current.lineWidth = newWidth;
+    };
 
     // YEONGWOO: colorpicker 수정
     const onChangeComplete = (colors) => {
@@ -70,7 +66,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         //JUNHO: canvas 크기 조정 끝
 
-        const context = canvas.getContext("2d");       
+        const context = canvas.getContext("2d");    
+        
 
         //YEONGWOO: 색상 선택
         const colors = document.getElementsByClassName('color');
@@ -88,10 +85,11 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         let drawing = false;
 
-        //create the drawing
+        // create the drawing
 
         const draw = (x0,y0,x1,y1,color,lineWidth,emit) => {
             context.beginPath();
+            context.lineCap = "round";   
             context.moveTo(x0,y0);
             context.lineTo(x1,y1);
             context.strokeStyle = color;
@@ -106,7 +104,6 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
             if(!socketRef.current) return;
             socketRef.current.emit('drawing', {
-                //FIXME: (1) props 확인 필요
                 mySessionId: mySessionId,
                 x0: x0 / w,
                 y0: y0 / h,
@@ -116,8 +113,9 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 lineWidth
             });
         };
-
-        //mouse movement
+        
+        
+        // mouse movement
 
         const onMouseDown = (e) => {
             drawing = true;
@@ -157,7 +155,6 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             );
         };
 
-        // FIXME: (2) 쓰로틀
         const throttle = (callback, delay) => {
             let previousCall = new Date().getTime();
             return function() {
@@ -181,8 +178,6 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             canvas.removeEventListener('mousemove', throttle(onMouseMove, 10), false);
             canvas.removeEventListener('mouseup', onMouseUp, false);
         }
-
-        // FIXME: (3) make the canvas fill its parent component
 
         const onResize = () => {
         const parent = canvas.parentElement;
@@ -231,7 +226,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
     }, [iAmPainter, socketRef]);
 
-    //YEONGWOO: 색상 선택 FIXME: toggle 수정 필요
+    //YEONGWOO: 색상 선택 버튼
     let [toggle, setToggle] = useState(false);
     const handleToggle = () => {
         setToggle(!toggle);
@@ -262,21 +257,42 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     return (
         <div className="RealCanvas_1">
             <canvas ref={canvasRef} className="whiteboard"/>
-            {/* YEONGWOO: clearCanvas 동기화, colorpicker수정 */}
-            <Button variant="warning" className="clearBtn" onClick={handleClearCanvas}>Clear</Button>
-            <Button variant="primary" onClick={increaseThickness}>Increase Thickness</Button>
-            <Button variant="primary" onClick={decreaseThickness}>Decrease Thickness</Button>
+            {/* YEONGWOO: clearCanvas 동기화, colorpicker수정, icon 수정 */}
             <ColorLensIcon
                 onClick={handleToggle}
                 className="palleteBtn"
-                sx={{ fontSize: 40 }}
+                sx={{ fontSize: 80, color: green[500] }}
             />
-            <GithubPicker
-                width="auto"
-                colors={colors}
-                className="color"
-                onChangeComplete={onChangeComplete}
+            <CircleIcon
+                onClick={() => changeLineWidth(2)}
+                sx={{ fontSize: 20, color: color }}
             />
+            <CircleIcon
+                onClick={() => changeLineWidth(6)}
+                sx={{ fontSize: 40, color: color }}
+            />
+            <CircleIcon
+                onClick={() => changeLineWidth(12)}
+                sx={{ fontSize: 60, color: color }}
+            />
+            <CircleIcon
+                onClick={() => changeLineWidth(20)}
+                sx={{ fontSize: 80, color: color }}
+            />
+            <DeleteForeverIcon
+                className="clearBtn"
+                onClick={handleClearCanvas}
+                sx={{ fontSize: 80, color: red[500] }}
+            />
+        
+            {toggle && (
+                <GithubPicker
+                    width="auto"
+                    colors={colors}
+                    className="color"
+                    onChangeComplete={onChangeComplete}
+                />
+            )}
         </div>
     );
 }
