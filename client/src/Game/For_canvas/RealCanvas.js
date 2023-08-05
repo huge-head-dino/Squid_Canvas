@@ -42,8 +42,18 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             current.lineWidth = thickness - 1;
         }
     }
-    
 
+    // YEONGWOO: colorpicker 수정
+    const onChangeComplete = (colors) => {
+        console.log(colors);
+        current.color = colors.hex;
+        setColor(colors.hex);
+    };
+
+    // YEONGWOO: clearCanvas 동기화
+    const handleClearCanvas = () => {
+        socketRef.current.emit('clearCanvas');
+    };
     
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -64,14 +74,10 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         //YEONGWOO: 색상 선택
         const colors = document.getElementsByClassName('color');
-        const onColorUpdate = (e) => {
-            console.log(e);
-            let arr = e.target.style.MozBoxShadow.split(' ');
-            current.color = arr[arr.length - 1];
-        };
+        
         // loop through the color elements and add the click event listeners
         for (let i = 0; i < colors.length; i++) {
-            colors[i].addEventListener('click', onColorUpdate, false);
+            colors[i].addEventListener('click', () => onChangeComplete(colors[i].style), false);
         }
 
         const clearCanvas = () => {
@@ -211,6 +217,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         socketRef.current = socket;
         socketRef.current.emit('joinRoom', { mySessionId, myUserName });  // Emit 'joinRoom' event
         socketRef.current.on('drawing', onDrawingEvent);
+        // YEONGWOO: clearCanvas 동기화
+        socketRef.current.on('clearCanvas', clearCanvas);
 
          // Cleanup when the component is unmounted or drawable changes.
          // MRSEO: 
@@ -254,7 +262,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     return (
         <div className="RealCanvas_1">
             <canvas ref={canvasRef} className="whiteboard"/>
-            <Button variant="warning" className="clearBtn">Clear</Button>
+            {/* YEONGWOO: clearCanvas 동기화, colorpicker수정 */}
+            <Button variant="warning" className="clearBtn" onClick={handleClearCanvas}>Clear</Button>
             <Button variant="primary" onClick={increaseThickness}>Increase Thickness</Button>
             <Button variant="primary" onClick={decreaseThickness}>Decrease Thickness</Button>
             <ColorLensIcon
@@ -266,10 +275,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 width="auto"
                 colors={colors}
                 className="color"
-                onChangeComplete={(colors)=> {
-                    setColor(colors.hex);
-                    current.color = colors.hex;
-                }}
+                onChangeComplete={onChangeComplete}
             />
         </div>
     );
