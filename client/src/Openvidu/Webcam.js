@@ -41,6 +41,7 @@ const Webcam = () => {
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
+  const [iAmSolverRender, setIAmSolverRender] = useState(false);
 
   // MRSEO: ZUSTAND 상태 변수 선언
   const { 
@@ -284,74 +285,57 @@ const Webcam = () => {
   }, [phase]);  // `phase`가 변경될 때 마다 이 useEffect는 실행됩니다.
 
   useEffect(() => {
-    setIAmSolver(iAmSolver);
+    if (round === 1 && team === 'red' ){
+      console.log("redteam iAmSolverRender@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      setIAmSolverRender(!iAmSolverRender)
+    } else if (round === 2 && team === 'blue' ){
+      console.log("blueteam iAmSolverRender@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      setIAmSolverRender(!iAmSolverRender)
+    }
   },[iAmSolver]);
 
-
-  //MRSEO: 
   useEffect(() => {
-    socket.emit('sendScore', team);
+    if (phase === 'Game2'){
+      GameInitializer2();
+    }
+  }, [phase]);
+
+  useEffect(() => {
+    const teamSettingHandler = () => {
+      console.log('teamSettingHandle_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      // gamers배열을 돌면서 myUserName과 같은 이름을 가진 gamer의 인덱스가 짝수면 setTeam('red'), 홀수면 setTeam('blue')
+      console.log(gamers, myUserName)
+      for (let i = 0; i < gamers.length; i++) {
+        if ( gamers[i].name === myUserName ){
+          if ( i % 2 === 0 ){
+            console.log("red teamSetting"+i)
+            setTeam('red');
+          } else {
+            console.log("blue teamSetting"+i)
+            setTeam('blue');
+          }
+        }
+      }
+      if ( myUserName === useStore.getState().host ){
+        setPhase('Game1');
+        socket.emit('round1Start');
+      }
+    }
+
+    socket.on('teamSetting', teamSettingHandler );
 
     return () => {
-      socket.off('sendScore', team);
+      socket.off('teamSetting', teamSettingHandler );
     }
-  },[ redScoreCnt, blueScoreCnt ]);
-  
-  
-  // MRSEO: 정답 제출
-  const submitAns = () => {
-    if ( !useStore.getState().canSubmitAns ) return;
-    if ( round === 1 ){
-      if ( ans === '사과' ){
-        
-        setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
-        setDrawable(!gamers[0].drawable, gamers[0].name);
 
-        setCanSeeAns(!gamers[2].canSeeAns, gamers[2].name);
-        setDrawable(!gamers[2].drawable, gamers[2].name);
+  },[socket, gamers]);
 
-        if ( gamers[0].name === myUserName){ 
-          setIAmPainter(gamers[0].drawable);
-        } else if ( gamers[2].name === myUserName ){
-          setIAmPainter(gamers[2].drawable);
-        }
-
-        if ( gamers[0] ) {
-          setIAmSolver(!iAmSolver)
-        } else if ( gamers[2] ) {
-          setIAmSolver(!iAmSolver)
-        }
-
-        setRedScoreCnt(redScoreCnt + 1);
-
-      }
-    }
-    if ( round === 2 ){
-      if ( ans === '' ){
-
-        setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
-        setDrawable(!gamers[1].drawable, gamers[1].name);
-
-        setCanSeeAns(!gamers[3].canSeeAns, gamers[3].name);
-        setDrawable(!gamers[3].drawable, gamers[3].name);
-
-        if ( gamers[1].name === myUserName){ 
-          setIAmPainter(gamers[1].drawable);
-        } else if ( gamers[3].name === myUserName ){
-          setIAmPainter(gamers[3].drawable);
-        }
-
-        if ( gamers[1] ) {
-          setIAmSolver(!iAmSolver)
-        } else if ( gamers[3] ) {
-          setIAmSolver(!iAmSolver)
-        }
-
-        setBlueScoreCnt(blueScoreCnt + 1);
-      }
-    }
-      setAns('');
+  const handleGameStart = () => {
+    // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
+    console.log('startTeamSetting@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    socket.emit('startTeamSetting')
   };
+
 
 // MRSEO: 게임 초기화
 const GameInitializer1 = () => {
@@ -375,7 +359,8 @@ const GameInitializer1 = () => {
           }
 
           if ( gamers[0] ) {
-            setIAmSolver(true)
+            setIAmSolverRender(true);
+            setIAmSolver(true);
           }
       }
       console.log("round1 초기화 실행 완료!!");
@@ -383,25 +368,96 @@ const GameInitializer1 = () => {
 
   }
 
+  // MRSEO: 게임 초기화
+  const GameInitializer2 = () => {
 
-  const handleGameStart = () => {
-    // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
-    console.log('게임 시작');
-    // gamers배열을 돌면서 myUserName과 같은 이름을 가진 gamer의 인덱스가 짝수면 setTeam('red'), 홀수면 setTeam('blue')
-    for (let i = 0; i < gamers.length; i++) {
-      if ( gamers[i].name === myUserName ){
-        if ( i % 2 === 0 ){
-          setTeam('red');
-        } else {
-          setTeam('blue');
+    if ( round === 2 ){
+      console.log("GameInitializer222222222222222222222222222222");
+        for (let i = 0; i < gamers.length; i++) {
+            if ( i === 1 ){
+                setCanSeeAns(true, gamers[i].name);
+                setDrawable(true, gamers[i].name);
+            } else if ( i === 0 || i === 2) {
+                setCanSeeAns(true, gamers[i].name);
+                setDrawable(false, gamers[i].name);
+            } else {
+                setCanSeeAns(false, gamers[i].name);
+                setDrawable(false, gamers[i].name);
+            }
+
+            if ( gamers[i].name === myUserName ){
+              setIAmPainter(gamers[i].drawable);
+            }
+
+            if ( gamers[1] ) {
+              setIAmSolverRender(true);
+              setIAmSolver(true)
+            }
+        }
+        console.log("round2 초기화 실행 완료!!");
+    }
+    // console.log(gamers);
+  }
+
+    // MRSEO: 정답 제출
+    const submitAns = () => {
+      if ( !useStore.getState().canSubmitAns ) return;
+      if ( round === 1 ){
+        if ( ans === '사과' ){
+          
+          setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
+          setDrawable(!gamers[0].drawable, gamers[0].name);
+  
+          setCanSeeAns(!gamers[2].canSeeAns, gamers[2].name);
+          setDrawable(!gamers[2].drawable, gamers[2].name);
+  
+          if ( gamers[0].name === myUserName){
+            setIAmPainter(gamers[0].drawable);
+          } else if ( gamers[2].name === myUserName ){
+            setIAmPainter(gamers[2].drawable);
+          }
+  
+          if ( gamers[0] ) {
+            setIAmSolver(!iAmSolver)
+          } else if ( gamers[2] ) {
+            setIAmSolver(!iAmSolver)
+          }
+  
+          setRedScoreCnt(redScoreCnt + 1);
+  
+          socket.emit('sendScore', team);
+  
         }
       }
-    }
-    setPhase('Game1');
-    socket.emit('round1Start');
-  };
-
-
+      if ( round === 2 ){
+        if ( ans === '배' ){
+  
+          setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
+          setDrawable(!gamers[1].drawable, gamers[1].name);
+  
+          setCanSeeAns(!gamers[3].canSeeAns, gamers[3].name);
+          setDrawable(!gamers[3].drawable, gamers[3].name);
+  
+          if ( gamers[1].name === myUserName){ 
+            setIAmPainter(gamers[1].drawable);
+          } else if ( gamers[3].name === myUserName ){
+            setIAmPainter(gamers[3].drawable);
+          }
+  
+          if ( gamers[1] ) {
+            setIAmSolver(!iAmSolver)
+          } else if ( gamers[3] ) {
+            setIAmSolver(!iAmSolver)
+          }
+  
+          setBlueScoreCnt(blueScoreCnt + 1);
+  
+          socket.emit('sendScore', team);
+  
+        }
+      }
+        setAns('');
+    };
 
   // JANG: 나중에 유저 입장이 안정적으로 처리되면 지울 것!
   const consoleCommand = () => {
@@ -412,6 +468,8 @@ const GameInitializer1 = () => {
     console.log("redScoreCnt : ", redScoreCnt);
     console.log("blueScoreCnt : ", blueScoreCnt);
     console.log("round : ", round);
+    console.log("team : ", team);
+//폼 미쳣다! 신경원 그는 서인가
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }
@@ -517,7 +575,8 @@ const GameInitializer1 = () => {
                   {phase === 'Game1' || phase === 'Game2' ? (
                         <>
                         {/* MRSEO: 조건 수정 */}
-                        { iAmSolver ? (
+                        { (team === 'red' && iAmSolverRender === true) || ( team === 'blue' && iAmSolverRender === true ) ?
+                         (
                           // JANG: TODO - 정답 입력창 css 수정
                           <div>
                         <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
@@ -542,7 +601,6 @@ const GameInitializer1 = () => {
                       Exit
                     </Button>
                     {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                    {/* MRSEO: 푸시전 수정해야 함 */}
                     {myUserName === host && gamers?.length === 4 ? (
                       <Button
                         colorScheme='Messenger'

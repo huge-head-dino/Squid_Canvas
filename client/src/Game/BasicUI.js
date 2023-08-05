@@ -75,11 +75,7 @@ function BasicUI() {
 
   }, [gamers]);
 
-  useEffect(() => {
-    if (phase === 'Game2'){
-      GameInitializer2();
-    }
-  }, [phase]);
+
 
 
     // MRSEO: 
@@ -117,35 +113,7 @@ function BasicUI() {
 
      }, [socket]);
 
-// MRSEO: 게임 초기화
-const GameInitializer2 = () => {
 
-    if ( round === 2 ){
-      console.log("GameInitializer222222222222222222222222222222");
-        for (let i = 0; i < gamers.length; i++) {
-            if ( i === 1 ){
-                setCanSeeAns(true, gamers[i].name);
-                setDrawable(true, gamers[i].name);
-            } else if ( i === 0 || i === 2) {
-                setCanSeeAns(true, gamers[i].name);
-                setDrawable(false, gamers[i].name);
-            } else {
-                setCanSeeAns(false, gamers[i].name);
-                setDrawable(false, gamers[i].name);
-            }
-
-            if ( gamers[i].name === myUserID ){
-              setIAmPainter(gamers[i].drawable);
-            }
-
-            if ( gamers[1] ) {
-              setIAmSolver(true)
-            }
-        }
-        console.log("round2 초기화 실행 완료!!");
-    }
-    // console.log(gamers);
-  }
 
     // JANG: 경쟁, 스파이 모드 추가 (임시)
     const {
@@ -166,7 +134,7 @@ const GameInitializer2 = () => {
       {/* 게임 진행 방 - 1) 헤더 부분 */}
         <Flex justifyContent="space-between" m="10px auto" p="2">
           <Button colorScheme="red" flex="1" color="white" size="lg" m='10px'>
-            <h1 style={{ fontWeight: "bold" }}>RED SCORE : {redScoreCnt}</h1>
+            <h1 style={{ fontWeight: "bold" }}>RED SCORE : {useStore.getState().redScoreCnt}</h1>
           </Button>
           <Spacer/>
           <Flex flex="2" gap="4">
@@ -179,7 +147,7 @@ const GameInitializer2 = () => {
           </Flex>
           <Spacer/>
           <Button colorScheme="blue" flex="1" color="white" size="lg" m='10px'>
-            <h1 style={{ fontWeight: "bold" }}>BLUE SCORE : {blueScoreCnt}</h1>
+            <h1 style={{ fontWeight: "bold" }}>BLUE SCORE : {useStore.getState().blueScoreCnt}</h1>
           </Button>
         </Flex>
 

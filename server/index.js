@@ -66,12 +66,17 @@ io.on('connection', (socket) => {
   });
 
   // MRSEO: 게임 시작
+  socket.on('startTeamSetting', () => {
+    console.log('startTeamSetting_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    io.emit('teamSetting');
+  });
   socket.on('round1Start', () => {
     console.log('round1Start_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     io.emit('round1Countdown');
   });
 
   socket.on('sendScore', (team) => {
+    console.log("sendScore_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     if (team === 'red') {
       redScore++;
     } else if (team === 'blue') {
