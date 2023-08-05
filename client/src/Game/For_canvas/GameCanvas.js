@@ -93,6 +93,21 @@ function GameCanvas() {
     }
   }, [socket]);
 
+  // SANGYOON: 4. 제시어를 서버(index.js)에서 수신
+  const [suggestWord, setSuggestWord] = useState('');
+
+  useEffect(() => {
+    const suggestWords = (names) => {
+      const word = names[0];
+      setSuggestWord(word);
+    };
+    socket.on('suggestWord', suggestWords);
+
+    return () => {
+      socket.off('suggestWord', suggestWords);
+    };
+  }, []);
+ 
 
   return (
     <>
@@ -100,7 +115,8 @@ function GameCanvas() {
       <div className="RealCanvas_3">
         <div className='RealCanvas_2' style={{ height: "100%"}}>
           <RealCanvas mySessionId = { mySessionId } myUserName = {myUserName}/>
-          <h1 style={{ fontWeight: "bold" }}>사과</h1>
+          {/* SANGYOON: 제시어 */}
+          <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>
         </div>
         <div className='ButtonZone'>
           <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>

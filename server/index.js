@@ -1,42 +1,42 @@
-require("dotenv").config(!!process.env.CONFIG ? {path: process.env.CONFIG} : {});
-var express = require("express");
-var bodyParser = require("body-parser");
-var http = require("http");
-var OpenVidu = require("openvidu-node-client").OpenVidu;
-var cors = require("cors");
-var app = express();
+// ---- env
+require("dotenv").config(!!process.env.CONFIG ? { path: process.env.CONFIG } : {});
+// ---- dependencies
+const OpenVidu = require("openvidu-node-client").OpenVidu;
+const http = require("http");
+const cors = require("cors");
+const socketIO = require("socket.io");
+const express = require("express");
+const app = express();
+const server = http.createServer(app);
 // MRSEO: timer 추가
-const timerModule = require('./timer'); 
+const timerModule = require('./timer');
 
-// Environment variable: PORT where the node server is listening
-var SERVER_PORT = process.env.SERVER_PORT || 5050;
-// Environment variable: URL where our OpenVidu server is listening
-var OPENVIDU_URL = process.env.OPENVIDU_URL || 'http://localhost:8443';
-// Environment variable: secret shared with our OpenVidu server
-var OPENVIDU_SECRET = process.env.OPENVIDU_SECRET || 'NAMANMU';
+// ---- openvidu env
+const SERVER_PORT = process.env.SERVER_PORT || 5050;
+const OPENVIDU_URL = process.env.OPENVIDU_URL || 'http://localhost:8443';
+const OPENVIDU_SECRET = process.env.OPENVIDU_SECRET || 'NAMANMU';
+const openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 
-// Enable CORS support
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+// ---- middleware
+app.use(cors({ origin: "*" }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-var server = http.createServer(app);
-var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+// ---- client num
 let numClients = 0;
 let redScore = 0;
 let blueScore = 0;
 
-const socketIO = require('socket.io');
+// ---- socket.io
 const io = socketIO(server, {
   cors: {
-    origin: "*",  // Allow all origins
-    methods: ["GET", "POST"]  // Allow GET and POST methods
+    origin: "*",
+    credentials: true,
+    methods: ['GET', 'POST']
   }
 });
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   console.log('User connected');
 
   // 클라이언트가 연결될 때마다 클라이언트 수 증가
@@ -53,7 +53,7 @@ io.on('connection', socket => {
     // socket.to(data.mySessionId).emit('drawing', data);
     socket.broadcast.emit('drawing', data);
   });
-  
+
   socket.on('disconnect', () => {
     console.log('User disconnected');
     // 클라이언트가 연결 해제될 때마다 클라이언트 수 감소
@@ -62,8 +62,8 @@ io.on('connection', socket => {
   });
 
   socket.on('clearCanvas', () => {
-      socket.broadcast.emit('clearCanvas');
-    });
+    socket.broadcast.emit('clearCanvas');
+  });
 
   // MRSEO: 게임 시작
   socket.on('round1Start', () => {
@@ -77,7 +77,7 @@ io.on('connection', socket => {
     } else if (team === 'blue') {
       blueScore++;
     }
-    io.emit('scoreUpdate', {redScore, blueScore});
+    io.emit('scoreUpdate', { redScore, blueScore });
   });
 
   socket.on('startTimer1', () => {
@@ -107,39 +107,63 @@ io.on('connection', socket => {
     });
   });
 
-
+  // SANGYOON: 2. Webcam.js에서 PASS 수신(on)
+  socket.on('updateQuestWords', () => {
+    updateQuestWords();
+  })
 });
 
-
-// Allow application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-// Allow application/json
-app.use(bodyParser.json());
-
-// Serve static resources if available
-app.use(express.static(__dirname + '/public'));
-
-// Serve application
+// ---- Server Application Connect
 server.listen(SERVER_PORT, () => {
-  console.log("Application started on port: ", SERVER_PORT);
+  console.log("Application started on port: " + SERVER_PORT);
   console.warn('Application server connecting to OpenVidu at ' + OPENVIDU_URL);
 });
 
+// ---- Create Sessions
 app.post("/api/sessions", async (req, res) => {
-  var session = await openvidu.createSession(req.body);
+  const session = await openvidu.createSession(req.body);
   res.send(session.sessionId);
 });
 
 app.post("/api/sessions/:sessionId/connections", async (req, res) => {
-  var session = openvidu.activeSessions.find(
+  const session = openvidu.activeSessions.find(
     (s) => s.sessionId === req.params.sessionId
   );
   if (!session) {
     res.status(404).send();
   } else {
-    var connection = await session.createConnection(req.body);
+    const connection = await session.createConnection(req.body);
     res.send(connection.token);
   }
 });
+
+// ---- SANGYOON: MongoDB Conneting
+// ---- local mongodb 가져오도록 설정됨
+// NOTE: 배포 시, 주석 해제!
+// const { MONGO_URI } = process.env;
+// const mongoose = require("mongoose");
+// mongoose
+//   .connect(MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => console.log("✅ MongoDB connected"))
+//   .catch(e => console.error(e));
+
+// ---- SANGYOON: 제시어 받는 API
+const FruitWord = require("./models/fruits");
+let selectQuestWords = [];
+
+const updateQuestWords = async () => {
+  try {
+    const FruitWords = await FruitWord.aggregate([{ $sample: { size: 20 } }]);
+    selectQuestWords = FruitWords;
+    const names = selectQuestWords.map((word) => word.name);
+    console.log(names);
+    io.emit('suggestWord', names); // 3. GameCanvas.js로 emit
+  } catch (error) {
+    console.log(error);
+  };
+};
 
 process.on('uncaughtException', err => console.error(err));

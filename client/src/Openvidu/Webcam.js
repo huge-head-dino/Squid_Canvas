@@ -104,8 +104,10 @@ const Webcam = () => {
     };
   }, []);
 
-
-  
+   // SANGYOON: 1. PASS 누르면 서버로 발신(emit)
+  const handlePass = () => {
+    socket.emit('updateQuestWords');
+  };
   
   const onBeforeUnload = (event) => {
     leaveSession();
@@ -498,9 +500,15 @@ const GameInitializer1 = () => {
 
                 <Flex flex="1.7" minWidth='max-content' alignItems='center' justifyContent='center' gap='2'>
                   
-                  <Button>
+                  {/* SANGYOON: PASS 버튼 기능 */}
+                  <Button
+                    colorScheme='blue'
+                    size='lg'
+                    onClick={handlePass}
+                  >
                     PASS
                   </Button>
+
 
                   {/* MRSEO: 참가자 수 출력 테스트 */}
                   {/* JANG: 나중에 확인하고 버릴 거! */}
