@@ -74,6 +74,7 @@ const Webcam = () => {
     iAmSolver,
     iAmPainter,
     setIAmSolver,
+    spyPainter,
    } = useStore(
     state => ({
       ans: state.ans,
@@ -100,6 +101,7 @@ const Webcam = () => {
       setMyUserId: state.setMyUserId,
       iAmSolver: state.iAmSolver,
       setIAmSolver: state.setIAmSolver,
+      spyPainter: state.spyPainter,
     })
    );
 
@@ -478,6 +480,7 @@ const GameInitializer1 = () => {
     console.log("iAmSolver : ", iAmSolver);
     console.log("iAmSolverRender : ", iAmSolverRender);
     console.log("iAmPainter : ", iAmPainter);
+    console.log("spyPainter : ", spyPainter);
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }

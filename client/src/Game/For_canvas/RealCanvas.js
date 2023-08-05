@@ -170,7 +170,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         // add event listeners
         // MRSEO: drawable 여부에 따라 이벤트 리스너 추가
-        if (iAmPainter || spyPainter) {
+        if (iAmPainter && spyPainter) {
             canvas.addEventListener('mousedown', onMouseDown, false);
             canvas.addEventListener('mousemove', throttle(onMouseMove, 10), false);
             canvas.addEventListener('mouseup', onMouseUp, false);
@@ -225,7 +225,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             canvas.removeEventListener('mouseup', onMouseUp, false);
         };
 
-    }, [iAmPainter, socketRef]);
+    }, [iAmPainter,spyPainter, socketRef]);
 
     //YEONGWOO: 색상 선택 버튼
     let [toggle, setToggle] = useState(false);
