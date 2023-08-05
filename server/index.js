@@ -71,17 +71,25 @@ io.on('connection', socket => {
     io.emit('round1Countdown');
   });
 
+  socket.on('sendScore', (team) => {
+    if (team === 'red') {
+      redScore++;
+    } else if (team === 'blue') {
+      blueScore++;
+    }
+    io.emit('scoreUpdate', {redScore, blueScore});
+  });
+
   socket.on('startTimer1', () => {
     console.log('startTimer1_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
-      io.emit('round1End');
+      io.emit('round2Countdown');
     });
   });
 
-  socket.on("round2Start", (redScoreCnt) => {
+  socket.on("round2Start", () => {
     console.log('round2Start_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    redScore = redScoreCnt;
     io.emit('round2Countdown');
   });
 
@@ -89,22 +97,16 @@ io.on('connection', socket => {
     console.log('startTimer2_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
-      io.emit('round2End');
+      if (redScore > blueScore) {
+        io.emit('round2End', 'red');
+      } else if (redScore < blueScore) {
+        io.emit('round2End', 'blue');
+      } else {
+        io.emit('round2End', 'draw');
+      }
     });
   });
 
-
-  socket.on('gameEnd', (blueScoreCnt) => {
-    console.log('gameEnd_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    blueScore = blueScoreCnt;
-    if (redScore > blueScore) {
-      io.emit('result', 'red');
-    } else if (redScore < blueScore) {
-      io.emit('result', 'blue');
-    } else {
-      io.emit('result', 'draw');
-    }
-  });
 
 });
 

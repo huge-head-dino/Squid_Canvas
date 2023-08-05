@@ -31,11 +31,18 @@ function BasicUI() {
     curSession,
     redScoreCnt,
     blueScoreCnt,
+    setRedScoreCnt,
+    setBlueScoreCnt,
     round,
     setRound,
     sortGamer,
     setCanSeeAns,
     setDrawable,
+    setIAmPainter,
+    phase,
+    setPhase,
+    myUserId,
+    setIAmSolver,
   } = useStore(
     state => ({
       gamers: state.gamers,
@@ -44,13 +51,18 @@ function BasicUI() {
       myUserID: state.myUserID,
       setMyIndex: state.setMyIndex,
       curSession: state.curSession,
-      redScoreCnt: state.redScoreCnt,
-      blueScoreCnt: state.blueScoreCnt,
+      setRedScoreCnt: state.setRedScoreCnt,
+      setBlueScoreCnt: state.setBlueScoreCnt,
       round: state.round,
       setRound: state.setRound,
       sortGamer: state.sortGamer,
       setCanSeeAns: state.setCanSeeAns,
       setDrawable: state.setDrawable,
+      setIAmPainter: state.setIAmPainter,
+      phase: state.phase,
+      setPhase: state.setPhase,
+      myUserId: state.myUserId,
+      setIAmSolver: state.setIAmSolver,
     })
   );
 
@@ -63,6 +75,13 @@ function BasicUI() {
 
   }, [gamers]);
 
+  useEffect(() => {
+    if (phase === 'Game2'){
+      GameInitializer2();
+    }
+  }, [phase]);
+
+
     // MRSEO: 
     useEffect(() => {
 
@@ -72,57 +91,61 @@ function BasicUI() {
         setTimerValue(value);
       };
 
+      const scoreUpdateHandler = ({redScore, blueScore}) => {
+        setRedScoreCnt(redScore);
+        setBlueScoreCnt(blueScore);
+      };
+
       const round2CountdownHandler = () => {
         setRound(2);
+        setPhase('Game2');
         // MRSEO: 게임 초기화
-        GameInitializer();
+        
       }
       // 서버로부터 타이머 값을 수신하는 이벤트 리스너
       socket.on('timerUpdate', timerUpdateHandler);
+      socket.on('scoreUpdate', scoreUpdateHandler);
 
       // MRSEO: 라운드를 2로 업데이트
       socket.on('round2Countdown', round2CountdownHandler);
 
       return () => {
         socket.off('timerUpdate', timerUpdateHandler);
+        socket.off('scoreUpdate', scoreUpdateHandler);
         socket.off('round2Countdown', round2CountdownHandler);
       }
 
      }, [socket]);
 
-     // MRSEO: 게임 초기화
-const GameInitializer = () => {
-  if ( round === 1 ){
-      for (let i = 0; i < gamers.length; i++) {
-          if ( i === 0 ){
-              setCanSeeAns(false, gamers[i].name);
-              setDrawable(false, gamers[i].name);
-          } else if ( i === 1 || i === 3) {
-              setCanSeeAns(true, gamers[i].name);
-              setDrawable(false, gamers[i].name);
-          } else {
-              setCanSeeAns(false, gamers[i].name);
-              setDrawable(false, gamers[i].name);
-          }
-      }
-  }
+// MRSEO: 게임 초기화
+const GameInitializer2 = () => {
 
-  if ( round === 2 ){
-      for (let i = 0; i < gamers.length; i++) {
-          if ( i === 1 ){
-              setCanSeeAns(true, gamers[i].name);
-              setDrawable(true, gamers[i].name);
-          } else if ( i === 0 || i === 2) {
-              setCanSeeAns(true, gamers[i].name);
-              setDrawable(false, gamers[i].name);
-          } else {
-              setCanSeeAns(false, gamers[i].name);
-              setDrawable(false, gamers[i].name);
-          }
+    if ( round === 2 ){
+      console.log("GameInitializer222222222222222222222222222222");
+        for (let i = 0; i < gamers.length; i++) {
+            if ( i === 1 ){
+                setCanSeeAns(true, gamers[i].name);
+                setDrawable(true, gamers[i].name);
+            } else if ( i === 0 || i === 2) {
+                setCanSeeAns(true, gamers[i].name);
+                setDrawable(false, gamers[i].name);
+            } else {
+                setCanSeeAns(false, gamers[i].name);
+                setDrawable(false, gamers[i].name);
+            }
+
+            if ( gamers[i].name === myUserID ){
+              setIAmPainter(gamers[i].drawable);
+            }
+
+            if ( gamers[1] ) {
+              setIAmSolver(true)
+            }
         }
-      }
-       // console.log(gamers);
+        console.log("round2 초기화 실행 완료!!");
     }
+    // console.log(gamers);
+  }
 
     // JANG: 경쟁, 스파이 모드 추가 (임시)
     const {

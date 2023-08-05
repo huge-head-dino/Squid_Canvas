@@ -25,9 +25,9 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
     const canvasRef = useRef(null);
     const socketRef = useRef(null);
-    const { gamers } = useStore(
+    const { iAmPainter } = useStore(
         state => ({
-            gamers: state.gamers
+            iAmPainter: state.iAmPainter
         })
     );
 
@@ -42,12 +42,6 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             current.lineWidth = thickness - 1;
         }
     }
-
-    //MRSEO: drawable 여부 확인
-    const drawableValue = useMemo(() => {
-        const currentGamer = gamers.find(gamer => gamer.name === myUserName);
-        return currentGamer ? currentGamer.drawable : false;
-    }, [gamers, myUserName]);
     
 
     
@@ -172,7 +166,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
         // add event listeners
         // MRSEO: drawable 여부에 따라 이벤트 리스너 추가
-        if (drawableValue) {
+        if (iAmPainter) {
             canvas.addEventListener('mousedown', onMouseDown, false);
             canvas.addEventListener('mousemove', throttle(onMouseMove, 10), false);
             canvas.addEventListener('mouseup', onMouseUp, false);
@@ -227,7 +221,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             canvas.removeEventListener('mouseup', onMouseUp, false);
         };
 
-    }, [drawableValue]);
+    }, [iAmPainter, socketRef]);
 
     //YEONGWOO: 색상 선택 FIXME: toggle 수정 필요
     let [toggle, setToggle] = useState(false);

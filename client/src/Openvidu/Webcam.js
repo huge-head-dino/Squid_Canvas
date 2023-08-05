@@ -32,8 +32,8 @@ import {
 
 
 // NOTE: 배포 전 확인!
-const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
   const [mySessionId, setMySessionId] = useState('SessionA');
@@ -60,6 +60,13 @@ const Webcam = () => {
     setHost,
     setCanSeeAns,
     setDrawable,
+    setIAmPainter,
+    setTeam,
+    team,
+    myUserId,
+    setMyUserId,
+    iAmSolver,
+    setIAmSolver,
    } = useStore(
     state => ({
       ans: state.ans,
@@ -77,7 +84,14 @@ const Webcam = () => {
       host: state.host,
       setHost: state.setHost,
       setCanSeeAns: state.setCanSeeAns,
-      setDrawable: state.setDrawable
+      setDrawable: state.setDrawable,
+      setIAmPainter: state.setIAmPainter,
+      setTeam: state.setTeam,
+      team: state.team,
+      myUserId: state.myUserId,
+      setMyUserId: state.setMyUserId,
+      iAmSolver: state.iAmSolver,
+      setIAmSolver: state.setIAmSolver,
     })
    );
 
@@ -100,10 +114,24 @@ const Webcam = () => {
 
   // MRSEO: 게임 시작 버튼을 누른 후, 플레이어 상태 초기화
   useEffect(() => {
-    if (phase === 'Game') {
-      GameInitializer();
+    if (phase === 'Game1') {
+      GameInitializer1();
     }
   }, [phase]);  // `phase`가 변경될 때 마다 이 useEffect는 실행됩니다.
+
+  useEffect(() => {
+    setIAmSolver(iAmSolver);
+  },[iAmSolver]);
+
+
+  //MRSEO: 
+  useEffect(() => {
+    socket.emit('sendScore', team);
+
+    return () => {
+      socket.off('sendScore', team);
+    }
+  },[ redScoreCnt, blueScoreCnt ]);
   
 
   const onBeforeUnload = (event) => {
@@ -208,6 +236,7 @@ const Webcam = () => {
               drawable: true,
               canSeeAns: true,
             });
+            setMyUserId(myUserName)
   
             // useStore.getState().setMyUserID(myUserName);
             setPublisher(publisher);
@@ -252,6 +281,18 @@ const Webcam = () => {
         setCanSeeAns(!gamers[2].canSeeAns, gamers[2].name);
         setDrawable(!gamers[2].drawable, gamers[2].name);
 
+        if ( gamers[0].name === myUserName){ 
+          setIAmPainter(gamers[0].drawable);
+        } else if ( gamers[2].name === myUserName ){
+          setIAmPainter(gamers[2].drawable);
+        }
+
+        if ( gamers[0] ) {
+          setIAmSolver(!iAmSolver)
+        } else if ( gamers[2] ) {
+          setIAmSolver(!iAmSolver)
+        }
+
         setRedScoreCnt(redScoreCnt + 1);
 
       }
@@ -265,6 +306,18 @@ const Webcam = () => {
         setCanSeeAns(!gamers[3].canSeeAns, gamers[3].name);
         setDrawable(!gamers[3].drawable, gamers[3].name);
 
+        if ( gamers[1].name === myUserName){ 
+          setIAmPainter(gamers[1].drawable);
+        } else if ( gamers[3].name === myUserName ){
+          setIAmPainter(gamers[3].drawable);
+        }
+
+        if ( gamers[1] ) {
+          setIAmSolver(!iAmSolver)
+        } else if ( gamers[3] ) {
+          setIAmSolver(!iAmSolver)
+        }
+
         setBlueScoreCnt(blueScoreCnt + 1);
       }
     }
@@ -272,9 +325,10 @@ const Webcam = () => {
   };
 
 // MRSEO: 게임 초기화
-const GameInitializer = () => {
+const GameInitializer1 = () => {
   console.log("GameInitializer 실행!!")
   if ( round === 1 ){
+    console.log("GameInitializer111111111111111111111111");
       for (let i = 0; i < gamers.length; i++) {
           if ( i === 0 ){
               setCanSeeAns(true, gamers[i].name);
@@ -286,31 +340,35 @@ const GameInitializer = () => {
               setCanSeeAns(false, gamers[i].name);
               setDrawable(false, gamers[i].name);
           }
-      }
-  }
 
-  if ( round === 2 ){
-      for (let i = 0; i < gamers.length; i++) {
-          if ( i === 1 ){
-              setCanSeeAns(true, gamers[i].name);
-              setDrawable(true, gamers[i].name);
-          } else if ( i === 0 || i === 2) {
-              setCanSeeAns(true, gamers[i].name);
-              setDrawable(false, gamers[i].name);
-          } else {
-              setCanSeeAns(false, gamers[i].name);
-              setDrawable(false, gamers[i].name);
+          if ( gamers[i].name === myUserName ){
+            setIAmPainter(gamers[i].drawable);
+          }
+
+          if ( gamers[0] ) {
+            setIAmSolver(true)
           }
       }
+      console.log("round1 초기화 실행 완료!!");
+    }
+
   }
-  // console.log(gamers);
-}
 
 
   const handleGameStart = () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
     console.log('게임 시작');
-    setPhase('Game');
+    // gamers배열을 돌면서 myUserName과 같은 이름을 가진 gamer의 인덱스가 짝수면 setTeam('red'), 홀수면 setTeam('blue')
+    for (let i = 0; i < gamers.length; i++) {
+      if ( gamers[i].name === myUserName ){
+        if ( i % 2 === 0 ){
+          setTeam('red');
+        } else {
+          setTeam('blue');
+        }
+      }
+    }
+    setPhase('Game1');
     socket.emit('round1Start');
   };
 
@@ -339,10 +397,13 @@ const GameInitializer = () => {
 
   // JANG: 나중에 유저 입장이 안정적으로 처리되면 지울 것!
   const consoleCommand = () => {
-    console.log(useStore.getState().gamers);
-    console.log(host);
-    console.log(gamers[0].name);
-    console.log(myUserName)
+    console.log("gamers : ", useStore.getState().gamers);
+    console.log("host : ", host);
+    console.log("gamers[0] : ", gamers[0].name);
+    console.log("myUserName : ", myUserName)
+    console.log("redScoreCnt : ", redScoreCnt);
+    console.log("blueScoreCnt : ", blueScoreCnt);
+    console.log("round : ", round);
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }
@@ -417,7 +478,7 @@ const GameInitializer = () => {
       {session !== undefined ? (
             <>
             {/* MRSEO: useStore.getState()지움 */}
-            {phase === 'Ready' || phase === 'Game' ? (
+            {phase === 'Ready' || phase === 'Game1' || phase === 'Game2'? (
               // JANG: 게임 대기방으로 만들기!
               <div className="GameForm">
               
@@ -439,16 +500,16 @@ const GameInitializer = () => {
                   {/* JANG: 나중에 확인하고 버릴 거! */}
                   <Button onClick={consoleCommand}>test</Button>
 
-                  {phase === 'Game' ? (
+                  {phase === 'Game1' || phase === 'Game2' ? (
                         <>
-                        {/* MRSEO: useStore.getState()지움 */}
-                        {gamers?.map((gamer) =>
-                          ( gamer.drawable === false && gamer.canSeeAns === false ? (
+                        {/* MRSEO: 조건 수정 */}
+                        { iAmSolver ? (
                           // JANG: TODO - 정답 입력창 css 수정
                           <div>
                         <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
                         <Button colorScheme='blue' onClick={submitAns}>제출</Button>
-                      </div> ):null))}
+                      </div> 
+                        ):null}
                     </>
                   ):null}
                 </Flex>

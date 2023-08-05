@@ -52,9 +52,6 @@ function GameCanvas() {
       }, 5000)
     };
 
-    const round1EndHandler = () => {
-      socket.emit('round2Start', redScoreCnt);
-    };
 
     const round2CountdownHandler = () => {
       setCanSubmitAns(false);
@@ -71,11 +68,8 @@ function GameCanvas() {
       }, 5000)
     }
 
-    const round2EndHandler = () => {
-      socket.emit('gameEnd', blueScoreCnt);
-    }
 
-    const resultHandler = (result) => {
+    const round2EndHandler = (result) => {
       console.log('result_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       // MRSEO: 게임 종료 후 결과 페이지로 이동
 
@@ -89,17 +83,13 @@ function GameCanvas() {
     }
 
     socket.on('round1Countdown', round1CountdownHandler);
-    socket.on('round1End', round1EndHandler);
     socket.on('round2Countdown', round2CountdownHandler);
     socket.on('round2End', round2EndHandler);
-    socket.on('result', resultHandler);
 
     return () => {
       socket.off('round1Countdown', round1CountdownHandler);
-      socket.off('round1End', round1EndHandler);
       socket.off('round2Countdown', round2CountdownHandler);
       socket.off('round2End', round2EndHandler);
-      socket.off('result', resultHandler);
     }
   }, [socket]);
 
