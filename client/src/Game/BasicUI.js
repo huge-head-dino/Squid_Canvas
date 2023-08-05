@@ -13,10 +13,16 @@ import {
   Button, Box,
   Center,
   Flex, 
-  Grid, GridItem,
+  GridItem,
   Spacer,
+  VStack,
+  Grid,
+  Input,
+
 } from "@chakra-ui/react";
 
+//JANG: (08.05) - Navbar 컴포넌트 추가
+import Navbar from "./For_screen/Navbar";
 
 function BasicUI() {
     // MRSEO: 타이머 값 상태
@@ -130,116 +136,216 @@ function BasicUI() {
     return (
 
       <>
-      <Box height="100%">
-      {/* 게임 진행 방 - 1) 헤더 부분 */}
-        <Flex justifyContent="space-between" m="10px auto" p="2">
-          <Button colorScheme="red" flex="1" color="white" size="lg" m='10px'>
-            <h1 style={{ fontWeight: "bold" }}>RED SCORE : {useStore.getState().redScoreCnt}</h1>
-          </Button>
-          <Spacer/>
-          <Flex flex="2" gap="4">
-            <Button colorScheme="yellow" flex="1" color="white" size="lg">
-              <h1 style={{ fontWeight: "bold" }}>라운드 : {round}</h1>
-            </Button>
-            <Button colorScheme="yellow" flex="1" color="white" size="lg">
-              <h1 style={{ fontWeight: "bold" }}>타이머 : {timerValue}</h1>
-            </Button>
-          </Flex>
-          <Spacer/>
-          <Button colorScheme="blue" flex="1" color="white" size="lg" m='10px'>
-            <h1 style={{ fontWeight: "bold" }}>BLUE SCORE : {useStore.getState().blueScoreCnt}</h1>
-          </Button>
-        </Flex>
+        <Box textAlign="center" className="1_Box">
 
 
-      {/* 게임 진행 방 - 2) 유저 비디오 왼쪽 */}
-      {/* JANG: UserVideoComponent가 적절하게 렌더링 되는 시점 */}
-      {/* 1) gamers 배열에 변화가 생겼을 때 (sortGamer) */}
-      {/* 2) streamManager가 변경될 때 (사용자가 새로 입장하거나 나가면 streamManager 변경되므로 UserVideoComponenet도 재렌더링) */}
+          {/********* @ 2. 게임 진행 창 **********/}
+          <VStack height="80vh" justifyContent="center" alignItems="center" spacing={4}>
+            <Navbar/>
 
-      <Box p="2" height="100%">
-        <Grid templateColumns="2fr 5fr 2fr" gap={4} height="100%">
-          <GridItem>
-            <Box boxShadow="md" bg="transparent" p={4} borderRadius="md" height="40%">
-              {gamers[0] && (
-                <UserVideoComponent 
-                  streamManager={gamers[0].streamManager}
-                  my_name={gamers[0].name}
-                  key={gamers[0].name}
-                />
-              )}
-            </Box>
-            <Box boxShadow="md" bg="transparent" p={4} borderRadius="md" mt={4} height="40%">
-              {gamers[2] && (
-                <UserVideoComponent
-                  streamManager={gamers[2].streamManager}
-                  my_name={gamers[2].name}
-                  key={gamers[2].name}
-                />
-              )}
-            </Box>
-          </GridItem>
-      
-          <GridItem>
-            <div className="GameCanvas_Right">
-              {/* JANG: 경쟁 / 스파이 모드 추가 */}
+
+              {/*** @2-0. 게임 시작 전 ***/}
               {mode === undefined ? (
-                <>
-                  {/* 모드 선택하는 창 */}
-                    <Center w="100%" h="100%" justifyContent="center" bg="darkgray">
-                      <Button size='lg' width='150px'
-                              colorScheme="green"
-                              border='2px' borderColor='green' borderRadius='lg'
-                              m={2}
-                              onClick={cllickCompetitive}>
-                        경쟁 모드
-                      </Button>
-                      <Button size='lg' width='150px'
-                              colorScheme="green"
-                              border='2px' borderColor='green' borderRadius='lg' 
-                              onClick={clickSpy}>
-                        스파이 모드
-                      </Button>
-                    </Center>
+                  <>
+                    {/* 모드 선택하는 창 */}
+                      <Flex h="66%" w="100%" alignItems="center" justifyContent="center">
+                          <Box h="100%" w="15%" bg="blue.500" mr={4} > 캐릭터 둥둥 </Box>
+                          <Box h="100%" bg="blue.200" w="50%" display="flex" alignItems="center" justifyContent="center">
+                              {/* @2-1. 경쟁/스파이 모드 선택 */}
+                              <Flex justifyContent="space-between" alignContent="center" width="60%" >
+                                <Button colorScheme="red" size="lg"
+                                        onClick={cllickCompetitive}>
+                                  경쟁 모드
+                                </Button>
+                                <Button colorScheme="red" size="lg" 
+                                        onClick={clickSpy}>
+                                  스파이 모드
+                                </Button>
+                              </Flex>
+                          </Box>
+                      </Flex>
+                      
+                      {/* 게이머들 나열 */}
+                      <Flex h="33%" w="90%" justifyContent="space-between" marginBottom="20px">
+                        <Box w="23%" bg="green.200">
+                            {gamers[0] && (
+                            <UserVideoComponent 
+                              streamManager={gamers[0].streamManager}
+                              my_name={gamers[0].name}
+                              key={gamers[0].name}
+                            />
+                          )}
+                        </Box>
+                        <Box w="23%" bg="purple.200">
+                            {gamers[1] && (
+                            <UserVideoComponent
+                              streamManager={gamers[1].streamManager}
+                              my_name={gamers[1].name}
+                              key={gamers[1].name}
+                            />
+                          )}
+                        </Box>
+                        <Box w="23%" bg="yellow.200">
+                            {gamers[2] && (
+                            <UserVideoComponent
+                              streamManager={gamers[2].streamManager}
+                              my_name={gamers[2].name}
+                              key={gamers[2].name}
+                            />
+                          )}
+                        </Box>
+                        <Box w="23%" bg="pink.200">
+                            {gamers[3] && (
+                            <UserVideoComponent
+                              streamManager={gamers[3].streamManager}
+                              my_name={gamers[3].name}
+                              key={gamers[3].name}
+                            />
+                          )}  
+                        </Box>
+                    </Flex>
+                    {/*** @2-0. 게임 시작 전 ***/}
+                  </>
+                ): (
+                  mode === 'competitive' ? ( 
+                  <>
+                    {/*** @2-1. 경쟁 모드 ***/}
+                    <Grid h="10%" w="90%" templateColumns="2fr 5fr 2fr">
+                    <Flex alignItems="center" justifyContent="center">
+                        <Box bg="red.500">RED SCORE : {useStore.getState().redScoreCnt}</Box>
+                    </Flex>
+                    <Flex alignItems="center" justifyContent="center">
+                        <Box bg="yellow.500">ROUND : {round} / TIMER : {timerValue}</Box>
+                    </Flex>
+                    <Flex alignItems="center" justifyContent="center">
+                        <Box bg="blue.500">BLUE SCORE : {useStore.getState().blueScoreCnt}</Box>
+                    </Flex>
+                </Grid>
+
+                <Box h="100%" w="90%" justifyContent="center" marginBottom="20px">
+                
+                  <Grid h="100%" templateColumns="2fr 5fr 2fr">
+                    {/* 왼쪽 박스 1과 2 */}
+                    <Flex flexDirection="column" justifyContent="space-between" h="80%" w="90%" >
+                      <Box bg="green.200" h="40%" mb={1} mt={10}>
+                        {gamers[0] && (
+                            <UserVideoComponent 
+                              streamManager={gamers[0].streamManager}
+                              my_name={gamers[0].name}
+                              key={gamers[0].name}
+                            />
+                          )}
+                      </Box>
+                      <Box bg="purple.200" h="40%" mb={5} mt={1}>
+                        {gamers[2] && (
+                              <UserVideoComponent 
+                                streamManager={gamers[2].streamManager}
+                                my_name={gamers[2].name}
+                                key={gamers[2].name}
+                              />
+                            )}
+                      </Box>
+                    </Flex>
+
+                    {/* 가운데 Canvas */}
+                    <div>
+                    <Box h="80%" bg="blue.200" display="flex" alignItems="center" justifyContent="center" mb="10px">
+                      <GameCanvas/>
+                    </Box>
+                    </div>
+
+                    {/* 오른쪽 박스 3과 4 */}
+                    <Flex flexDirection="column" justifyContent="space-between" h="80%" w="90%" ml="auto" >
+                      <Box bg="green.200" h="40%" mb={1} mt={10}>
+                        {gamers[1] && (
+                            <UserVideoComponent 
+                              streamManager={gamers[1].streamManager}
+                              my_name={gamers[1].name}
+                              key={gamers[1].name}
+                            />
+                          )}
+                      </Box>
+                      <Box bg="purple.200" h="40%" mb={5} mt={1}>
+                        {gamers[3] && (
+                            <UserVideoComponent 
+                              streamManager={gamers[3].streamManager}
+                              my_name={gamers[3].name}
+                              key={gamers[3].name}
+                            />
+                          )}
+                      </Box>
+                    </Flex>
+                  </Grid>
+                </Box>
+                {/*** @2-1. 경쟁 모드 ***/}
                 </>
-              ): (
-                mode === 'competitive' ? ( 
-                // 경쟁 모드
-                  <GameCanvas />
-                ) : (
-                  // 스파이 모드
-                  <GameCanvas />
-                )
-              )}
-              {/* JANG: 경쟁/스파이 모드 */}
+                  ) : (
+                  <>
+                    {/*** @2-2. 스파이 모드 ***/}
+                    <Flex alignItems="center" justifyContent="space-between">
+                      <Box bg="red.500">TIMER</Box>
+                      <Box bg="yellow.500">제시어</Box>
+                      <Box bg="blue.500">입력칸과 제출버튼</Box>
+                    </Flex>
 
-            </div>
-          </GridItem>
-      
-          <GridItem>
-            <Box boxShadow="md" bg="transparent" p={4} borderRadius="md" height="40%">
-              {gamers[1] && (
-                <UserVideoComponent
-                  streamManager={gamers[1].streamManager}
-                  my_name={gamers[1].name}
-                  key={gamers[1].name}
-                />
-              )}
-            </Box>
-            <Box boxShadow="md" bg="transparent" p={4} borderRadius="md" mt={4} height="40%">
-              {gamers[3] && (
-                <UserVideoComponent
-                  streamManager={gamers[3].streamManager}
-                  my_name={gamers[3].name}
-                  key={gamers[3].name}
-                />
-              )}
-            </Box>
-          </GridItem>
-        </Grid>
+                    <Flex h="66%" w="100%" alignItems="center" justifyContent="center">
+                        <Box h="100%" bg="blue.200" w="50%" display="flex" alignItems="center" justifyContent="center">
+                            {/* @2-1. 경쟁/스파이 모드 선택 */}
+                            <Flex justifyContent="center" alignContent="center" width="60%" >
+                              <GameCanvas /> 
+                            </Flex>
+                        </Box>
+                    </Flex>
+                    <Flex h="33%" w="90%" justifyContent="space-between" margin="10px">
+                        <Box w="23%" h="85%" bg="green.200">
+                          {gamers[0] && (
+                            <UserVideoComponent 
+                              streamManager={gamers[0].streamManager}
+                              my_name={gamers[0].name}
+                              key={gamers[0].name}
+                            />
+                          )}
+                        </Box>
+                        <Box w="23%" h="85%" bg="purple.200">
+                          {gamers[1] && (
+                            <UserVideoComponent 
+                              streamManager={gamers[1].streamManager}
+                              my_name={gamers[1].name}
+                              key={gamers[1].name}
+                            />
+                          )}
+                        </Box>
+                        <Box w="23%" h="85%" bg="yellow.200">
+                          {gamers[2] && (
+                            <UserVideoComponent 
+                              streamManager={gamers[2].streamManager}
+                              my_name={gamers[2].name}
+                              key={gamers[2].name}
+                            />
+                          )}
+                        </Box>
+                        <Box w="23%" h="85%" bg="pink.200">
+                          {gamers[3] && (
+                            <UserVideoComponent 
+                              streamManager={gamers[3].streamManager}
+                              my_name={gamers[3].name}
+                              key={gamers[3].name}
+                            />
+                          )}
+                        </Box>
+                    </Flex>
+                    {/*** @2-2. 스파이 모드 ***/}
+                  </>
+                  )
+                )}
+
+          </VStack>
+          {/********* @ 2. 게임 진행 창 **********/}
+
+          {/* (추가) ※ 하단 우측에 아바타 버튼을 만들어서, 각각 게임에 대한 설명이 나타날 수 있도록! */}
+
+
       </Box>
-
-    </Box>
     </>
     );  
   }

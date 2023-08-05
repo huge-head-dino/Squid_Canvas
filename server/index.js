@@ -145,15 +145,15 @@ app.post("/api/sessions/:sessionId/connections", async (req, res) => {
 // ---- SANGYOON: MongoDB Conneting
 // ---- local mongodb 가져오도록 설정됨
 // NOTE: 배포 시, 주석 해제!
-// const { MONGO_URI } = process.env;
-// const mongoose = require("mongoose");
-// mongoose
-//   .connect(MONGO_URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//   .then(() => console.log("✅ MongoDB connected"))
-//   .catch(e => console.error(e));
+const { MONGO_URI } = process.env;
+const mongoose = require("mongoose");
+mongoose
+  .connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(e => console.error(e));
 
 // ---- SANGYOON: 제시어 받는 API
 const FruitWord = require("./models/fruits");

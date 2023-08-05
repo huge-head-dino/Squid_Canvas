@@ -44,6 +44,10 @@ function GameCanvas() {
       setTimeout(() => {
         setRound1Countdown(false);
         setCanSubmitAns(true);
+        
+        //SANGYOON: 스타트 버튼 누르면 제시어 생성
+        socket.emit('updateQuestWords');
+
         console.log(useStore.getState().host, myUserName);
         if ( useStore.getState().host === myUserName ) {
           console.log("b4startTimer1@@@@@@@@@@@@@@@@@@@@@");
