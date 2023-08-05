@@ -105,6 +105,168 @@ const Webcam = () => {
   }, []);
 
 
+  
+  
+  const onBeforeUnload = (event) => {
+    leaveSession();
+  };
+
+  const handleChangeSessionId = (e) => {
+    setMySessionId(e.target.value);
+  };
+
+  const handleChangeUserName = (e) => {
+    setMyUserName(e.target.value);
+  };
+
+  const joinSession = async(e) => {
+    e.preventDefault();
+    
+    const OV = new OpenVidu();
+    
+    const mySession = OV.initSession();
+    
+    mySession.on('streamCreated', (event) => {
+      var subscriber = mySession.subscribe(event.stream, undefined); 
+      // mySession.subscribe : openvidu 세션(mySession)에 대해 스트림 구독
+      
+      // MRSEO: SUBSCRIBER 로직 업데이트 -> 다시 확인!
+      // var subscribers = [...subscribers];
+      setGamers({
+        name: JSON.parse(event.stream.connection.data).clientData,
+        streamManager: subscriber,
+        // MRSEO: 08.04 상태를 true로 초기화
+        drawable: true,
+        canSeeAns: true,
+      });
+      
+      subscribers.push(subscriber);
+      setSubscribers(subscribers);
+    });
+    
+    //JANG: deleteGamer 로직 수정할 것! (아래 주석 보면서)
+    mySession.on("streamDestroyed", (event) => {
+      // var subscribers = [...subscribers];
+      
+      // 1. subscribers 배열에서 해당 subscriber 제거
+      const index = subscribers.indexOf(event.stream.streamManager);
+      if (index > -1) {
+        subscribers.splice(index, 1);
+        setSubscribers(subscribers);
+      }
+      
+      // 2. gamers 정보에서 해당 subscriber 제거
+      // JANG: 아래 useStore 쓰는 것보다, zustand로 불러와서 쓰면 바로 렌더링 됨! (확인 필요)
+      useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
+      
+      // 3. 방에 남아 있는 플레이어 수 업데이트
+      // JANG: setPlayerCount 갱신되기 전 삭제하는 시점의 플레이어 수로 갱신되는 문제 해결
+      // JANG: 일단 이거 없애니까, 지금까지 1) gamer 배열 중복 등록 방지 2) 세션 나가면 gamer 배열 갱신 성공 + 비디오 비워지고 새 유저 그 자리에
+      // useStore.getState().setPlayerCount(useStore.getState().gamers.filter((a) => event.stream.streamManager.clientData !== a.name).length);
+      
+      //JANG: 아래 로직으로 가는 게 더 좋을 것 같다! (앞서 useStore로 수정 진행하고 -> setSubscriber로 한 번에 렌더링)
+      // const deleteSubscriber = (streamManager, subscribers) => {
+        //   let index = subscribers.indexOf(streamManager, 0); 
+        
+        //   useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
+        //   useStore.getState().setPlayerCount(useStore.getState().gamers.length);
+        
+        //   if (index > -1) {
+          //     subscribers.splice(index, 1);  // subscribers 배열에서 해당 streamManager 삭제
+          //     return subscribers;
+      //   }
+      // };
+      
+      // setSubscribers(deleteSubscriber(event.stream.streamManager, subscribers));
+    });
+
+    mySession.on('exception', (exception) => {
+      console.warn(exception);
+    });
+    
+    try{
+      const token = await getToken(); 
+      await mySession.connect(token, { clientData: myUserName })
+      .then(async () => {
+        let publisher = await OV.initPublisherAsync(undefined, {
+          audioSource: undefined,
+          videoSource: undefined,
+          publishAudio: true,
+          publishVideo: true,
+          resolution: '640x480',
+          frameRate: 30,
+          insertMode: 'APPEND',
+          mirror: false,
+        });
+        
+        mySession.publish(publisher);
+        
+        setGamers({
+          name: myUserName,
+              streamManager: publisher,
+              // MRSEO: gamer의 drawable, canSeeAns 상태 변수 추가
+              // MRSEO: 08.04 상태를 true로 초기화
+              drawable: true,
+              canSeeAns: true,
+            });
+            setMyUserId(myUserName)
+            
+            // useStore.getState().setMyUserID(myUserName);
+            setPublisher(publisher);
+          })
+        }
+    catch (error) {
+      console.log('There was an error connecting to the session:', error.code, error.message);
+    }
+    
+    setSession(mySession);
+    
+  };
+  
+  // JANG: 이부분 수정해야 될 수도!
+  // 내가 나갈 때, 방에 남은 다른 유저들도 모두 게임에서 제거 되어 버림
+  // 그냥 창을 끌 때와, 직접 exit 버튼 누르는 것에 차이가 있을까?
+  const leaveSession = () => {
+    const mySession = session;
+
+    if (mySession) {
+      mySession.disconnect();
+    }
+    
+    useStore.getState().clearGamer();
+    
+    setSession(undefined);
+    setSubscribers([]);
+    setMySessionId('SessionA');
+    setMyUserName('Participant' + Math.floor(Math.random() * 100));
+    setPublisher(undefined);
+  };
+  
+  const getToken = async () => {
+    const sessionId = await createSession(mySessionId);
+    console.log('getToken' + sessionId);
+    return await createToken(sessionId);
+  };
+  
+  const createSession = async (sessionId) => {
+    console.log('create' + sessionId);
+    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
+      headers: { 'Content-Type': 'application/json', },
+    });
+    return response.data; // The sessionId (정확히는 session, sessionId)
+  };
+  
+  const createToken = async (sessionId) => {
+    console.log('createToken' + sessionId);
+    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+      headers: { 'Content-Type': 'application/json', },
+    });
+    return response.data; // The token (정확히는 connection.token)
+  };
+  
+  //JUNHO: 시작
+
+
   //MRSEO: host 설정
   useEffect(() => {
     if (gamers.length === 0) return;
@@ -133,142 +295,7 @@ const Webcam = () => {
     }
   },[ redScoreCnt, blueScoreCnt ]);
   
-
-  const onBeforeUnload = (event) => {
-    leaveSession();
-  };
-
-  const handleChangeSessionId = (e) => {
-    setMySessionId(e.target.value);
-  };
-
-  const handleChangeUserName = (e) => {
-    setMyUserName(e.target.value);
-  };
-
-  const joinSession = async(e) => {
-    e.preventDefault();
-
-    const OV = new OpenVidu();
-
-    const mySession = OV.initSession();
-
-    mySession.on('streamCreated', (event) => {
-      var subscriber = mySession.subscribe(event.stream, undefined); 
-      // mySession.subscribe : openvidu 세션(mySession)에 대해 스트림 구독
-      
-      // MRSEO: SUBSCRIBER 로직 업데이트 -> 다시 확인!
-      // var subscribers = [...subscribers];
-      setGamers({
-        name: JSON.parse(event.stream.connection.data).clientData,
-        streamManager: subscriber,
-        // MRSEO: 08.04 상태를 true로 초기화
-        drawable: true,
-        canSeeAns: true,
-      });
-      
-      subscribers.push(subscriber);
-      setSubscribers(subscribers);
-    });
-
-    //JANG: deleteGamer 로직 수정할 것! (아래 주석 보면서)
-    mySession.on("streamDestroyed", (event) => {
-      // var subscribers = [...subscribers];
-
-      // 1. subscribers 배열에서 해당 subscriber 제거
-      const index = subscribers.indexOf(event.stream.streamManager);
-      if (index > -1) {
-        subscribers.splice(index, 1);
-        setSubscribers(subscribers);
-      }
-
-      // 2. gamers 정보에서 해당 subscriber 제거
-      // JANG: 아래 useStore 쓰는 것보다, zustand로 불러와서 쓰면 바로 렌더링 됨! (확인 필요)
-      useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
-
-      // 3. 방에 남아 있는 플레이어 수 업데이트
-      // JANG: setPlayerCount 갱신되기 전 삭제하는 시점의 플레이어 수로 갱신되는 문제 해결
-      // JANG: 일단 이거 없애니까, 지금까지 1) gamer 배열 중복 등록 방지 2) 세션 나가면 gamer 배열 갱신 성공 + 비디오 비워지고 새 유저 그 자리에
-      // useStore.getState().setPlayerCount(useStore.getState().gamers.filter((a) => event.stream.streamManager.clientData !== a.name).length);
-
-      //JANG: 아래 로직으로 가는 게 더 좋을 것 같다! (앞서 useStore로 수정 진행하고 -> setSubscriber로 한 번에 렌더링)
-      // const deleteSubscriber = (streamManager, subscribers) => {
-      //   let index = subscribers.indexOf(streamManager, 0); 
-        
-      //   useStore.getState().deleteGamer(JSON.parse(event.stream.connection.data).clientData);
-      //   useStore.getState().setPlayerCount(useStore.getState().gamers.length);
-
-      //   if (index > -1) {
-      //     subscribers.splice(index, 1);  // subscribers 배열에서 해당 streamManager 삭제
-      //     return subscribers;
-      //   }
-      // };
-
-      // setSubscribers(deleteSubscriber(event.stream.streamManager, subscribers));
-    });
-
-    mySession.on('exception', (exception) => {
-      console.warn(exception);
-    });
-
-    try{
-        const token = await getToken(); 
-        await mySession.connect(token, { clientData: myUserName })
-        .then(async () => {
-            let publisher = await OV.initPublisherAsync(undefined, {
-              audioSource: undefined,
-              videoSource: undefined,
-              publishAudio: true,
-              publishVideo: true,
-              resolution: '640x480',
-              frameRate: 30,
-              insertMode: 'APPEND',
-              mirror: false,
-            });
   
-            mySession.publish(publisher);
-  
-            setGamers({
-              name: myUserName,
-              streamManager: publisher,
-              // MRSEO: gamer의 drawable, canSeeAns 상태 변수 추가
-              // MRSEO: 08.04 상태를 true로 초기화
-              drawable: true,
-              canSeeAns: true,
-            });
-            setMyUserId(myUserName)
-  
-            // useStore.getState().setMyUserID(myUserName);
-            setPublisher(publisher);
-          })
-    }
-    catch (error) {
-      console.log('There was an error connecting to the session:', error.code, error.message);
-    }
-
-    setSession(mySession);
-
-  };
-
-  // JANG: 이부분 수정해야 될 수도!
-  // 내가 나갈 때, 방에 남은 다른 유저들도 모두 게임에서 제거 되어 버림
-  // 그냥 창을 끌 때와, 직접 exit 버튼 누르는 것에 차이가 있을까?
-  const leaveSession = () => {
-    const mySession = session;
-
-    if (mySession) {
-      mySession.disconnect();
-    }
-
-    useStore.getState().clearGamer();
-
-    setSession(undefined);
-    setSubscribers([]);
-    setMySessionId('SessionA');
-    setMyUserName('Participant' + Math.floor(Math.random() * 100));
-    setPublisher(undefined);
-  };
-
   // MRSEO: 정답 제출
   const submitAns = () => {
     if ( !useStore.getState().canSubmitAns ) return;
@@ -373,27 +400,6 @@ const GameInitializer1 = () => {
   };
 
 
-  const getToken = async () => {
-    const sessionId = await createSession(mySessionId);
-    console.log('getToken' + sessionId);
-    return await createToken(sessionId);
-  };
-
-  const createSession = async (sessionId) => {
-    console.log('create' + sessionId);
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-      headers: { 'Content-Type': 'application/json', },
-    });
-    return response.data; // The sessionId (정확히는 session, sessionId)
-  };
-
-  const createToken = async (sessionId) => {
-    console.log('createToken' + sessionId);
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-      headers: { 'Content-Type': 'application/json', },
-    });
-    return response.data; // The token (정확히는 connection.token)
-  };
 
   // JANG: 나중에 유저 입장이 안정적으로 처리되면 지울 것!
   const consoleCommand = () => {
