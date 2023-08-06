@@ -1,57 +1,83 @@
 .GameCanvas_Wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    /* background-color: green; */
-    display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* background-color: green; */
+  display: flex;
 }
 
-  .GameCanvas_Right{
-    width: 100%;
-    height: 80%;
-    /* background-color: pink; */
-  }
-
-  /* JANG: 추가 */
-  .VideoBox {
-    position: relative;
-    width: 100%; /* 원하는 너비 */
-    flex: 1; /* VideoBox가 균등하게 세로로 나열되도록 설정 */
-    margin: 5px 0; /* VideoBox 간격 조정 */
-    box-sizing: border-box; /* 마진과 패딩을 박스 크기에 포함시키기 위해 설정 */
-    border: 1px solid black; /* VideoBox 구분선을 위해 설정 */  
+.GameCanvas_Right{
+  width: 100%;
+  height: 80%;
+  /* background-color: pink; */
 }
-  
+
+/* JANG: 추가 */
+.VideoBox {
+  position: relative;
+  width: 100%; /* 원하는 너비 */
+  flex: 1; /* VideoBox가 균등하게 세로로 나열되도록 설정 */
+  margin: 5px 0; /* VideoBox 간격 조정 */
+  box-sizing: border-box; /* 마진과 패딩을 박스 크기에 포함시키기 위해 설정 */
+  border: 1px solid black; /* VideoBox 구분선을 위해 설정 */  
+}
+
 .VideoBox:before {
-    content: "";
-    display: block;
-    padding-top: 75%; /* VideoBox의 세로 크기 조정 (여기서는 16:9 비율로 설정) -> JANG: 이 부분 다듬어야 함!!!*/
+  content: "";
+  display: block;
+  padding-top: 75%; /* VideoBox의 세로 크기 조정 (여기서는 16:9 비율로 설정) -> JANG: 이 부분 다듬어야 함!!!*/
 }
+
+.VideoFrame_Out {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  margin: 10px; /* VideoFrame_Out의 여백 설정 */
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+
+}
+
+.VideoFrame_In {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;    
   
-  .VideoFrame_Out {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    margin: 10px; /* VideoFrame_Out의 여백 설정 */
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-
-  }
-  
-  .VideoFrame_In {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;    
-    
-    color: #ccc;
-    border-radius: 6px;
-    border: 1px solid rgba(0, 0, 0, 0.8);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  }
+  color: #ccc;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
 
 
+/* JANG: 추가 */
+.Game_mode {
+border: 4px solid #000;
+border-radius: 20px;
+padding: 20px;
+}
+
+/* 버튼 스타일 */
+.Button_mode {
+font-size: 18px;
+font-weight: bold;
+padding: 12px 20px;
+border: 2px solid #000;
+border-radius: 8px;
+cursor: pointer;
+}
+
+.Button_mode:hover {
+background-color: #ffde00; /* 닌텐도 노란색 */
+color: #000; /* 흰색 텍스트 */
+}
+
+.Button_mode:active {
+background-color: #e60012; /* 닌텐도 빨간색 */
+color: #fff; /* 흰색 텍스트 */
+}

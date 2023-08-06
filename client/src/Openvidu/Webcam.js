@@ -20,20 +20,33 @@ import socket from './socket';
 
 import { GameMusic } from '../Game/audio';
 
-// JANG: Chakra UI V
-import { 
-  Button, ButtonGroup, Box,
+// JANG: 08.06 - Chakra UI 추가
+import {
+  Button,
+  ButtonGroup,
+  Box,
   Center,
-  FormLabel, Flex,
+  FormLabel,
+  Flex,
   Heading,
   Input,
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalCloseButton,
-  Spacer, 
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalCloseButton,
+  Spacer,
   useDisclosure, // CHAKRA 제공 함수
   Grid,
   VStack,
   ModalBody,
-} from '@chakra-ui/react'
+  Img,
+} from "@chakra-ui/react";
+// 버튼 애니메이션
+import { keyframes } from "@emotion/react";
+// CSS
+import "./Webcam.css";
 
 
 // NOTE: 배포 전 확인!
@@ -485,114 +498,175 @@ const GameInitializer1 = () => {
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }
 
-  //JANG: CHAKRA UI 제공 함수function
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  //JANG: 08.06 - Chakra UI, 애니메이션 효과
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  // 버튼 애니메이션 (bounce)
+  const bounce = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+  `;
+  // 마우스 설정 (위치와 상태 관리 및 처리)
+  const [xy, setXy] = useState({ x: 0, y: 0 });
+  const [pointerSize, setPointerSize] = useState(40);
+  const xyHandler = (e) => {
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    setXy({ x: mouseX, y: mouseY });
+  };
 
   return (
+    // JANG: 08.06 - 마우스 캐릭터
+    <div
+    onMouseMove={xyHandler}
+    onMouseDown={() => {
+      setPointerSize(50);
+    }}
+    onMouseUp={() => {
+      setPointerSize(40);
+    }}
+    style={{ width: "100vw", height: "100vh", cursor: "none" }}
+  >
+    <Img
+      src={`${process.env.PUBLIC_URL}/resources/images/pointer.png`}
+      alt="pointer"
+      style={{
+        background: "transparent", // 배경 투명
+        transform: `translate(${xy.x}px, ${xy.y}px)`, // 마우스 위치에 따라 이미지 위치 변경
+        position: "absolute", // 절대 위치
+        width: pointerSize, // 이미지 크기
+        height: pointerSize, // 이미지 크기
+        left: -pointerSize / 2, // 이미지 크기의 절반만큼 왼쪽으로 이동
+        top: -pointerSize / 2, // 이미지 크기의 절반만큼 위로 이동
+        zIndex: "1000",
+        pointerEvents: "none",
+      }}
+    />
 
-    <>
+    {session === undefined ? (
+            <Box textAlign="center" className="Home_Screen">
+              <Grid minH="100vh" p={3}>
+                <VStack
+                  spacing={8}
+                  justifyContent="center"
+                  alignItems="center"
+                  height="100%"
+                >
+                  {/* 수직으로 요소들을 정렬, 자식 요소들 사이의 간격 8, 수평/수직으로 가운데 정렬, 부모의 요소 높이의 100%  */}
 
-      {session === undefined ? (
+                  <div>
+                    <Flex alignContent="center" justifyContent="center" h="100%">
+                      <VStack spacing={10}>
+                        {/* JANG: 로고 선정해서 넣기 */}
+                        {/* <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      bg="orange"
+                      color="white"
+                      w="60vw"
+                      h="40vh"
+                      borderRadius="md"
+                      p={4}
+                    >
+                      <div class="Home_Logo" >
+                      @ 1-1. 홈 화면 - 로고
+                      </div>
+                    </Flex> */}
+                        <h1
+                          style={{
+                            fontWeight: 800,
+                            fontSize: "60px",
+                            marginBottom: "40px",
+                          }}
+                        >
+                          Jungle Canvas
+                        </h1>
+                        <Button
+                          colorScheme="teal"
+                          borderRadius="md"
+                          w="200px"
+                          h="100px"
+                          onClick={onOpen}
+                          className="Home_Button"
+                        >
+                          {/* @ 1-1. 홈 화면 - JOIN 버튼 (이미지로 넣기! + 움직임) */}
+                          JOIN GAME
+                        </Button>
+                        
 
-      <Box textAlign="center" className="1_Box">
-      <Grid minH="100vh" p={3} className="2_Grid">
+                        {/* @ 1-2. 닉네임, 방번호 입력 모달창 */}
+                        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+                          <ModalOverlay />
+                          <ModalContent className="JoinForm">
+                            <ModalHeader>
+                              <h2 style={{ textAlign: "center" }}>게임 참가</h2>
+                            </ModalHeader>
+                            <ModalCloseButton />
 
-        <VStack spacing={8} className="3_VStack" justifyContent="center" alignItems="center" height="100%">
-          {/* 수직으로 요소들을 정렬, 자식 요소들 사이의 간격 8, 수평/수직으로 가운데 정렬, 부모의 요소 높이의 100%  */}
+                            <form onSubmit={joinSession}>
+                              <ModalBody pb={6}>
+                                <div style={{ width: "75%", margin: "0 auto" }}>
+                                  <FormLabel>닉네임</FormLabel>
+                                  <Input
+                                    type="text"
+                                    id="userName"
+                                    value={myUserName}
+                                    onChange={handleChangeUserName}
+                                    required
+                                    style={{ marginBottom: "10px" }}
+                                  />
+                                  <FormLabel>ROOM 넘버</FormLabel>
+                                  <Input
+                                    type="text"
+                                    id="sessionId"
+                                    value={mySessionId}
+                                    onChange={handleChangeSessionId}
+                                    required
+                                  />
+                                </div>
+                              </ModalBody>
 
-          <div className="Home_Screen">
-            <Flex alignContent="center" justifyContent="center" h="100%">
-              <VStack spacing={10}>
+                              <ModalFooter>
+                                <Button
+                                  onClick={onClose}
+                                  colorScheme="teal"
+                                  size="md"
+                                  type="submit"
+                                >
+                                  입장하기
+                                </Button>
+                              </ModalFooter>
+                            </form>
+                          </ModalContent>
+                        </Modal>
+                      </VStack>
+                    </Flex>
+                  </div>
+                </VStack>
+              </Grid>
+            </Box>
+          ) : null}
 
+        {session !== undefined ? (
+          <div className="Game_Screen">
+            {/* MRSEO: useStore.getState()지움 */}
+            {phase === "Ready" || phase === "Game1" || phase === "Game2" ? (
+              // JANG: 게임 대기방으로 만들기!
+              <Box textAlign="center" height="100vh">
                 <Flex
+                  height="80%"
+                  flexDirection="column"
                   alignItems="center"
                   justifyContent="center"
-                  bg="orange"
-                  color="white"
-                  w="60vw"
-                  h="40vh"
-                  borderRadius="md"
-                  p={4}
                 >
-                  @ 1-1. 홈 화면 - 로고
-                </Flex>
-                
-                <Box borderRadius='md' w="200px" h="100px" onClick={onOpen}> 
-                  {/* @ 1-1. 홈 화면 - JOIN 버튼 (이미지로 넣기! + 움직임) */}
-                  JOIN GAME
-                </Box>
-          
-
-
-              {/* @ 1-2. 닉네임, 방번호 입력 모달창 */}
-              <Modal isOpen={isOpen} onClose={onClose} isCentered>
-                  <ModalOverlay /> 
-                  <ModalContent className="JoinForm"> 
-                      <ModalHeader><h2 style={{textAlign: 'center'}}>게임 참가</h2></ModalHeader>
-                      <ModalCloseButton />
-
-                      <form onSubmit={joinSession}>
-
-                          <ModalBody pb={6}>
-                          <div style={{width: '75%', margin: '0 auto'}}>
-                              <FormLabel>닉네임</FormLabel>
-                              <Input
-                                  type="text"
-                                  id="userName"
-                                  value={myUserName}
-                                  onChange={handleChangeUserName}
-                                  required
-                                  style={{marginBottom: "10px"}}
-                              />
-                              <FormLabel>ROOM 넘버</FormLabel>
-                              <Input 
-                                  type="text"
-                                  id="sessionId"
-                                  value={mySessionId}
-                                  onChange={handleChangeSessionId}
-                                  required 
-                              />
-                          </div>
-                          </ModalBody>
-
-                          <ModalFooter>
-                          <Button onClick={onClose} colorScheme='teal' size='md' type="submit">
-                              입장하기
-                          </Button>
-                          </ModalFooter>
-
-                      </form>
-
-                  </ModalContent>
-              </Modal>      
-
-              </VStack>
-            </Flex>
-          </div>
-
-        </VStack>
-
-      </Grid>
-      </Box>
-
-
-      ) : null}
-
-      {session !== undefined ? (
-            <>
-            {/* MRSEO: useStore.getState()지움 */}
-            {phase === 'Ready' || phase === 'Game1' || phase === 'Game2'? (
-              // JANG: 게임 대기방으로 만들기!
-              <div className="GameForm">
-              
-              <Flex flexDirection="column" height="100vh">
-                <Flex flex="8">
                   {/* JANG: 게임 대기방 */}
                   <SessionContext.Provider value={{ mySessionId, myUserName }}>
                     <BasicUI />
                   </SessionContext.Provider>
                 </Flex>
 
+                {/* JANG: 08.06 - ★★★ 뭐가 또..추가된 거죠..? (비율 조정하기 + 게임 시작하면 보이도록) */}
                 <Flex flex="1.7" minWidth='max-content' alignItems='center' justifyContent='center' gap='2'>
                   
                   { (round === 1 && team === 'blue' && gamers[3].name === myUserName) || (round === 2 && team === 'red' && gamers[2].name === myUserName) ? (
@@ -633,46 +707,40 @@ const GameInitializer1 = () => {
                     </>
                   ):null}
                 </Flex>
+                {/* JANG: 08.06 - ★★★ 여기까지 재검토 */}
 
-                <Flex flex="0.3" minWidth='max-content' alignItems='center' gap='2'>
-                  <Box p='2'>
-                    <Heading size='md' color='white'>CopyRight@RED_TEAM_3</Heading>
-                  </Box>
-                  <Spacer />
-                  <ButtonGroup gap='2' mb="2">
+
+                <Flex height="5%" alignItems="flex-end" justifyContent="flex-end">
+                {/* <Spacer /> */}
+                <ButtonGroup gap="2" mb="2">
+                  {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
+                  {myUserName === host && gamers?.length === 4 ? (
                     <Button
-                      colorScheme='red'
-                      size='lg'
-                      onClick={leaveSession}
+                      colorScheme="Messenger"
+                      size="lg"
+                      onClick={handleGameStart}
+                      marginRight="10px"
                     >
-                      Exit
+                      Start
                     </Button>
-                    {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
-                    {myUserName === host && gamers?.length === 4 ? (
-                      <Button
-                        colorScheme='Messenger'
-                        size='lg'     
-                        onClick={handleGameStart}
-                        marginRight="10px"
-                      >
-                        Start
-                      </Button>
-                    ):null}
-                    <Spacer />
-                    <Spacer />
-                  </ButtonGroup>
-                </Flex>
+                  ) : null}
+                  <Button
+                    colorScheme="red"
+                    size="lg"
+                    onClick={leaveSession}
+                    marginRight="10px"
+                    _hover={{ transform: "scale(1.1)" }} // 마우스 올리면 확대
+                  >
+                    Exit
+                  </Button>
+                </ButtonGroup>
               </Flex>
-
-              </div>
-              ) : null }
-
-          </>
+            </Box>
           ) : null}
-
-    </>
-
-    )
-}
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 export default Webcam;

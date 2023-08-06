@@ -6,6 +6,8 @@ import * as serviceWorker from './[X] Lib_Chakra/serviceWorker';
 // Chakra UI
 import { ChakraProvider } from '@chakra-ui/react'
 import { ColorModeScript } from '@chakra-ui/react';
+import theme from './[X] Lib_Chakra/theme'
+
 
 // JANG: App 컴포넌트 변경
 import Webcam from './Openvidu/Webcam';
@@ -16,9 +18,10 @@ const root = ReactDOM.createRoot(container);
 
 root.render(
   <StrictMode>
-    <ChakraProvider>
-      <ColorModeScript />
-      <Webcam />
+    <ChakraProvider theme={theme}>
+      {/* JANG: 08.06 - 다크 모드 해결이 안 됨.. */}
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        <Webcam />
     </ChakraProvider>
   </StrictMode>
 );

@@ -216,6 +216,8 @@ a:hover .demo-logo {
 	width: 50%;
 	cursor: pointer;
 	object-fit: cover;
+	/* JANG: 08.06 - 아래 거 유효한 속성이 아님..? */
+	/* object-fit: f; */
 	height: 180px;
 }
 

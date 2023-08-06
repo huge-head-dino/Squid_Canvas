@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+// JANG: 08.06 - css 추가
+import './OvVideo.css';
 
 export default class OpenViduVideoComponent extends Component {
 

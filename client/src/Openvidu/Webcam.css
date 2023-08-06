@@ -1,57 +1,46 @@
-.Wrapper {
-	padding: 0;
-	margin: 0;
+/* 1. 홈 화면 + 접속 */
+.Home_Screen {
+	/* JANG: 홈 화면 이미지 변경하기 */
+	background-image: url("../../public/resources/images/home3-bg.jpg");
+	height: 100vh;
 	width: 100vw;
-	height: 100%;
-
-	/* background-image: url("../Images/bg1.jpg"); */
 	background-size: cover;
 	background-position: center;
-
-}
-
-/* 1) 게임 참가 전 창 */
-
-.BeforeGame {
-	background-image: url("../../public/resources/images/home-bg.png");
-	height: 100vh;
+  }
+  
+  .Home_Button {
+	background-repeat: no-repeat;
 	background-size: cover;
-	background-position: center;
-	
-}
-
-.JoinForm {
 	text-align: center;
-
-
-}
-
-/* .JoinForm_Header {
-
-} */
-
-.JoinForm_Button {
-	text-align: center;
-	margin-top: 10px;
-}
-
-/* 2) 게임 진행 창 */
-.GameForm{
-	background-image: url("../../public/resources/images/home-bg.png");
+	font-weight: bold;
+	animation: bounce 1s ease infinite;
+  }
+  button {
+	cursor: none !important;
+  }
+  @keyframes bounce {
+	0% {
+	  transform: scale(1);
+	}
+	50% {
+	  transform: scale(1.1);
+	}
+	100% {
+	  transform: scale(1);
+	}
+  }
+  
+  /* 2. 게임 참가 */
+  .Game_Screen {
+	/* JANG: 게임 창 이미지 변경하기 */
+	background-image: url("../../public/resources/images/home3-bg.jpg");
 	height: 100vh;
-	overflow: hidden;
+	width: 100vw;
 	background-size: cover;
 	background-position: center;
-}
-
-.GameForm_Header {
-
-}
-
-.GameForm_Button {
-
-}
-
-.GameForm_Body {
-
-}
+  }
+  
+  .JoinForm {
+	text-align: center;
+  }
+  

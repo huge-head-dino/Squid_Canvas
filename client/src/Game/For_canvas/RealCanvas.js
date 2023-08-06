@@ -63,7 +63,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         canvas.height = height * 2;
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
-        canvas.style.boxShadow = "10px 10px 5px grey";
+        // JANG: 08.06 - 캔버스 그림자 효과 제거함..!
+        // canvas.style.boxShadow = "10px 10px 5px grey";
 
         //JUNHO: canvas 크기 조정 끝
 

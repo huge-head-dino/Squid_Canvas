@@ -9,6 +9,8 @@ import SessionContext from '../../Openvidu/SessionContext'
 import './GameCanvas.css'
 import useStore from "../../store";
 
+// JANG: 08.06 - chakra-ui 추가 + react-bootstrap 변경할 것!
+import {Box} from '@chakra-ui/react'
 import {Button, Col} from 'react-bootstrap'
 
 
@@ -253,6 +255,8 @@ function GameCanvas() {
 
   return (
     <>
+      {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
+
       <Col>
       <div className="RealCanvas_3">
         <div className='RealCanvas_2' style={{ height: "100%"}}>
@@ -296,12 +300,16 @@ function GameCanvas() {
                   < Countdown />
                   </>
               ): null}
-               </div>
+            </div>
 
           </div>
         </div>
       </div>
-      </Col>
+    </Col>
+    
+    {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
+
+
     </>
   );
 }
