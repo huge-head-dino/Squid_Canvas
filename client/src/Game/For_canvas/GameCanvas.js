@@ -184,7 +184,7 @@ function GameCanvas() {
   const submitAns = () => {
     if ( !useStore.getState().canSubmitAns ) return;
     if ( round === 1 ){
-      if ( ans === '사과' ){
+      if ( ans === suggestWord ){
         
         setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
         setDrawable(!gamers[0].drawable, gamers[0].name);
@@ -196,10 +196,11 @@ function GameCanvas() {
 
         socket.emit('sendScore', team);
         socket.emit('req_changeSolver', 'red')
+        socket.emit('updateQuestWords')
       }
     }
     if ( round === 2 ){
-      if ( ans === '배' ){
+      if ( ans === suggestWord ){
 
         setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
         setDrawable(!gamers[1].drawable, gamers[1].name);
@@ -210,7 +211,8 @@ function GameCanvas() {
         setBlueScoreCnt(blueScoreCnt + 1);
 
         socket.emit('sendScore', team);
-        socket.emit('req_changeSolver', 'blue');  
+        socket.emit('req_changeSolver', 'blue');
+        socket.emit('updateQuestWords')
       }
     }
       setAns('');
@@ -374,7 +376,7 @@ function GameCanvas() {
         <div className='RealCanvas_2' style={{ height: "100%"}}>
           <RealCanvas mySessionId = { mySessionId } myUserName = {myUserName}/>
           {/* SANGYOON: 제시어 */}
-          <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>
+          {!iAmSolverRender && <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>}
         </div>
         <div className='ButtonZone'>
           {phase === 'Game1' || phase === 'Game2' ? (

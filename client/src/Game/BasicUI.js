@@ -128,7 +128,7 @@ function BasicUI() {
     setMode
   } = useStore();
   const cllickCompetitive = () => {
-    setMode('competitive');
+    setMode('competition');
   }
   const clickSpy = () => {
     setMode('spy');

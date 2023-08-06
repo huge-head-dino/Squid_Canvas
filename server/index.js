@@ -115,14 +115,18 @@ io.on('connection', (socket) => {
     });
   });
 
+  // SANGYOON: 2. Webcam.js에서 PASS 수신(on)
+  socket.on('updateQuestWords', () => {
+    updateQuestWords();
+  })
   // ------------------------ JUNHO: 스파이모드 시작 ------------------------
   //TODO: 타이머 만들기
-  
+
   const spyPlayers = [0, 1, 2, 3];
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; // swap
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // swap
     }
   }
 
@@ -135,7 +139,7 @@ io.on('connection', (socket) => {
     console.log(spyPlayers);
     io.emit('spy1GO', spyPlayers[0]);
   });
-  
+
   //1번 타이머 시작
   socket.on('startSpyTimer1', (spyPlayer1) => {
     console.log('startSpyTimer1');
@@ -158,7 +162,8 @@ io.on('connection', (socket) => {
     console.log('startSpyTimer2');
     spyTimerModule.startTimer(io, 10, () => {
       console.log('2번 타이머 종료');
-      io.emit('spyTimer2End', spyPlayer2);});
+      io.emit('spyTimer2End', spyPlayer2);
+    });
   });
 
   //3번 대기
@@ -173,7 +178,8 @@ io.on('connection', (socket) => {
     console.log('startSpyTimer3');
     spyTimerModule.startTimer(io, 10, () => {
       console.log('3번 타이머 종료');
-      io.emit('spyTimer3End', spyPlayer3);});
+      io.emit('spyTimer3End', spyPlayer3);
+    });
 
   });
 
@@ -208,10 +214,6 @@ io.on('connection', (socket) => {
 
   // });
 
-  // SANGYOON: 2. Webcam.js에서 PASS 수신(on)
-  socket.on('updateQuestWords', () => {
-    updateQuestWords();
-  })
 });
 
 // ---- Server Application Connect
