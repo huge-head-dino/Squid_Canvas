@@ -136,23 +136,24 @@ function GameCanvas() {
       setSpyTimerValue(value);
     };
 
-    socket.on('spy1GO', () => {
+    socket.on('spy1GO', (spyPlayer1) => {
       console.log('spy1GO');
+      console.log("spyPlayerIndex: "+ spyPlayer1);
       setSpyCountdown(true);
       setTimeout(() => {
         setSpyCountdown(false);
-        if ( gamers[0].name === myUserName ) {
+        if ( gamers[spyPlayer1].name === myUserName ) {
           setSpyPainter(true);
         }
         if (host === myUserName) {
-          socket.emit('startSpyTimer1');
+          socket.emit('startSpyTimer1', spyPlayer1);
         }
       }, 5000);
     });
 
-    socket.on('spyTimer1End', () => {
+    socket.on('spyTimer1End', (spyPlayer1) => {
       console.log('spyTimer1End');
-      if ( gamers[0].name === myUserName ) {
+      if ( gamers[spyPlayer1].name === myUserName ) {
         setSpyPainter(false);
       }
       if (host === myUserName) {
@@ -160,23 +161,23 @@ function GameCanvas() {
       }
     });
 
-    socket.on('spy2GO', () => {
+    socket.on('spy2GO', (spyPlayer2) => {
       console.log('spy2GO');
       setSpyCountdown(true);
       setTimeout(() => {
         setSpyCountdown(false);
-        if ( gamers[1].name === myUserName ) {
+        if ( gamers[spyPlayer2].name === myUserName ) {
           setSpyPainter(true);
         }
         if (host === myUserName) {
-          socket.emit('startSpyTimer2');
+          socket.emit('startSpyTimer2', spyPlayer2);
         }
       }, 5000);
     });
 
-    socket.on('spyTimer2End', () => {
+    socket.on('spyTimer2End', (spyPlayer2) => {
       console.log('spyTimer2End');
-      if ( gamers[1].name === myUserName ) {
+      if ( gamers[spyPlayer2].name === myUserName ) {
         setSpyPainter(false);
       }
       if (host === myUserName) {
@@ -184,23 +185,23 @@ function GameCanvas() {
       }
     });
 
-    socket.on('spy3GO', () => {
+    socket.on('spy3GO', (spyPlayer3) => {
       console.log('spy3GO');
       setSpyCountdown(true);
       setTimeout(() => {
         setSpyCountdown(false);
-        if ( gamers[2].name === myUserName ) {
+        if ( gamers[spyPlayer3].name === myUserName ) {
           setSpyPainter(true);
         }
         if (host === myUserName) {
-          socket.emit('startSpyTimer3');
+          socket.emit('startSpyTimer3', spyPlayer3);
         }
       }, 5000);
     });
 
-    socket.on('spyTimer3End', () => {
+    socket.on('spyTimer3End', (spyPlayer3) => {
       console.log('spyTimer3End');
-      if ( gamers[2].name === myUserName ) {
+      if ( gamers[spyPlayer3].name === myUserName ) {
         setSpyPainter(false);
       }
       if (host === myUserName) {
@@ -208,22 +209,22 @@ function GameCanvas() {
       }
     });
 
-    socket.on('spy4GO', () => {
+    socket.on('spy4GO', (spyPlayer4) => {
       console.log('spy4GO');
       setSpyCountdown(true);
       setTimeout(() => {
-        if ( gamers[3].name === myUserName ) {
+        if ( gamers[spyPlayer4].name === myUserName ) {
           setSpyPainter(true);
         }
         setSpyCountdown(false);
         if (host === myUserName) {
-          socket.emit('startSpyTimer4');
+          socket.emit('startSpyTimer4', spyPlayer4);
         }
       }, 5000);
     });
 
-    socket.on('spyTimer4End', () => {
-      if ( gamers[3].name === myUserName ) {
+    socket.on('spyTimer4End', (spyPlayer4) => {
+      if ( gamers[spyPlayer4].name === myUserName ) {
         setSpyPainter(false);
       }
       console.log('모든 과정이 종료되었습니다.');

@@ -118,66 +118,78 @@ io.on('connection', (socket) => {
   // ------------------------ JUNHO: 스파이모드 시작 ------------------------
   //TODO: 타이머 만들기
   
+  const spyPlayers = [0, 1, 2, 3];
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // swap
+    }
+  }
+
   //1번 대기
   socket.on('spy1Ready', () => {
     console.log('spy1Ready');
-    io.emit('spy1GO');
+    console.log(spyPlayers);
+    //플레이어 순서 섞기
+    shuffleArray(spyPlayers);
+    console.log(spyPlayers);
+    io.emit('spy1GO', spyPlayers[0]);
   });
   
   //1번 타이머 시작
-  socket.on('startSpyTimer1', () => {
+  socket.on('startSpyTimer1', (spyPlayer1) => {
     console.log('startSpyTimer1');
     spyTimerModule.startTimer(io, 10, () => {
       console.log('1번 타이머 종료');
-      io.emit('spyTimer1End');});
+      io.emit('spyTimer1End', spyPlayer1)
+    });
   });
 
   //2번 대기
   socket.on('spy2Ready', () => {
     console.log('spy2Ready');
-    io.emit('spy2GO');
+    // console.log(spyPlayers);
+    io.emit('spy2GO', spyPlayers[1]);
   });
 
 
   //2번 타이머 시작
-  socket.on('startSpyTimer2', () => {
+  socket.on('startSpyTimer2', (spyPlayer2) => {
     console.log('startSpyTimer2');
     spyTimerModule.startTimer(io, 10, () => {
       console.log('2번 타이머 종료');
-      io.emit('spyTimer2End');});
-
+      io.emit('spyTimer2End', spyPlayer2);});
   });
 
   //3번 대기
   socket.on('spy3Ready', () => {
     console.log('spy3Ready');
-    io.emit('spy3GO');
+    io.emit('spy3GO', spyPlayers[2]);
   });
 
 
   //3번 타이머 시작
-  socket.on('startSpyTimer3', () => {
+  socket.on('startSpyTimer3', (spyPlayer3) => {
     console.log('startSpyTimer3');
     spyTimerModule.startTimer(io, 10, () => {
       console.log('3번 타이머 종료');
-      io.emit('spyTimer3End');});
+      io.emit('spyTimer3End', spyPlayer3);});
 
   });
 
   //4번 대기
   socket.on('spy4Ready', () => {
     console.log('spy4Ready');
-    io.emit('spy4GO');
+    io.emit('spy4GO', spyPlayers[3]);
   });
 
 
   //4번 타이머 시작
-  socket.on('startSpyTimer4', () => {
+  socket.on('startSpyTimer4', (spyPlayer4) => {
     console.log('startSpyTimer4');
     spyTimerModule.startTimer(io, 10, () => {
       console.log('4번 타이머 종료');
-      io.emit('spyTimer4End');});
-
+      io.emit('spyTimer4End', spyPlayer4);
   });
 
   // ------------------------ JUNHO: 스파이모드 끝 --------------------
