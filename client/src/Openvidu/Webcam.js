@@ -59,7 +59,6 @@ const Webcam = () => {
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
-  const [iAmSolverRender, setIAmSolverRender] = useState(false);
 
   // MRSEO: ZUSTAND 상태 변수 선언
   const { 
@@ -308,16 +307,7 @@ const Webcam = () => {
     }
   }, [phase]);  // `phase`가 변경될 때 마다 이 useEffect는 실행됩니다.
 
-  useEffect(() => {
-    if (round === 1 && team === 'red' ){
-      console.log("redteam iAmSolverRender@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      setIAmSolverRender(!iAmSolverRender)
-    } else if (round === 2 && team === 'blue' ){
-      console.log("blueteam iAmSolverRender@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-      setIAmSolverRender(!iAmSolverRender)
-    }
-  },[iAmSolver]);
-
+  
 
   useEffect(() => {
     const settingHandler = () => {
@@ -337,31 +327,16 @@ const Webcam = () => {
         socket.emit('round1Start');
       }
     }
-
+    
     socket.on('setting', settingHandler );
-
+    
     return () => {
       socket.off('setting', settingHandler );
     }
-
+    
   },[socket, gamers]);
 
-  useEffect(() => {
-
-    const res_changeSolverHandler = (res_team) => {
-      console.log('res_changeSolver_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-      if ( res_team === team ){
-        setIAmSolver(!iAmSolver);
-        setIAmPainter(!iAmPainter);
-      } 
-    }
-
-    socket.on('res_changeSolver', res_changeSolverHandler);
-
-    return () => {
-      socket.off('res_changeSolver', res_changeSolverHandler);
-    }
-  },[socket, team, iAmSolver]);
+  
 
   const handleGameStart = () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
@@ -395,7 +370,6 @@ const GameInitializer1 = () => {
         setIAmPainter(false)
       }
       if ( gamers[2].name === myUserName ) {
-        setIAmSolverRender(true);
         setIAmSolver(true);
       }
       console.log("round1 초기화 실행 완료!!");
@@ -428,7 +402,6 @@ const GameInitializer1 = () => {
         }
         
         if ( gamers[3].name === myUserName ) {
-          setIAmSolverRender(true);
           setIAmSolver(true)
         }
         console.log("round2 초기화 실행 완료!!");
@@ -436,41 +409,7 @@ const GameInitializer1 = () => {
     // console.log(gamers);
   }
 
-    // MRSEO: 정답 제출
-    const submitAns = () => {
-      if ( !useStore.getState().canSubmitAns ) return;
-      if ( round === 1 ){
-        if ( ans === '사과' ){
-          
-          setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
-          setDrawable(!gamers[0].drawable, gamers[0].name);
-  
-          setCanSeeAns(!gamers[2].canSeeAns, gamers[2].name);
-          setDrawable(!gamers[2].drawable, gamers[2].name);
-  
-          setRedScoreCnt(redScoreCnt + 1);
-  
-          socket.emit('sendScore', team);
-          socket.emit('req_changeSolver', 'red')
-        }
-      }
-      if ( round === 2 ){
-        if ( ans === '배' ){
-  
-          setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
-          setDrawable(!gamers[1].drawable, gamers[1].name);
-  
-          setCanSeeAns(!gamers[3].canSeeAns, gamers[3].name);
-          setDrawable(!gamers[3].drawable, gamers[3].name);
-  
-          setBlueScoreCnt(blueScoreCnt + 1);
-  
-          socket.emit('sendScore', team);
-          socket.emit('req_changeSolver', 'blue');  
-        }
-      }
-        setAns('');
-    };
+
 
     const hacking = () => {
       console.log("hacking@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -491,7 +430,6 @@ const GameInitializer1 = () => {
     console.log("round : ", round);
     console.log("team : ", team);
     console.log("iAmSolver : ", iAmSolver);
-    console.log("iAmSolverRender : ", iAmSolverRender);
     console.log("iAmPainter : ", iAmPainter);
     console.log("spyPainter : ", spyPainter);
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
@@ -693,19 +631,7 @@ const GameInitializer1 = () => {
                   {/* JANG: 나중에 확인하고 버릴 거! */}
                   <Button onClick={consoleCommand}>test</Button>
 
-                  {phase === 'Game1' || phase === 'Game2' ? (
-                        <>
-                        {/* MRSEO: 조건 수정 */}
-                        { ( round === 1 && team === 'red' && iAmSolverRender === true) || ( round === 2 && team === 'blue' && iAmSolverRender === true ) ?
-                         (
-                          // JANG: TODO - 정답 입력창 css 수정
-                          <div>
-                        <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
-                        <Button colorScheme='blue' onClick={submitAns}>제출</Button>
-                      </div> 
-                        ):null}
-                    </>
-                  ):null}
+                  
                 </Flex>
                 {/* JANG: 08.06 - ★★★ 여기까지 재검토 */}
 

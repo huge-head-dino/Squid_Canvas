@@ -10,7 +10,9 @@ import './GameCanvas.css'
 import useStore from "../../store";
 
 // JANG: 08.06 - chakra-ui 추가 + react-bootstrap 변경할 것!
-import {Box} from '@chakra-ui/react'
+import {Box, 
+  Input,
+} from '@chakra-ui/react'
 import {Button, Col} from 'react-bootstrap'
 
 
@@ -26,15 +28,41 @@ function GameCanvas() {
     host,
     setSpyPainter,
     setIAmSpy,
+    round,
+    team,
+    iAmSolver,
+    setIAmPainter,
+    iAmPainter,
+    setCanSeeAns,
+    setDrawable,
+    phase,
+    setIAmSolver,
+    ans,
+    setRedScoreCnt,
+    setBlueScoreCnt,
+    setAns,
   } = useStore(
     state => ({
       setCanSubmitAns: state.setCanSubmitAns,
       gamers: state.gamers,
-      redScoreCnt: state.redScoreCnt,
+      redScoreCnt: state.redScoreCnt, 
       blueScoreCnt: state.blueScoreCnt,
       host: state.host,
       setSpyPainter: state.setSpyPainter,
       setIAmSpy: state.setIAmSpy,
+      round: state.round,
+      team: state.team,
+      iAmSolver: state.iAmSolver,
+      setIAmPainter: state.setIAmPainter,
+      iAmPainter: state.iAmPainter,
+      setCanSeeAns: state.setCanSeeAns,
+      setDrawable: state.setDrawable,
+      phase: state.phase,
+      setIAmSolver: state.setIAmSolver,
+      ans: state.ans,
+      setRedScoreCnt: state.setRedScoreCnt,
+      setBlueScoreCnt: state.setBlueScoreCnt,
+      setAns: state.setAns,
     })
   )
 
@@ -43,6 +71,9 @@ function GameCanvas() {
     const [round2Countdown, setRound2Countdown] = useState(false);
     //JUNHO: (1)
     const [spyCountdown, setSpyCountdown] = useState(false);
+    // MRSEO: 정답 제출 가능 여부
+    const [iAmSolverRender, setIAmSolverRender] = useState(false);
+
 
 
    // MRSEO:
@@ -107,6 +138,85 @@ function GameCanvas() {
       socket.off('round2End', round2EndHandler);
     }
   }, [socket]);
+
+  // MRSEO: 정답 제출 가능 여부 시작
+  useEffect(() => {
+    if ( phase === 'Game1' ) {
+      if ( gamers[2].name === myUserName ){
+        setIAmSolverRender(true);
+      }
+    } else if ( phase === 'Game2' ) {
+      if ( gamers[3].name === myUserName ){
+        setIAmSolverRender(true);
+      }
+    }
+  },[phase]);
+
+  useEffect(() => {
+    if (round === 1 && team === 'red' ){
+      console.log("redteam iAmSolverRender@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      setIAmSolverRender(!iAmSolverRender)
+    } else if (round === 2 && team === 'blue' ){
+      console.log("blueteam iAmSolverRender@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      setIAmSolverRender(!iAmSolverRender)
+    }
+  },[iAmSolver]);
+
+
+  useEffect(() => {
+
+    const res_changeSolverHandler = (res_team) => {
+      console.log('res_changeSolver_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      if ( res_team === team ){
+        setIAmSolver(!iAmSolver);
+        setIAmPainter(!iAmPainter);
+      } 
+    }
+
+    socket.on('res_changeSolver', res_changeSolverHandler);
+
+    return () => {
+      socket.off('res_changeSolver', res_changeSolverHandler);
+    }
+  },[socket, team, iAmSolver]);
+
+  // MRSEO: 정답 제출
+  const submitAns = () => {
+    if ( !useStore.getState().canSubmitAns ) return;
+    if ( round === 1 ){
+      if ( ans === '사과' ){
+        
+        setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
+        setDrawable(!gamers[0].drawable, gamers[0].name);
+
+        setCanSeeAns(!gamers[2].canSeeAns, gamers[2].name);
+        setDrawable(!gamers[2].drawable, gamers[2].name);
+
+        setRedScoreCnt(redScoreCnt + 1);
+
+        socket.emit('sendScore', team);
+        socket.emit('req_changeSolver', 'red')
+      }
+    }
+    if ( round === 2 ){
+      if ( ans === '배' ){
+
+        setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
+        setDrawable(!gamers[1].drawable, gamers[1].name);
+
+        setCanSeeAns(!gamers[3].canSeeAns, gamers[3].name);
+        setDrawable(!gamers[3].drawable, gamers[3].name);
+
+        setBlueScoreCnt(blueScoreCnt + 1);
+
+        socket.emit('sendScore', team);
+        socket.emit('req_changeSolver', 'blue');  
+      }
+    }
+      setAns('');
+  };
+
+  // MRSEO: 정답 제출 가능 여부 끝
 
   // SANGYOON: 4. 제시어를 서버(index.js)에서 수신
   const [suggestWord, setSuggestWord] = useState('');
@@ -244,7 +354,8 @@ function GameCanvas() {
       socket.off('spyTimer4End');
     }
 
-  },[socket, myUserName])
+  },[socket, myUserName]);
+
 
   // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
   const spyButtonHandler = () => {
@@ -266,6 +377,19 @@ function GameCanvas() {
           <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>
         </div>
         <div className='ButtonZone'>
+          {phase === 'Game1' || phase === 'Game2' ? (
+              <>
+              {/* MRSEO: 조건 수정 */}
+              { ( round === 1 && team === 'red' && iAmSolverRender === true) || ( round === 2 && team === 'blue' && iAmSolverRender === true ) ?
+                  (
+                  // JANG: TODO - 정답 입력창 css 수정
+                    <div>
+                      <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)}/>
+                      <Button colorScheme='blue' onClick={submitAns}>제출</Button>
+                    </div> 
+                  ):null}
+              </>
+            ):null}
 
 
           {/* // JUNHO: 스파이모드 시작 */}

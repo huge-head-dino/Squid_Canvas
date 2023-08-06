@@ -705,7 +705,8 @@ function BasicUI() {
                             </RadioGroup>
                           </Flex>
                         </Flex>
-                        <Button colorScheme="blue" onClick={함수}>
+                        {/* <Button colorScheme="blue" onClick={함수}> */}
+                        <Button colorScheme="blue" >
                           제출하기
                         </Button>
                       </Box>
