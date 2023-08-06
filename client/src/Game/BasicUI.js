@@ -38,6 +38,7 @@ function BasicUI() {
   // MRSEO: 타이머 값 상태
   const [timerValue, setTimerValue] = useState(0);
   const [suggestWord, setSuggestWord] = useState('');
+  const [ans, setAns] = useState('');
 
   const {
     gamers,
@@ -325,9 +326,11 @@ function BasicUI() {
     };
   }, []);
 
-  // const spySubmitHandler = () => {
-    
-  // };
+  const spySubmitHandler = () => {
+    if (suggestWord === ans ){
+      alert('정답입니다.');
+    }
+  };
 
   // JUNHO: 스파이모드 끝
 
@@ -916,7 +919,7 @@ function BasicUI() {
                         </Flex>
                         {/* <Button colorScheme="blue" onClick={함수}> */}
                         <Flex>
-                          <Button colorScheme="blue" onClick={spySubmitHandler}>
+                          <Button colorScheme="blue">
                             제출하기
                           </Button>
                           <Img
@@ -966,8 +969,8 @@ function BasicUI() {
                 {iAmSpy ? (
                   <FormControl>
                     <FormLabel><h5 style={{ color: "black" }}>스파이만 보이는 입력칸</h5></FormLabel>
-                    <Input placehloder="정답은?" />
-                    <Button colorScheme="blue">제출</Button>
+                    <Input placehloder="정답은?" value={ans} onChange={(e) => setAns(e.target.value)}/>
+                    <Button colorScheme="blue" onClick={spySubmitHandler}>제출</Button>
                   </FormControl>
                 ) : null}
               </Flex>

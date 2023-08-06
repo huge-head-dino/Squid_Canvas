@@ -234,6 +234,7 @@ const Webcam = () => {
 
           // useStore.getState().setMyUserID(myUserName);
           setPublisher(publisher);
+          socket.emit('joinSession', myUserName);
         })
     }
     catch (error) {
@@ -254,6 +255,8 @@ const Webcam = () => {
       mySession.disconnect();
     }
 
+    socket.emit('leaveSession');
+    socket.leave(mySessionId);
     useStore.getState().clearGamer();
 
     setSession(undefined);

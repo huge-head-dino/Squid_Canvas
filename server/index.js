@@ -27,6 +27,7 @@ app.use(express.json());
 let numClients = 0;
 let redScore = 0;
 let blueScore = 0;
+let currentTimerId;
 
 // ---- socket.io
 const io = socketIO(server, {
@@ -44,9 +45,26 @@ io.on('connection', (socket) => {
   numClients++;
   console.log('현재 클라이언트 수:', numClients);
 
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+    // 클라이언트가 연결 해제될 때마다 클라이언트 수 감소
+    numClients--;
+    
+    console.log('현재 클라이언트 수:', numClients);
+  });
+
   socket.on('joinRoom', (mySessionId) => {
     // console.log('$$$$$$$$$$$$$$$$$$$$$$$joinRoom: ', mySessionId);
     socket.join(mySessionId);
+  });
+
+  socket.on('leaveSession', () => {
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession'); 
+      if (timerModule.getIntervalId() ) {
+        console.log('타이머 종료');
+        clearInterval(timerModule.getIntervalId());
+      }
+      currentSuggestIndex = 0;
   });
 
   socket.on('drawing', (data) => {
@@ -55,12 +73,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('drawing', data);
   });
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-    // 클라이언트가 연결 해제될 때마다 클라이언트 수 감소
-    numClients--;
-    console.log('현재 클라이언트 수:', numClients);
-  });
+  
 
   socket.on('clearCanvas', () => {
     socket.broadcast.emit('clearCanvas');
