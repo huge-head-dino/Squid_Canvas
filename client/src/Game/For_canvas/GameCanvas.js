@@ -294,7 +294,7 @@ function GameCanvas() {
                   ) : null}
               </>
             ) : null}
-            {(round === 1 && team === 'blue' && gamers[3].name === myUserName) || (round === 2 && team === 'red' && gamers[2].name === myUserName) ? (
+            {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? (
               <Button
                 colorScheme='green'
                 size='lg'
