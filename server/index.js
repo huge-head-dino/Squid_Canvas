@@ -94,11 +94,6 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on("round2Start", () => {
-    console.log('round2Start_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    io.emit('round2Countdown');
-  });
-
   socket.on('startTimer2', () => {
     console.log('startTimer2_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     timerModule.startTimer(io, 50, () => {
@@ -123,6 +118,7 @@ io.on('connection', (socket) => {
   //TODO: 타이머 만들기
 
   const spyPlayers = [0, 1, 2, 3];
+  let spy = 0;
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -136,8 +132,12 @@ io.on('connection', (socket) => {
     console.log(spyPlayers);
     //플레이어 순서 섞기
     shuffleArray(spyPlayers);
+    spy = Math.floor(Math.random() * 4);
+    while ( spy !== spyPlayers[0]) {
+      spy = Math.floor(Math.random() * 4);
+    }
     console.log(spyPlayers);
-    io.emit('spy1GO', spyPlayers[0]);
+    io.emit('spy1GO', spyPlayers[0], spy);
   });
 
   //1번 타이머 시작

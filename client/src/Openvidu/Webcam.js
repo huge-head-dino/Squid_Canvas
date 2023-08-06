@@ -125,11 +125,6 @@ const Webcam = () => {
       window.removeEventListener('beforeunload', onBeforeUnload);
     };
   }, []);
-
-   // SANGYOON: 1. PASS 누르면 서버로 발신(emit)
-  const handlePass = () => {
-    socket.emit('updateQuestWords');
-  };
   
   const onBeforeUnload = (event) => {
     leaveSession();
@@ -410,15 +405,6 @@ const GameInitializer1 = () => {
   }
 
 
-
-    const hacking = () => {
-      console.log("hacking@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      setIAmPainter(true);
-      setTimeout(() => {
-        setIAmPainter(false);
-      }, 5000)
-    }
-
   // JANG: 나중에 유저 입장이 안정적으로 처리되면 지울 것!
   const consoleCommand = () => {
     console.log("gamers : ", useStore.getState().gamers);
@@ -604,29 +590,9 @@ const GameInitializer1 = () => {
                   </SessionContext.Provider>
                 </Flex>
 
-                {/* JANG: 08.06 - ★★★ 뭐가 또..추가된 거죠..? (비율 조정하기 + 게임 시작하면 보이도록) */}
                 <Flex flex="1.7" minWidth='max-content' alignItems='center' justifyContent='center' gap='2'>
                   
-                  { (round === 1 && team === 'blue' && gamers[3].name === myUserName) || (round === 2 && team === 'red' && gamers[2].name === myUserName) ? (
-                    <Button 
-                    colorScheme='green'
-                    size='lg'
-                    onClick = {hacking}
-                    >
-                      방해하기!
-                    </Button>
-                  ):null}
                   
-                  {/* SANGYOON: PASS 버튼 기능 */}
-                  <Button
-                    colorScheme='blue'
-                    size='lg'
-                    onClick={handlePass}
-                  >
-                    PASS
-                  </Button>
-
-
                   {/* MRSEO: 참가자 수 출력 테스트 */}
                   {/* JANG: 나중에 확인하고 버릴 거! */}
                   <Button onClick={consoleCommand}>test</Button>
