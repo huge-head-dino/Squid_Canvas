@@ -50,8 +50,8 @@ import "./Webcam.css";
 
 
 // NOTE: 배포 전 확인!
-// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
   const [mySessionId, setMySessionId] = useState('SessionA');
@@ -87,6 +87,7 @@ const Webcam = () => {
     iAmPainter,
     setIAmSolver,
     spyPainter,
+    iAmSpy,
   } = useStore(
     state => ({
       ans: state.ans,
@@ -114,6 +115,7 @@ const Webcam = () => {
       iAmSolver: state.iAmSolver,
       setIAmSolver: state.setIAmSolver,
       spyPainter: state.spyPainter,
+      iAmSpy: state.iAmSpy,
     })
   );
 
@@ -416,6 +418,7 @@ const Webcam = () => {
     console.log("iAmSolver : ", iAmSolver);
     console.log("iAmPainter : ", iAmPainter);
     console.log("spyPainter : ", spyPainter);
+    console.log("spy : ", iAmSpy);
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }

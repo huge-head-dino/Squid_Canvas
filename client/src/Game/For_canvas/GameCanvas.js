@@ -70,8 +70,7 @@ function GameCanvas() {
   // MRSEO: 카운트 조건 초기화
   const [round1Countdown, setRound1Countdown] = useState(false);
   const [round2Countdown, setRound2Countdown] = useState(false);
-  //JUNHO: (1)
-  const [spyCountdown, setSpyCountdown] = useState(false);
+
   // MRSEO: 정답 제출 가능 여부
   const [iAmSolverRender, setIAmSolverRender] = useState(false);
 
@@ -255,136 +254,12 @@ function GameCanvas() {
 
 
 
-  // JUNHO: 스파이모드 시작
-  const [spyTimerValue, setSpyTimerValue] = useState(0);
-
-  useEffect(() => {
-    // 보이는 타이머 업데이트
-    const spyTimerUpdateHandler = (value) => {
-      console.log('timerUpdate_client@@@@@@@@@@@@@@@@');
-      setSpyTimerValue(value);
-    };
-
-    socket.on('spy1GO', (spyPlayer1, spy) => {
-      console.log('spy1GO');
-      if (gamers[spy].name === myUserName) {
-        setIAmSpy(true)
-      }
-      setSpyCountdown(true);
-      setTimeout(() => {
-        setSpyCountdown(false);
-        if (gamers[spyPlayer1].name === myUserName) {
-          setSpyPainter(true);
-        }
-        if (host === myUserName) {
-          socket.emit('startSpyTimer1', spyPlayer1);
-        }
-      }, 5000);
-    });
-
-    socket.on('spyTimer1End', (spyPlayer1) => {
-      console.log('spyTimer1End');
-      if (gamers[spyPlayer1].name === myUserName) {
-        setSpyPainter(false);
-      }
-      if (host === myUserName) {
-        socket.emit('spy2Ready');
-      }
-    });
-
-    socket.on('spy2GO', (spyPlayer2) => {
-      console.log('spy2GO');
-      setSpyCountdown(true);
-      setTimeout(() => {
-        setSpyCountdown(false);
-        if (gamers[spyPlayer2].name === myUserName) {
-          setSpyPainter(true);
-        }
-        if (host === myUserName) {
-          socket.emit('startSpyTimer2', spyPlayer2);
-        }
-      }, 5000);
-    });
-
-    socket.on('spyTimer2End', (spyPlayer2) => {
-      console.log('spyTimer2End');
-      if (gamers[spyPlayer2].name === myUserName) {
-        setSpyPainter(false);
-      }
-      if (host === myUserName) {
-        socket.emit('spy3Ready');
-      }
-    });
-
-    socket.on('spy3GO', (spyPlayer3) => {
-      console.log('spy3GO');
-      setSpyCountdown(true);
-      setTimeout(() => {
-        setSpyCountdown(false);
-        if (gamers[spyPlayer3].name === myUserName) {
-          setSpyPainter(true);
-        }
-        if (host === myUserName) {
-          socket.emit('startSpyTimer3', spyPlayer3);
-        }
-      }, 5000);
-    });
-
-    socket.on('spyTimer3End', (spyPlayer3) => {
-      console.log('spyTimer3End');
-      if (gamers[spyPlayer3].name === myUserName) {
-        setSpyPainter(false);
-      }
-      if (host === myUserName) {
-        socket.emit('spy4Ready');
-      }
-    });
-
-    socket.on('spy4GO', (spyPlayer4) => {
-      console.log('spy4GO');
-      setSpyCountdown(true);
-      setTimeout(() => {
-        if (gamers[spyPlayer4].name === myUserName) {
-          setSpyPainter(true);
-        }
-        setSpyCountdown(false);
-        if (host === myUserName) {
-          socket.emit('startSpyTimer4', spyPlayer4);
-        }
-      }, 5000);
-    });
-
-    socket.on('spyTimer4End', (spyPlayer4) => {
-      if (gamers[spyPlayer4].name === myUserName) {
-        setSpyPainter(false);
-      }
-      console.log('모든 과정이 종료되었습니다.');
-    });
 
 
-    socket.on('spyTimerUpdate', spyTimerUpdateHandler);
-    return () => {
-      socket.off('spyTimerUpdate', spyTimerUpdateHandler);
-      socket.off('spy1GO');
-      socket.off('spy2GO');
-      socket.off('spy3GO');
-      socket.off('spy4GO');
-      socket.off('spyTimer1End');
-      socket.off('spyTimer2End');
-      socket.off('spyTimer3End');
-      socket.off('spyTimer4End');
-    }
-
-  }, [socket, myUserName]);
+  
 
 
-  // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
-  const spyButtonHandler = () => {
-    socket.emit('spy1Ready');
-    // gamers[0].name === myUserName ? setIAmPainter(false) : setIAmPainter(true);
-  };
 
-  // JUNHO: 스파이모드 끝
 
   return (
     <>
@@ -431,21 +306,7 @@ function GameCanvas() {
 
 
 
-            {/* // JUNHO: 스파이모드 시작 */}
-            <div className="junhozone">
-              <Button colorScheme="red" flex="1" color="white" size="lg"
-                m='10px' className="junhobtn" onClick={spyButtonHandler}>스파이모드 시작</Button>
 
-              <h2></h2>
-
-              <Button colorScheme="yellow" flex="1" color="white" size="lg">
-                <h1 style={{ fontWeight: "bold" }}>타이머 : {spyTimerValue}</h1>
-              </Button>
-
-              {spyCountdown && <Countdown />}
-
-            </div>
-            {/* // JUNHO: 스파이모드 끝 */}
 
 
             <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>

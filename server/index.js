@@ -134,11 +134,11 @@ io.on('connection', (socket) => {
     //플레이어 순서 섞기
     shuffleArray(spyPlayers);
     spy = Math.floor(Math.random() * 4);
-    while (spy !== spyPlayers[0]) {
+    while (spy === spyPlayers[0]) {
       spy = Math.floor(Math.random() * 4);
     }
     console.log(spyPlayers);
-    io.emit('spy1GO', spyPlayers[0], spy);
+    io.emit('spy1GO', spyPlayers[0], spy, spyPlayers);
   });
 
   //1번 타이머 시작

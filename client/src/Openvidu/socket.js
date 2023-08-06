@@ -1,8 +1,8 @@
 import io from "socket.io-client";
 
 // NOTE: 배포 시, 주소 확인!
-const socket = io("http://localhost:5050", {
-// const socket = io("https://mysquidcanvas.shop", {
+// const socket = io("http://localhost:5050", {
+const socket = io("https://mysquidcanvas.shop", {
   // CORS 설정 (클라이언트와 다른 도메인에서 접근 가능하도록 설정)
   cors: {
     origin: "*",

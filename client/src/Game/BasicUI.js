@@ -9,6 +9,7 @@ import socket from "../Openvidu/socket";
 import GameCanvas from "./For_canvas/GameCanvas";
 // JANG: 08.06 - 폭죽 애니메이션
 import confetti from "canvas-confetti";
+import Countdown from "./Countdown";
 
 // JANG: Chakra UI 추가
 import {
@@ -57,6 +58,10 @@ function BasicUI() {
     phase,
     setPhase,
     myUserId,
+    iAmSpy,
+    setIAmSpy,
+    setSpyPainter,
+    host,
   } = useStore(
     state => ({
       gamers: state.gamers,
@@ -76,6 +81,11 @@ function BasicUI() {
       phase: state.phase,
       setPhase: state.setPhase,
       myUserId: state.myUserId,
+      iAmSpy: state.iAmSpy,
+      myUserId: state.myUserId,
+      setIAmSpy: state.setIAmSpy,
+      setSpyPainter: state.setSpyPainter,
+      host: state.host,
     })
   );
 
@@ -144,12 +154,167 @@ function BasicUI() {
   // JANG: 08.06 - ★★★ 아래 요소는 임시로 넣어 둠 (승자/패자에 대한 효과 처리)
   const [status, setStatus] = useState("game"); // game, vote, result
 
-  useState(() => {
+  //MRSEO: 08.06 useState를 useEffect로 바꿈.
+  useEffect(() => {
     confetti();
   }, []);
 
+  // JUNHO: 스파이모드 시작
+  const [spyTimerValue, setSpyTimerValue] = useState(0);
+  //JUNHO: (1)
+  const [spyCountdown, setSpyCountdown] = useState(false);
+  const [spyPlayers, setSpyPlayers] = useState([0, 1, 2, 3]);
+  const [playerTurn, setPlayerTrun] = useState(0);
+
+  useEffect(() => {
+    if (gamers.length === 4){
+    for (let i = 0; i < 4; i++) {
+      if (gamers[spyPlayers[i]].name === myUserId) {
+        setPlayerTrun(i+1);
+      }
+    }
+  }
+  },[spyPlayers]);
+
+
+  useEffect(() => {
+    // 보이는 타이머 업데이트
+    const spyTimerUpdateHandler = (value) => {
+      console.log('timerUpdate_client@@@@@@@@@@@@@@@@');
+      setSpyTimerValue(value);
+    };
+
+    socket.on('spy1GO', (spyPlayer1, spy, spyPlayers) => {
+      console.log('spy1GO');
+      console.log(spy)
+      setSpyPlayers(spyPlayers);
+      
+      if (gamers[spy].name === myUserId) {
+        setIAmSpy(true)
+      }
+      setSpyCountdown(true);
+      setTimeout(() => {
+        setSpyCountdown(false);
+        if (gamers[spyPlayer1].name === myUserId) {
+          setSpyPainter(true);
+        }
+        if (gamers[0].name === myUserId) {
+          socket.emit('startSpyTimer1', spyPlayer1);
+        }
+      }, 5000);
+    });
+
+    socket.on('spyTimer1End', (spyPlayer1) => {
+      console.log('spyTimer1End');
+      if (gamers[spyPlayer1].name === myUserId) {
+        setSpyPainter(false);
+      }
+      if (gamers[0].name === myUserId) {
+        socket.emit('spy2Ready');
+      }
+    });
+
+    socket.on('spy2GO', (spyPlayer2) => {
+      console.log('spy2GO');
+      setSpyCountdown(true);
+      setTimeout(() => {
+        setSpyCountdown(false);
+        console.log("spyPlayer2 : " + spyPlayer2);
+        if (gamers[spyPlayer2].name === myUserId) {
+          setSpyPainter(true);
+        }
+        if (gamers[0].name === myUserId) {
+          socket.emit('startSpyTimer2', spyPlayer2);
+        }
+      }, 5000);
+    });
+
+    socket.on('spyTimer2End', (spyPlayer2) => {
+      console.log('spyTimer2End');
+      if (gamers[spyPlayer2].name === myUserId) {
+        setSpyPainter(false);
+      }
+      if (gamers[0].name === myUserId) {
+        socket.emit('spy3Ready');
+      }
+    });
+
+    socket.on('spy3GO', (spyPlayer3) => {
+      console.log('spy3GO');
+      setSpyCountdown(true);
+      setTimeout(() => {
+        setSpyCountdown(false);
+        if (gamers[spyPlayer3].name === myUserId) {
+          setSpyPainter(true);
+        }
+        if (gamers[0].name === myUserId) {
+          socket.emit('startSpyTimer3', spyPlayer3);
+        }
+      }, 5000);
+    });
+
+    socket.on('spyTimer3End', (spyPlayer3) => {
+      console.log('spyTimer3End');
+      if (gamers[spyPlayer3].name === myUserId) {
+        setSpyPainter(false);
+      }
+      if (gamers[0].name === myUserId) {
+        socket.emit('spy4Ready');
+      }
+    });
+
+    socket.on('spy4GO', (spyPlayer4) => {
+      console.log('spy4GO');
+      setSpyCountdown(true);
+      setTimeout(() => {
+        if (gamers[spyPlayer4].name === myUserId) {
+          setSpyPainter(true);
+        }
+        setSpyCountdown(false);
+        if (gamers[0].name === myUserId) {
+          socket.emit('startSpyTimer4', spyPlayer4);
+        }
+      }, 5000);
+    });
+
+    socket.on('spyTimer4End', (spyPlayer4) => {
+      if (gamers[spyPlayer4].name === myUserId) {
+        setSpyPainter(false);
+      }
+      setIAmSpy(false);
+      console.log('모든 과정이 종료되었습니다.');
+    });
+
+
+    socket.on('spyTimerUpdate', spyTimerUpdateHandler);
+    return () => {
+      socket.off('spyTimerUpdate', spyTimerUpdateHandler);
+      socket.off('spy1GO');
+      socket.off('spy2GO');
+      socket.off('spy3GO');
+      socket.off('spy4GO');
+      socket.off('spyTimer1End');
+      socket.off('spyTimer2End');
+      socket.off('spyTimer3End');
+      socket.off('spyTimer4End');
+    }
+
+  }, [socket, myUserId, gamers]);
+
+
   // JANG: 08.06 - 스파이 투표 상태 -> "유저1" 변경!!!
-  const [value, setValue] = React.useState('유저1')
+  const [votedSpy, setVotedSpy] = React.useState('유저1');
+
+  // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
+  const spyButtonHandler = () => {
+    socket.emit('spy1Ready');
+    // gamers[0].name === myUserName ? setIAmPainter(false) : setIAmPainter(true);
+  };
+
+  // JUNHO: 스파이모드 끝
+
+
+
 
   return (
     <>
@@ -583,16 +748,19 @@ function BasicUI() {
                 >
                   TIMER
                 </Box>
-                <Box
-                  bg="yellow.500"
-                  width="100px"
-                  height="50px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  제시어
-                </Box>
+                {!iAmSpy ? (
+                  <Box
+                    bg="yellow.500"
+                    width="100px"
+                    height="50px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    제시어
+                  </Box>
+                ) : null}
+
                 <Box
                   bg="blue.500"
                   width="200px"
@@ -602,6 +770,7 @@ function BasicUI() {
                   justifyContent="center"
                   gap="5px"
                 >
+                  당신은 {playerTurn}번째 차례입니다.
                   {/* JANG: 08.06 - ★★★ 입력칸과 제출 버튼 처리 어떻게..? */}
                   {/* <input
                     placeholder="입력하세요"
@@ -688,8 +857,23 @@ function BasicUI() {
                         <Text fontSize="xl" fontWeight="bold" mb="1rem" textAlign="center" color="darkgray">
                           스파이를 찾아라!
                         </Text>
+                        {/* // JUNHO: 스파이모드 시작 */}
+                        <div className="junhozone">
+                          <Button colorScheme="red" flex="1" color="white" size="lg"
+                            m='10px' className="junhobtn" onClick={spyButtonHandler}>스파이모드 시작</Button>
+
+                          <h2></h2>
+
+                          <Button colorScheme="yellow" flex="1" color="white" size="lg">
+                            <h1 style={{ fontWeight: "bold" }}>타이머 : {spyTimerValue}</h1>
+                          </Button>
+
+                          {spyCountdown && <Countdown />}
+
+                        </div>
+                        {/* // JUNHO: 스파이모드 끝 */}
                         <Flex flexDirection="column">
-                          <RadioGroup onChange={setValue} value={value}>
+                          <RadioGroup onChange={setVotedSpy} value={votedSpy}>
                             <Radio size="lg" colorScheme="teal" value={"유저1"}>
                               <Text mr="1rem" flex="1" color="black">
                                 유저1
@@ -761,11 +945,13 @@ function BasicUI() {
 
               <Flex justifyContent="center" alignItems="center">
                 {/* JANG: 스파이만 이 입력 창 보이게끔 설정! */}
-                <FormControl>
-                  <FormLabel><h5 style={{ color: "black" }}>스파이만 보이는 입력칸</h5></FormLabel>
-                  <Input placehloder="정답은?" />
-                  <Button colorScheme="blue">제출</Button>
-                </FormControl>
+                {iAmSpy ? (
+                  <FormControl>
+                    <FormLabel><h5 style={{ color: "black" }}>스파이만 보이는 입력칸</h5></FormLabel>
+                    <Input placehloder="정답은?" />
+                    <Button colorScheme="blue">제출</Button>
+                  </FormControl>
+                ) : null}
               </Flex>
 
               {/* JANG: 08.06 - 게이머들 */}
