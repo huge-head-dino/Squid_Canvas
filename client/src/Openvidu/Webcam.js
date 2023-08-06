@@ -368,7 +368,7 @@ const Webcam = () => {
       if (gamers[2].name === myUserName) {
         setIAmSolver(true);
       }
-      console.log("Round1 초기화 실행 완료!!");
+      console.log("Round 1 - 초기화 실행 완료!!");
     }
 
   }
@@ -399,7 +399,7 @@ const Webcam = () => {
       if (gamers[3].name === myUserName) {
         setIAmSolver(true)
       }
-      console.log("Round2 초기화 실행 완료!!");
+      console.log("Round 2 - 초기화 실행 완료!!");
     }
     // console.log(gamers);
   }

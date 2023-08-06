@@ -81,7 +81,7 @@ function GameCanvas() {
 
     // MRSEO: 이벤트 리스너 관리를 위한 함수 추가와 클린업 함수 추가
     const round1CountdownHandler = () => {
-      console.log('round1Countdown_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      console.log('Round 1 - Countdown_client !!!!!');
       setRound1Countdown(true);
       setTimeout(() => {
         setRound1Countdown(false);
@@ -90,8 +90,8 @@ function GameCanvas() {
         if (useStore.getState().host === myUserName) {
           //SANGYOON: 스타트 버튼 누르면 제시어 생성
           socket.emit('updateQuestWords');
-          console.log('Round 1 제시어 나옴');
-          console.log("b4startTimer1@@@@@@@@@@@@@@@@@@@@@");
+          console.log('Round 1 - 제시어 나옴');
+          console.log("startTimer 1 on");
           socket.emit('startTimer1');
         }
       }, 5000)
@@ -100,17 +100,17 @@ function GameCanvas() {
 
     const round2CountdownHandler = () => {
       setCanSubmitAns(false);
-      console.log('round2Countdown_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      console.log('Round 2 - Countdown_client !!!!!');
       setRound2Countdown(true);
       setTimeout(() => {
         setRound2Countdown(false);
         setCanSubmitAns(true);
-        //SANGYOON: 스타트 버튼 누르면 제시어 생성
-        socket.emit('updateQuestWords');
-        console.log('Round 2 제시어 나옴');
         console.log(useStore.getState().host, myUserName);
         if (useStore.getState().host === myUserName) {
-          console.log("b4startTimer2@@@@@@@@@@@@@@@@@@@@@");
+          //SANGYOON: 스타트 버튼 누르면 제시어 생성
+          socket.emit('updateQuestWords');
+          console.log('Round 2 - 제시어 나옴');
+          console.log("startTimer 2 on");
           socket.emit('startTimer2');
         }
       }, 5000)
@@ -118,7 +118,7 @@ function GameCanvas() {
 
 
     const round2EndHandler = (result) => {
-      console.log('result_client@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      console.log('Result_client !!!!');
       // MRSEO: 게임 종료 후 결과 페이지로 이동
 
       if (result === 'red') {
@@ -231,7 +231,7 @@ function GameCanvas() {
     }, 5000)
   }
 
-  // SANGYOON: 1. PASS 누르면 서버로 발신(emit)
+  // SANGYOON: 1. PASS 누르면 서버(index.js)로 발신(emit)
   const handlePass = () => {
     socket.emit('updateQuestWords');
   };
@@ -241,7 +241,7 @@ function GameCanvas() {
 
   useEffect(() => {
     const suggestWords = (names) => {
-      const word = names[0];
+      const word = names;
       setSuggestWord(word);
     };
     socket.on('suggestWord', suggestWords);

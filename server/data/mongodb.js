@@ -21,31 +21,33 @@ db.on("error", handleError); //error 이벤트가 발생할 때마다 handleErro
 const FruitWords = [
   {
     theme: '과일',
+    name: '샤인머스켓'
+  },
+  {
+    theme: '과일',
+    name: '파인애플'
+  },
+  {
+    theme: '과일',
     name: '사과'
   },
+  // 블루팀용
   {
     theme: '과일',
-    name: '수박'
+    name: '달팽이'
   },
   {
     theme: '과일',
-    name: '딸기'
+    name: '문어'
+  },
+  // 스파이 모드용
+  {
+    theme: '과일',
+    name: '라이언 일병 구하기'
   },
   {
     theme: '과일',
-    name: '블루베리'
-  },
-  {
-    theme: '과일',
-    name: '귤'
-  },
-  {
-    theme: '과일',
-    name: '레몬'
-  },
-  {
-    theme: '과일',
-    name: '아보카도'
+    name: '백설공주'
   },
   {
     theme: '과일',
@@ -89,7 +91,7 @@ const FruitWords = [
   },
   {
     theme: '과일',
-    name: '파인애플'
+    name: '수박'
   },
   {
     theme: '과일',
@@ -97,7 +99,7 @@ const FruitWords = [
   },
   {
     theme: '과일',
-    name: '샤인머스켓'
+    name: '수박'
   }
 ];
 

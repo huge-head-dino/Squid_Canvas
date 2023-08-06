@@ -37,6 +37,7 @@ import Navbar from "./For_screen/Navbar";
 function BasicUI() {
   // MRSEO: 타이머 값 상태
   const [timerValue, setTimerValue] = useState(0);
+  const [suggestWord, setSuggestWord] = useState('');
 
   const {
     gamers,
@@ -167,14 +168,14 @@ function BasicUI() {
   const [playerTurn, setPlayerTrun] = useState(0);
 
   useEffect(() => {
-    if (gamers.length === 4){
-    for (let i = 0; i < 4; i++) {
-      if (gamers[spyPlayers[i]].name === myUserId) {
-        setPlayerTrun(i+1);
+    if (gamers.length === 4) {
+      for (let i = 0; i < 4; i++) {
+        if (gamers[spyPlayers[i]].name === myUserId) {
+          setPlayerTrun(i + 1);
+        }
       }
     }
-  }
-  },[spyPlayers]);
+  }, [spyPlayers]);
 
 
   useEffect(() => {
@@ -188,7 +189,7 @@ function BasicUI() {
       console.log('spy1GO');
       console.log(spy)
       setSpyPlayers(spyPlayers);
-      
+
       if (gamers[spy].name === myUserId) {
         setIAmSpy(true)
       }
@@ -308,8 +309,25 @@ function BasicUI() {
   // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
   const spyButtonHandler = () => {
     socket.emit('spy1Ready');
+    socket.emit('updateQuestWords');
     // gamers[0].name === myUserName ? setIAmPainter(false) : setIAmPainter(true);
   };
+
+  useEffect(() => {
+    const suggestWords = (names) => {
+      const word = names;
+      setSuggestWord(word);
+    };
+    socket.on('suggestWord', suggestWords);
+
+    return () => {
+      socket.off('suggestWord', suggestWords);
+    };
+  }, []);
+
+  // const spySubmitHandler = () => {
+    
+  // };
 
   // JUNHO: 스파이모드 끝
 
@@ -757,7 +775,7 @@ function BasicUI() {
                     alignItems="center"
                     justifyContent="center"
                   >
-                    제시어
+                    {suggestWord}
                   </Box>
                 ) : null}
 
@@ -898,7 +916,7 @@ function BasicUI() {
                         </Flex>
                         {/* <Button colorScheme="blue" onClick={함수}> */}
                         <Flex>
-                          <Button colorScheme="blue" >
+                          <Button colorScheme="blue" onClick={spySubmitHandler}>
                             제출하기
                           </Button>
                           <Img

@@ -71,6 +71,7 @@ io.on('connection', (socket) => {
     console.log('🔴 startTeamSetting_server !!!!!');
     io.emit('setting');
   });
+
   socket.on('round1Start', () => {
     console.log('🟠 round1Start_server !!!!!');
     io.emit('round1Countdown');
@@ -88,6 +89,7 @@ io.on('connection', (socket) => {
     console.log('🟢 startTimer2_server !!!!!');
     timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
+      // 최종 스코어 로직
       if (redScore > blueScore) {
         io.emit('round2End', 'red');
       } else if (redScore < blueScore) {
@@ -257,15 +259,17 @@ mongoose
 // ---- SANGYOON: 제시어 받는 API
 const FruitWord = require("./models/fruits");
 let selectQuestWords = [];
+let currentSuggestIndex = 0;
 
 const updateQuestWords = async () => {
   try {
-    const FruitWords = await FruitWord.aggregate([{ $sample: { size: 20 } }]);
+    const FruitWords = await FruitWord.aggregate([{ $limit: 20 }]);
     selectQuestWords = FruitWords;
     const names = selectQuestWords.map((word) => word.name);
-    console.log('랜덤');
+    const nextSuggestIndex = currentSuggestIndex % names.length;
+    io.emit('suggestWord', names[nextSuggestIndex]); // 3. GameCanvas.js로 emit
+    currentSuggestIndex++;
     console.log(names);
-    io.emit('suggestWord', names); // 3. GameCanvas.js로 emit
   } catch (error) {
     console.log(error);
   };
