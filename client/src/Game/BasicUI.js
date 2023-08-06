@@ -26,11 +26,11 @@ import {
   Text,
   keyframes,
   Img,
+  FormControl,
+  FormLabel
 } from "@chakra-ui/react";
 
 import Navbar from "./For_screen/Navbar";
-// JANG: 08.06 - react-bootstrap 추가
-import { Form } from "react-bootstrap";
 
 
 function BasicUI() {
@@ -148,6 +148,8 @@ function BasicUI() {
     confetti();
   }, []);
 
+  // JANG: 08.06 - 스파이 투표 상태 -> "유저1" 변경!!!
+  const [value, setValue] = React.useState('유저1')
 
   return (
     <>
@@ -643,7 +645,7 @@ function BasicUI() {
                     width="60%"
                   >
                     {/* JANG: 08.06 - 스파이모드 1 : 그냥 캔버스 */}
-                    {status === "game" ? (
+                    {/* {status === "game" ? (
                       <Box
                         h="80%"
                         bg="teal"
@@ -654,63 +656,83 @@ function BasicUI() {
                       >
                         <GameCanvas />
                       </Box>
-                    ) : null}
+                    ) : null} */}
 
+                    {/* JANG: 08.06 (21:40) - 투표 양식 작성 중 */}
                     {/* JANG: 08.06 - 스파이모드 2 : 투표 창 */}
-                    {status === "vote" ? (
+                    {/* {status === "vote" ? ( */}
                       <Box
                         width="100%"
                         height="100%"
-                        padding="1rem"
                         bg="rgba(255, 255, 255, 0.7)"
-                        backdropFilter="auto"
-                        backdropBlur="5px"
+                        backdropFilter="auto" // 블러
+                        backdropBlur="5px"    // 블러
                         boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                        borderRadius="20px"
+                        mr={4}
+                        borderRadius="20px" // 모서리 둥글게
+                        display="flex"
+                        alignItems="center" // 중앙정렬
+                        justifyContent="center" // 중앙정렬
+                        fontStyle={{ fontWeight: "bold", fontSize: "1.5rem" }}
                       >
-                        <Text fontSize="xl" fontWeight="bold" mb="1rem">
-                          마피아를 찾아라!
+                        <Grid
+                          bg="rgba(255, 255, 255, 0.9)" // 반투명 하얀 배경색으로 설정
+                          boxShadow="inset 0px 0px 10px rgba(0,0,0,0.1)" // 선명한 그림자 추가
+                          padding="20px"
+                          borderRadius="10px"
+                          display="grid"
+                          gridTemplateRows="auto 1fr auto"
+                          gridGap="1rem"
+                          position="relative" // 자식 요소의 position을 absolute로 설정하기 위해 relative로 설정
+                        >
+                        <Text fontSize="xl" fontWeight="bold" mb="1rem" textAlign="center" color="darkgray">
+                          스파이를 찾아라!
                         </Text>
                         <Flex flexDirection="column">
-                          <Flex alignItems="center" mb="0.5rem">
-                            <Text mr="1rem" flex="1">
-                              {/* JANG: 유저 이름 */}
-                            </Text>
-                            <RadioGroup>
-                              <Radio size="lg" colorScheme="teal" />
-                            </RadioGroup>
-                          </Flex>
-                          <Flex alignItems="center" mb="0.5rem">
-                            <Text mr="1rem" flex="1">
-                              {/* JANG: 유저 이름 */}
-                            </Text>
-                            <RadioGroup>
-                              <Radio size="lg" colorScheme="teal" />
-                            </RadioGroup>
-                          </Flex>
-                          <Flex alignItems="center" mb="0.5rem">
-                            <Text mr="1rem" flex="1">
-                              {/* JANG: 유저 이름 */}
-                            </Text>
-                            <RadioGroup>
-                              <Radio size="lg" colorScheme="teal" />
-                            </RadioGroup>
-                          </Flex>
-                          <Flex alignItems="center" mb="0.5rem">
-                            <Text mr="1rem" flex="1">
-                              {/* JANG: 유저 이름 */}
-                            </Text>
-                            <RadioGroup>
-                              <Radio size="lg" colorScheme="teal" />
-                            </RadioGroup>
-                          </Flex>
+                          <RadioGroup onChange={setValue} value={value}>
+                            <Radio size="lg" colorScheme="teal" value={"유저1"}>
+                              <Text mr="1rem" flex="1" color="black">
+                                유저1
+                              </Text>
+                            </Radio>
+                            <Radio size="lg" colorScheme="teal" value={"유저2"}>
+                              <Text mr="1rem" flex="1" color="black">
+                                유저2
+                              </Text>
+                            </Radio>
+                            <Radio size="lg" colorScheme="teal" value={"유저3"}>
+                              <Text mr="1rem" flex="1" color="black">
+                                유저3
+                              </Text>
+                            </Radio>
+                            <Radio size="lg" colorScheme="teal" value={"유저4"}>
+                              <Text mr="1rem" flex="1" color="black">
+                                유저4
+                              </Text>
+                            </Radio>
+                          </RadioGroup>
                         </Flex>
                         {/* <Button colorScheme="blue" onClick={함수}> */}
+                        <Flex>
                         <Button colorScheme="blue" >
                           제출하기
                         </Button>
+                        <Img
+                          src={`${process.env.PUBLIC_URL}/resources/images/game-spy-vote.png`}
+                          alt="game-spy-vote"
+                          width="30%"
+                          height="30%"
+
+                          position="absolute"
+                          bottom="-10px"
+                          right="-10px"
+                          // zIndex="-1"
+                          animation={animation}
+                        />
+                        </Flex>
+                        </Grid>
                       </Box>
-                    ) : null}
+                    {/* ) : null} */}
 
                     {/* JANG: 08.06 - 스파이모드 3 : 결과 창 */}
                     {status === "result" ? (
@@ -730,10 +752,20 @@ function BasicUI() {
                       >
                         {/* <img src={mafia} alt=""></img> */}
                         스파이는..!
+                        {/* JANG: 위에 value와 setValue 참고해서, 스파이 띄우기! */}
                       </Box>
                     ) : null}
                   </Flex>
                 </Box>
+              </Flex>
+              
+              <Flex justifyContent="center" alignItems="center">
+              {/* JANG: 스파이만 이 입력 창 보이게끔 설정! */}
+              <FormControl>
+                <FormLabel><h5 style={{color: "black"}}>스파이만 보이는 입력칸</h5></FormLabel>
+                <Input placehloder="정답은?"/>
+                <Button colorScheme="blue">제출</Button>
+              </FormControl>
               </Flex>
 
               {/* JANG: 08.06 - 게이머들 */}
