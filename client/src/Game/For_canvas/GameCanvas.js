@@ -87,12 +87,11 @@ function GameCanvas() {
       setTimeout(() => {
         setRound1Countdown(false);
         setCanSubmitAns(true);
-
-        //SANGYOON: 스타트 버튼 누르면 제시어 생성
-        socket.emit('updateQuestWords');
-
         console.log(useStore.getState().host, myUserName);
         if (useStore.getState().host === myUserName) {
+          //SANGYOON: 스타트 버튼 누르면 제시어 생성
+          socket.emit('updateQuestWords');
+          console.log('Round 1 제시어 나옴');
           console.log("b4startTimer1@@@@@@@@@@@@@@@@@@@@@");
           socket.emit('startTimer1');
         }
@@ -107,6 +106,9 @@ function GameCanvas() {
       setTimeout(() => {
         setRound2Countdown(false);
         setCanSubmitAns(true);
+        //SANGYOON: 스타트 버튼 누르면 제시어 생성
+        socket.emit('updateQuestWords');
+        console.log('Round 2 제시어 나옴');
         console.log(useStore.getState().host, myUserName);
         if (useStore.getState().host === myUserName) {
           console.log("b4startTimer2@@@@@@@@@@@@@@@@@@@@@");

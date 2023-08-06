@@ -68,26 +68,16 @@ io.on('connection', (socket) => {
 
   // MRSEO: 게임 시작
   socket.on('startSetting', () => {
-    console.log('startTeamSetting_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    console.log('🔴 startTeamSetting_server !!!!!');
     io.emit('setting');
   });
   socket.on('round1Start', () => {
-    console.log('round1Start_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    console.log('🟠 round1Start_server !!!!!');
     io.emit('round1Countdown');
   });
 
-  socket.on('sendScore', (team) => {
-    console.log("sendScore_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    if (team === 'red') {
-      redScore++;
-    } else if (team === 'blue') {
-      blueScore++;
-    }
-    io.emit('scoreUpdate', { redScore, blueScore });
-  });
-
   socket.on('startTimer1', () => {
-    console.log('startTimer1_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    console.log('🟡 startTimer1_server !!!!!');
     timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
       io.emit('round2Countdown');
@@ -95,7 +85,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('startTimer2', () => {
-    console.log('startTimer2_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    console.log('🟢 startTimer2_server !!!!!');
     timerModule.startTimer(io, 50, () => {
       console.log('타이머 종료');
       if (redScore > blueScore) {
@@ -110,10 +100,21 @@ io.on('connection', (socket) => {
     });
   });
 
+  socket.on('sendScore', (team) => {
+    console.log("🔵 sendScore_server !!!!!");
+    if (team === 'red') {
+      redScore++;
+    } else if (team === 'blue') {
+      blueScore++;
+    }
+    io.emit('scoreUpdate', { redScore, blueScore });
+  });
+
   // SANGYOON: 2. Webcam.js에서 PASS 수신(on)
   socket.on('updateQuestWords', () => {
     updateQuestWords();
   })
+  
   // ------------------------ JUNHO: 스파이모드 시작 ------------------------
   //TODO: 타이머 만들기
 
@@ -133,7 +134,7 @@ io.on('connection', (socket) => {
     //플레이어 순서 섞기
     shuffleArray(spyPlayers);
     spy = Math.floor(Math.random() * 4);
-    while ( spy !== spyPlayers[0]) {
+    while (spy !== spyPlayers[0]) {
       spy = Math.floor(Math.random() * 4);
     }
     console.log(spyPlayers);
@@ -205,7 +206,7 @@ io.on('connection', (socket) => {
 
   // MRSEO: change Solver
   socket.on('req_changeSolver', (team) => {
-    console.log('changeSolver_server@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    console.log('🟣 changeSolver_server !!!!!');
     io.emit('res_changeSolver', team);
   });
 
@@ -262,6 +263,7 @@ const updateQuestWords = async () => {
     const FruitWords = await FruitWord.aggregate([{ $sample: { size: 20 } }]);
     selectQuestWords = FruitWords;
     const names = selectQuestWords.map((word) => word.name);
+    console.log('랜덤');
     console.log(names);
     io.emit('suggestWord', names); // 3. GameCanvas.js로 emit
   } catch (error) {
