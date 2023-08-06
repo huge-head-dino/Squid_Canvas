@@ -405,6 +405,14 @@ function GameCanvas() {
                     <div>
                       <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)} />
                       <Button colorScheme='blue' onClick={submitAns}>제출</Button>
+                      {/* SANGYOON: PASS 버튼 기능 */}
+                      <Button
+                        colorScheme='blue'
+                        size='lg'
+                        onClick={handlePass}
+                      >
+                        PASS
+                      </Button>
                     </div>
                   ) : null}
               </>
@@ -419,14 +427,6 @@ function GameCanvas() {
               </Button>
             ) : null}
 
-            {/* SANGYOON: PASS 버튼 기능 */}
-            <Button
-              colorScheme='blue'
-              size='lg'
-              onClick={handlePass}
-            >
-              PASS
-            </Button>
 
 
             {/* // JUNHO: 스파이모드 시작 */}

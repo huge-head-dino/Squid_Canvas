@@ -34,8 +34,8 @@ import Navbar from "./For_screen/Navbar";
 
 
 function BasicUI() {
-    // MRSEO: 타이머 값 상태
-    const [timerValue, setTimerValue] = useState(0);
+  // MRSEO: 타이머 값 상태
+  const [timerValue, setTimerValue] = useState(0);
 
   const {
     gamers,
@@ -97,7 +97,7 @@ function BasicUI() {
       setTimerValue(value);
     };
 
-    const scoreUpdateHandler = ({redScore, blueScore}) => {
+    const scoreUpdateHandler = ({ redScore, blueScore }) => {
       setRedScoreCnt(redScore);
       setBlueScoreCnt(blueScore);
     };
@@ -106,7 +106,7 @@ function BasicUI() {
       setRound(2);
       setPhase('Game2');
       // MRSEO: 게임 초기화
-      
+
     }
     // 서버로부터 타이머 값을 수신하는 이벤트 리스너
     socket.on('timerUpdate', timerUpdateHandler);
@@ -121,13 +121,13 @@ function BasicUI() {
       socket.off('round2Countdown', round2CountdownHandler);
     }
 
-    }, [socket]);
+  }, [socket]);
 
   const {
     mode,
     setMode
   } = useStore();
-  const cllickCompetitive = () => {
+  const cllickCompetition = () => {
     setMode('competition');
   }
   const clickSpy = () => {
@@ -144,7 +144,7 @@ function BasicUI() {
   // JANG: 08.06 - ★★★ 아래 요소는 임시로 넣어 둠 (승자/패자에 대한 효과 처리)
   const [status, setStatus] = useState("game"); // game, vote, result
 
-  useState(() => {  
+  useState(() => {
     confetti();
   }, []);
 
@@ -226,7 +226,7 @@ function BasicUI() {
                       colorScheme="teal"
                       flex={1}
                       size="lg"
-                      onClick={cllickCompetitive}
+                      onClick={cllickCompetition}
                       className="Button_Mode"
                       _hover={{ transform: "scale(1.1)" }} // hover시 커지게
                     >
@@ -333,9 +333,9 @@ function BasicUI() {
               </Flex>
               {/*** @2-0. 게임 시작 전 ***/}
             </>
-          ) : mode === "competitive" ? (
+          ) : mode === "competition" ? (
             <div style={{ height: "100%" }}>
-              
+
               {/* ** 패배 시 뜨는 창 **
               <div
                 style={{
@@ -357,7 +357,7 @@ function BasicUI() {
                 패배
               </div> */}
               {/* ** 승리 시 confetti(); 실행하면 폭죽효과 생김 ** */}
-              
+
               {/*** @2-1. 경쟁 모드 ***/}
               <Grid h="10%" w="98%" templateColumns="2fr 5fr 2fr">
                 <Flex alignItems="center" justifyContent="center">
@@ -661,30 +661,30 @@ function BasicUI() {
                     {/* JANG: 08.06 (21:40) - 투표 양식 작성 중 */}
                     {/* JANG: 08.06 - 스파이모드 2 : 투표 창 */}
                     {/* {status === "vote" ? ( */}
-                      <Box
-                        width="100%"
-                        height="100%"
-                        bg="rgba(255, 255, 255, 0.7)"
-                        backdropFilter="auto" // 블러
-                        backdropBlur="5px"    // 블러
-                        boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                        mr={4}
-                        borderRadius="20px" // 모서리 둥글게
-                        display="flex"
-                        alignItems="center" // 중앙정렬
-                        justifyContent="center" // 중앙정렬
-                        fontStyle={{ fontWeight: "bold", fontSize: "1.5rem" }}
+                    <Box
+                      width="100%"
+                      height="100%"
+                      bg="rgba(255, 255, 255, 0.7)"
+                      backdropFilter="auto" // 블러
+                      backdropBlur="5px"    // 블러
+                      boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                      mr={4}
+                      borderRadius="20px" // 모서리 둥글게
+                      display="flex"
+                      alignItems="center" // 중앙정렬
+                      justifyContent="center" // 중앙정렬
+                      fontStyle={{ fontWeight: "bold", fontSize: "1.5rem" }}
+                    >
+                      <Grid
+                        bg="rgba(255, 255, 255, 0.9)" // 반투명 하얀 배경색으로 설정
+                        boxShadow="inset 0px 0px 10px rgba(0,0,0,0.1)" // 선명한 그림자 추가
+                        padding="20px"
+                        borderRadius="10px"
+                        display="grid"
+                        gridTemplateRows="auto 1fr auto"
+                        gridGap="1rem"
+                        position="relative" // 자식 요소의 position을 absolute로 설정하기 위해 relative로 설정
                       >
-                        <Grid
-                          bg="rgba(255, 255, 255, 0.9)" // 반투명 하얀 배경색으로 설정
-                          boxShadow="inset 0px 0px 10px rgba(0,0,0,0.1)" // 선명한 그림자 추가
-                          padding="20px"
-                          borderRadius="10px"
-                          display="grid"
-                          gridTemplateRows="auto 1fr auto"
-                          gridGap="1rem"
-                          position="relative" // 자식 요소의 position을 absolute로 설정하기 위해 relative로 설정
-                        >
                         <Text fontSize="xl" fontWeight="bold" mb="1rem" textAlign="center" color="darkgray">
                           스파이를 찾아라!
                         </Text>
@@ -714,24 +714,24 @@ function BasicUI() {
                         </Flex>
                         {/* <Button colorScheme="blue" onClick={함수}> */}
                         <Flex>
-                        <Button colorScheme="blue" >
-                          제출하기
-                        </Button>
-                        <Img
-                          src={`${process.env.PUBLIC_URL}/resources/images/game-spy-vote.png`}
-                          alt="game-spy-vote"
-                          width="30%"
-                          height="30%"
+                          <Button colorScheme="blue" >
+                            제출하기
+                          </Button>
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/game-spy-vote.png`}
+                            alt="game-spy-vote"
+                            width="30%"
+                            height="30%"
 
-                          position="absolute"
-                          bottom="-10px"
-                          right="-10px"
-                          // zIndex="-1"
-                          animation={animation}
-                        />
+                            position="absolute"
+                            bottom="-10px"
+                            right="-10px"
+                            // zIndex="-1"
+                            animation={animation}
+                          />
                         </Flex>
-                        </Grid>
-                      </Box>
+                      </Grid>
+                    </Box>
                     {/* ) : null} */}
 
                     {/* JANG: 08.06 - 스파이모드 3 : 결과 창 */}
@@ -758,14 +758,14 @@ function BasicUI() {
                   </Flex>
                 </Box>
               </Flex>
-              
+
               <Flex justifyContent="center" alignItems="center">
-              {/* JANG: 스파이만 이 입력 창 보이게끔 설정! */}
-              <FormControl>
-                <FormLabel><h5 style={{color: "black"}}>스파이만 보이는 입력칸</h5></FormLabel>
-                <Input placehloder="정답은?"/>
-                <Button colorScheme="blue">제출</Button>
-              </FormControl>
+                {/* JANG: 스파이만 이 입력 창 보이게끔 설정! */}
+                <FormControl>
+                  <FormLabel><h5 style={{ color: "black" }}>스파이만 보이는 입력칸</h5></FormLabel>
+                  <Input placehloder="정답은?" />
+                  <Button colorScheme="blue">제출</Button>
+                </FormControl>
               </Flex>
 
               {/* JANG: 08.06 - 게이머들 */}
