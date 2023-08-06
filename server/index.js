@@ -190,8 +190,8 @@ io.on('connection', (socket) => {
     spyTimerModule.startTimer(io, 10, () => {
       console.log('4번 타이머 종료');
       io.emit('spyTimer4End', spyPlayer4);
+    });
   });
-
   // ------------------------ JUNHO: 스파이모드 끝 --------------------
 
 
