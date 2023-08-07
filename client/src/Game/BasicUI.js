@@ -285,6 +285,23 @@ function BasicUI() {
       }
       setIAmSpy(false);
       console.log('모든 과정이 종료되었습니다.');
+      setSpyVoteRender(true);
+      setTimeout(() => {
+        setSpyVoteRender(false);
+        socket.emit('submitVotedSpy', votedSpy);
+      }, [20000]);
+    });
+
+    socket.on('spyVoteResult', (votedSpy, result) => {
+      console.log('spyVoteResult');
+      if ( result === 'spyWin' ) {
+        alert('스파이가 승리했습니다.');
+      } else if ( result === 'spyLose' ){
+        alert('스파이가 패배했습니다.');
+      } else {
+        alert('error');
+      }
+      alert('스파이는 ' + gamers[votedSpy].name + '입니다.')
     });
 
 
@@ -299,6 +316,7 @@ function BasicUI() {
       socket.off('spyTimer2End');
       socket.off('spyTimer3End');
       socket.off('spyTimer4End');
+      socket.off('spyVoteResult');
     }
 
   }, [socket, myUserId, gamers]);
@@ -306,6 +324,7 @@ function BasicUI() {
 
   // JANG: 08.06 - 스파이 투표 상태 -> "유저1" 변경!!!
   const [votedSpy, setVotedSpy] = React.useState('유저1');
+  const [spyVoteRender, setSpyVoteRender] = React.useState(false);
 
   // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
   const spyButtonHandler = () => {
@@ -327,9 +346,13 @@ function BasicUI() {
   }, []);
 
   const spySubmitHandler = () => {
-    if (suggestWord === ans ){
+    if (suggestWord === ans) {
       alert('정답입니다.');
     }
+  };
+
+  const votedSpyHandler = () => {
+
   };
 
   // JUNHO: 스파이모드 끝
@@ -893,33 +916,34 @@ function BasicUI() {
 
                         </div>
                         {/* // JUNHO: 스파이모드 끝 */}
-                        <Flex flexDirection="column">
-                          <RadioGroup onChange={setVotedSpy} value={votedSpy}>
-                            <Radio size="lg" colorScheme="teal" value={"유저1"}>
-                              <Text mr="1rem" flex="1" color="black">
-                                유저1
-                              </Text>
-                            </Radio>
-                            <Radio size="lg" colorScheme="teal" value={"유저2"}>
-                              <Text mr="1rem" flex="1" color="black">
-                                유저2
-                              </Text>
-                            </Radio>
-                            <Radio size="lg" colorScheme="teal" value={"유저3"}>
-                              <Text mr="1rem" flex="1" color="black">
-                                유저3
-                              </Text>
-                            </Radio>
-                            <Radio size="lg" colorScheme="teal" value={"유저4"}>
-                              <Text mr="1rem" flex="1" color="black">
-                                유저4
-                              </Text>
-                            </Radio>
-                          </RadioGroup>
-                        </Flex>
-                        {/* <Button colorScheme="blue" onClick={함수}> */}
+                        {spyVoteRender ? (
+                          <>
+                          <Flex flexDirection="column">
+                            <RadioGroup onChange={setVotedSpy} value={votedSpy}>
+                              <Radio size="lg" colorScheme="teal" value={0}>
+                                <Text mr="1rem" flex="1" color="black">
+                                  {gamers[0].name}
+                                </Text>
+                              </Radio>
+                              <Radio size="lg" colorScheme="teal" value={1}>
+                                <Text mr="1rem" flex="1" color="black">
+                                  {gamers[1].name}
+                                </Text>
+                              </Radio>
+                              <Radio size="lg" colorScheme="teal" value={2}>
+                                <Text mr="1rem" flex="1" color="black">
+                                  {gamers[2].name}
+                                </Text>
+                              </Radio>
+                              <Radio size="lg" colorScheme="teal" value={3}>
+                                <Text mr="1rem" flex="1" color="black">
+                                  {gamers[3].name}
+                                </Text>
+                              </Radio>
+                            </RadioGroup>
+                          </Flex>
                         <Flex>
-                          <Button colorScheme="blue">
+                          <Button colorScheme="blue" onClick={votedSpyHandler}>
                             제출하기
                           </Button>
                           <Img
@@ -935,6 +959,9 @@ function BasicUI() {
                             animation={animation}
                           />
                         </Flex>
+                        </>
+                        ):null}
+
                       </Grid>
                     </Box>
                     {/* ) : null} */}
@@ -969,7 +996,7 @@ function BasicUI() {
                 {iAmSpy ? (
                   <FormControl>
                     <FormLabel><h5 style={{ color: "black" }}>스파이만 보이는 입력칸</h5></FormLabel>
-                    <Input placehloder="정답은?" value={ans} onChange={(e) => setAns(e.target.value)}/>
+                    <Input placehloder="정답은?" value={ans} onChange={(e) => setAns(e.target.value)} />
                     <Button colorScheme="blue" onClick={spySubmitHandler}>제출</Button>
                   </FormControl>
                 ) : null}

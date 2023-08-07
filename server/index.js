@@ -27,7 +27,6 @@ app.use(express.json());
 let numClients = 0;
 let redScore = 0;
 let blueScore = 0;
-let currentTimerId;
 
 // ---- socket.io
 const io = socketIO(server, {
@@ -49,7 +48,7 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
     // 클라이언트가 연결 해제될 때마다 클라이언트 수 감소
     numClients--;
-    
+
     console.log('현재 클라이언트 수:', numClients);
   });
 
@@ -59,12 +58,14 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leaveSession', () => {
-    console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession'); 
-      if (timerModule.getIntervalId() ) {
-        console.log('타이머 종료');
-        clearInterval(timerModule.getIntervalId());
-      }
-      currentSuggestIndex = 0;
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession');
+    if (timerModule.getIntervalId()) {
+      console.log('타이머 종료');
+      clearInterval(timerModule.getIntervalId());
+    }
+    currentSuggestIndex = 0;
+    redScore = 0;
+    blueScore = 0;
   });
 
   socket.on('drawing', (data) => {
@@ -73,7 +74,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('drawing', data);
   });
 
-  
+
 
   socket.on('clearCanvas', () => {
     socket.broadcast.emit('clearCanvas');
@@ -129,12 +130,13 @@ io.on('connection', (socket) => {
   socket.on('updateQuestWords', () => {
     updateQuestWords();
   })
-  
+
   // ------------------------ JUNHO: 스파이모드 시작 ------------------------
   //TODO: 타이머 만들기
 
   const spyPlayers = [0, 1, 2, 3];
   let spy = 0;
+  const votedSpyList = [0, 0, 0, 0];
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -213,6 +215,19 @@ io.on('connection', (socket) => {
       console.log('4번 타이머 종료');
       io.emit('spyTimer4End', spyPlayer4);
     });
+  });
+
+  socket.on('submitVotedSpy', (votedSpy) => {
+    console.log('submitVotedSpy_server');
+    votedSpyList[votedSpy]++;
+    if (sum(votedSpyList) === 4) {
+      elected = votedSpyList.index(max(votedSpyList))
+      if (elected === spy){
+        io.emit('spyVoteResult', spy,'spyLose');
+      } else {
+        io.emit('spyVoteResult', spy, 'spyWin');
+      }
+    }
   });
   // ------------------------ JUNHO: 스파이모드 끝 --------------------
 
