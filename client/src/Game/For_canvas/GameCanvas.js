@@ -13,8 +13,10 @@ import useStore from "../../store";
 import {
   Box,
   Input,
+  Flex,
+  Grid
 } from '@chakra-ui/react'
-import { Button, Col } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
 
 function GameCanvas() {
@@ -265,9 +267,9 @@ function GameCanvas() {
     <>
       {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
 
-      <Col>
+      <Flex height="100%">
         <div className="RealCanvas_3">
-          <div className='RealCanvas_2' style={{ height: "100%" }}>
+          <div className='RealCanvas_2' style={{ height: "100%", width: "100%"}}>
             <RealCanvas mySessionId={mySessionId} myUserName={myUserName} />
             {/* SANGYOON: 제시어 */}
             {!iAmSolverRender && <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>}
@@ -330,7 +332,7 @@ function GameCanvas() {
             </div>
           </div>
         </div>
-      </Col>
+      </Flex>
 
       {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
 

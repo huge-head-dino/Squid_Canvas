@@ -428,12 +428,24 @@ const Webcam = () => {
 
   //JANG: 08.06 - Chakra UI, 애니메이션 효과
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // 버튼 애니메이션 (bounce)
-  const bounce = keyframes`
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-  `;
+   // JANG: 홈 타이틀 애니메이션 (bounce)
+   const bounce_title = keyframes`
+   0% { transform: scale(1); }
+   50% { transform: scale(1.1); }
+   100% { transform: scale(1); }
+   `;
+ 
+   // JANG: 홈 캐릭터 애니메이션
+   const bounce_character = keyframes`
+   0% { transform: translateY(15px); }
+   50% { transform: translateY(-15px);}
+   100% { transform: translateY(15px); }
+   `;
+   const animation_character = `${bounce_character} infinite 2s ease`;
+ 
+   // JANG: 08.06 - ★★★ 아래 요소는 임시로 넣어 둠 (승자/패자에 대한 효과 처리)
+   const [status, setStatus] = useState("game"); // game, vote, result
+
   // 마우스 설정 (위치와 상태 관리 및 처리)
   const [xy, setXy] = useState({ x: 0, y: 0 });
   const [pointerSize, setPointerSize] = useState(40);
@@ -443,13 +455,12 @@ const Webcam = () => {
 
     setXy({ x: mouseX, y: mouseY });
   };
-
   return (
     // JANG: 08.06 - 마우스 캐릭터
     <div
       onMouseMove={xyHandler}
       onMouseDown={() => {
-        setPointerSize(50);
+        setPointerSize(40);
       }}
       onMouseUp={() => {
         setPointerSize(40);
@@ -457,7 +468,7 @@ const Webcam = () => {
       style={{ width: "100vw", height: "100vh", cursor: "none" }}
     >
       <Img
-        src={`${process.env.PUBLIC_URL}/resources/images/pointer.png`}
+        src={`${process.env.PUBLIC_URL}/resources/images/character_squid.png`}
         alt="pointer"
         style={{
           background: "transparent", // 배경 투명
@@ -501,26 +512,58 @@ const Webcam = () => {
                       @ 1-1. 홈 화면 - 로고
                       </div>
                     </Flex> */}
-                    <h1
-                      style={{
-                        fontWeight: 800,
-                        fontSize: "60px",
-                        marginBottom: "40px",
-                      }}
-                    >
-                      Jungle Canvas
-                    </h1>
-                    <Button
+                    <Box
                       colorScheme="teal"
                       borderRadius="md"
-                      w="200px"
-                      h="100px"
+                      w="800px"
+                      h="400px"
                       onClick={onOpen}
                       className="Home_Button"
                     >
-                      {/* @ 1-1. 홈 화면 - JOIN 버튼 (이미지로 넣기! + 움직임) */}
-                      JOIN GAME
-                    </Button>
+                    </Box>
+                    {/* @ 1-1. 홈 화면 캐릭터 */}
+                    <div className="character">
+                    <Img
+                      src={`${process.env.PUBLIC_URL}/resources/images/character_squid.png`}
+                      alt="character"
+                      width="10%"
+                      height="25%"
+                      animation={animation_character}
+                      position="fixed"
+                      top="30px"
+                      left="300px"
+                    />
+                    <Img
+                      src={`${process.env.PUBLIC_URL}/resources/images/character_shark.png`}
+                      alt="character"
+                      width="15%"
+                      height="25%"
+                      animation={animation_character}
+                      position="fixed"
+                      top="200px"
+                      right="150px"
+                    />
+                    <Img
+                      src={`${process.env.PUBLIC_URL}/resources/images/character_crab.png`}
+                      alt="character"
+                      width="7%"
+                      height="13%"
+                      animation={animation_character}
+                      position="fixed"
+                      bottom="15px"
+                      left="500px"
+                    />
+                    <Img
+                      src={`${process.env.PUBLIC_URL}/resources/images/character_plant.png`}
+                      alt="character"
+                      width="30%"
+                      height="50%"
+                      // animation={animation_character}
+                      position="fixed"
+                      bottom="-50px"
+                      left="-80px"
+                    />
+                    </div>
 
 
                     {/* @ 1-2. 닉네임, 방번호 입력 모달창 */}

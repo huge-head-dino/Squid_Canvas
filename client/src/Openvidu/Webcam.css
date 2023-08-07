@@ -1,24 +1,24 @@
 /* 1. 홈 화면 + 접속 */
 .Home_Screen {
 	/* JANG: 홈 화면 이미지 변경하기 */
-	background-image: url("../../public/resources/images/home3-bg.jpg");
+	background-image: url("../../public/resources/images/home-bg1.png");
 	height: 100vh;
 	width: 100vw;
-	background-size: cover;
+	background-size: 100% 100%; /* 배경 이미지를 너비, 높이 100 100으로 확대 또는 축소 */
 	background-position: center;
   }
   
   .Home_Button {
+	background-image: url("../../public/resources/images/home-title.png");
 	background-repeat: no-repeat;
 	background-size: cover;
 	text-align: center;
-	font-weight: bold;
-	animation: bounce 1s ease infinite;
+	animation: bounce_title 1s ease infinite;
   }
   button {
-	cursor: none !important;
+	cursor: none !important; 
   }
-  @keyframes bounce {
+  @keyframes bounce_title {
 	0% {
 	  transform: scale(1);
 	}
@@ -33,7 +33,7 @@
   /* 2. 게임 참가 */
   .Game_Screen {
 	/* JANG: 게임 창 이미지 변경하기 */
-	background-image: url("../../public/resources/images/home3-bg.jpg");
+	background-image: url("../../public/resources/images/main-bg1.png");
 	height: 100vh;
 	width: 100vw;
 	background-size: cover;

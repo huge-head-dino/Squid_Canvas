@@ -17,8 +17,15 @@ export default class UserVideoComponent extends Component {
                     {this.props.streamManager !== undefined ? (
                         <div className="streamcomponent">
                             <OpenViduVideoComponent streamManager={this.props.streamManager} />
-                            {/* <div><p>{this.getNicknameTag()}</p></div> */}
-                        </div>
+                            {/* JANG: 색상 변경 나중에!!!!!!*/}
+                            { (parseInt(this.props.key) % 2 === 0) ? (
+                            <div style={{height: "30px", color: "red"}}><h3>{this.getNicknameTag()}</h3></div>
+                            ):(
+                                <div style={{height: "30px", color: "blue"}}><h3>{this.getNicknameTag()}</h3></div>
+                            )
+                            }    
+
+                            </div>
                     ) : null}
                 </div>
             </div>
