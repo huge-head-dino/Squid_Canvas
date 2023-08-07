@@ -18,7 +18,7 @@ import BasicUI from '../Game/BasicUI';
 // MRSEO: 
 import socket from './socket';
 
-import { GameMusic } from '../Game/audio';
+import { RoundMusic, EntranceSound } from '../Game/audio';
 
 // JANG: 08.06 - Chakra UI 추가
 import {
@@ -326,13 +326,16 @@ const Webcam = () => {
 
   }, [socket, gamers]);
 
-
+  // SANGYOON: 입장하기 사운드
+  const entranceSquid = () => {
+    EntranceSound.play();
+  };
 
   const handleGameStart = () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
     console.log("게임 시작");
-    // GameMusic.play();
-    GameMusic.volume = 0.5;
+    RoundMusic.play();
+    RoundMusic.volume = 0.5;
     socket.emit('startSetting')
   };
 
@@ -412,30 +415,30 @@ const Webcam = () => {
     console.log("iAmPainter : ", iAmPainter);
     console.log("spyPainter : ", spyPainter);
     console.log("spy : ", iAmSpy);
-    console.log("mode : "+ useStore.getState().mode);
+    console.log("mode : " + useStore.getState().mode);
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }
 
   //JANG: 08.06 - Chakra UI, 애니메이션 효과
   const { isOpen, onOpen, onClose } = useDisclosure();
-   // JANG: 홈 타이틀 애니메이션 (bounce)
-   const bounce_title = keyframes`
+  // JANG: 홈 타이틀 애니메이션 (bounce)
+  const bounce_title = keyframes`
    0% { transform: scale(1); }
    50% { transform: scale(1.1); }
    100% { transform: scale(1); }
    `;
- 
-   // JANG: 홈 캐릭터 애니메이션
-   const bounce_character = keyframes`
+
+  // JANG: 홈 캐릭터 애니메이션
+  const bounce_character = keyframes`
    0% { transform: translateY(15px); }
    50% { transform: translateY(-15px);}
    100% { transform: translateY(15px); }
    `;
-   const animation_character = `${bounce_character} infinite 2s ease`;
- 
-   // JANG: 08.06 - ★★★ 아래 요소는 임시로 넣어 둠 (승자/패자에 대한 효과 처리)
-   const [status, setStatus] = useState("game"); // game, vote, result
+  const animation_character = `${bounce_character} infinite 2s ease`;
+
+  // JANG: 08.06 - ★★★ 아래 요소는 임시로 넣어 둠 (승자/패자에 대한 효과 처리)
+  const [status, setStatus] = useState("game"); // game, vote, result
 
   // 마우스 설정 (위치와 상태 관리 및 처리)
   const [xy, setXy] = useState({ x: 0, y: 0 });
@@ -448,8 +451,8 @@ const Webcam = () => {
   };
   return (
     <div>
-    {/* // JANG: 08.06 - 마우스 캐릭터 -> 나중에 주석 해지하기!! */}
-    {/* <div
+      {/* // JANG: 08.06 - 마우스 캐릭터 -> 나중에 주석 해지하기!! */}
+      {/* <div
       onMouseMove={xyHandler}
       onMouseDown={() => {
         setPointerSize(40);
@@ -515,46 +518,46 @@ const Webcam = () => {
                     </Box>
                     {/* @ 1-1. 홈 화면 캐릭터 */}
                     <div className="character">
-                    <Img
-                      src={`${process.env.PUBLIC_URL}/resources/images/character_squid.png`}
-                      alt="character"
-                      width="10%"
-                      height="25%"
-                      animation={animation_character}
-                      position="fixed"
-                      top="30px"
-                      left="300px"
-                    />
-                    <Img
-                      src={`${process.env.PUBLIC_URL}/resources/images/character_shark.png`}
-                      alt="character"
-                      width="15%"
-                      height="25%"
-                      animation={animation_character}
-                      position="fixed"
-                      top="200px"
-                      right="150px"
-                    />
-                    <Img
-                      src={`${process.env.PUBLIC_URL}/resources/images/character_crab.png`}
-                      alt="character"
-                      width="7%"
-                      height="13%"
-                      animation={animation_character}
-                      position="fixed"
-                      bottom="15px"
-                      left="500px"
-                    />
-                    <Img
-                      src={`${process.env.PUBLIC_URL}/resources/images/character_plant.png`}
-                      alt="character"
-                      width="30%"
-                      height="50%"
-                      // animation={animation_character}
-                      position="fixed"
-                      bottom="-50px"
-                      left="-80px"
-                    />
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/resources/images/character_squid.png`}
+                        alt="character"
+                        width="10%"
+                        height="25%"
+                        animation={animation_character}
+                        position="fixed"
+                        top="30px"
+                        left="300px"
+                      />
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/resources/images/character_shark.png`}
+                        alt="character"
+                        width="15%"
+                        height="25%"
+                        animation={animation_character}
+                        position="fixed"
+                        top="200px"
+                        right="150px"
+                      />
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/resources/images/character_crab.png`}
+                        alt="character"
+                        width="7%"
+                        height="13%"
+                        animation={animation_character}
+                        position="fixed"
+                        bottom="15px"
+                        left="500px"
+                      />
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/resources/images/character_plant.png`}
+                        alt="character"
+                        width="30%"
+                        height="50%"
+                        // animation={animation_character}
+                        position="fixed"
+                        bottom="-50px"
+                        left="-80px"
+                      />
                     </div>
 
 
@@ -592,7 +595,10 @@ const Webcam = () => {
 
                           <ModalFooter>
                             <Button
-                              onClick={onClose}
+                              onClick={() => {
+                                onClose(); // 첫 번째 작업
+                                entranceSquid(); // 두 번째 작업
+                              }}
                               colorScheme="teal"
                               size="md"
                               type="submit"
@@ -616,15 +622,15 @@ const Webcam = () => {
           {/* MRSEO: useStore.getState()지움 */}
           {phase === "Ready" || phase === "Game1" || phase === "Game2" ? (
             // JANG: 게임 대기방으로 만들기!
-              <Flex className="Game_Screen_in1"
-                textAlign="center"
-                height="100vh" 
-                width="100vw"
-                flexDirection="column"
-                alignItems="center" // 자식 요소들이 교차 축을 최대한 차지하도록 설정
-                justifyContent="center"
-              >
-                {/* JANG: 게임 대기방 */}
+            <Flex className="Game_Screen_in1"
+              textAlign="center"
+              height="100vh"
+              width="100vw"
+              flexDirection="column"
+              alignItems="center" // 자식 요소들이 교차 축을 최대한 차지하도록 설정
+              justifyContent="center"
+            >
+              {/* JANG: 게임 대기방 */}
               <Flex flex="9.3" width="100%">
                 <SessionContext.Provider value={{ mySessionId, myUserName }}>
                   <BasicUI />
@@ -660,7 +666,7 @@ const Webcam = () => {
                   </Button>
                 </ButtonGroup>
               </Flex>
-              </Flex>
+            </Flex>
           ) : null}
         </div>
       ) : null}

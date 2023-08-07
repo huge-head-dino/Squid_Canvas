@@ -9,6 +9,9 @@ import SessionContext from '../../Openvidu/SessionContext'
 import './GameCanvas.css'
 import useStore from "../../store";
 
+// SANGYOON: Sound Effect 추가
+import { RoundMusic, SubmitSound } from "../audio";
+
 // JANG: 08.06 - chakra-ui 추가 + react-bootstrap 변경할 것!
 import {
   Box,
@@ -104,6 +107,8 @@ function GameCanvas() {
         console.log(useStore.getState().host, myUserName);
         if (useStore.getState().host === myUserName) {
           //SANGYOON: 스타트 버튼 누르면 제시어 생성
+          RoundMusic.play();
+          RoundMusic.volume = 0.5;
           socket.emit('updateQuestWords');
           console.log('Round 2 - 제시어 나옴');
           console.log("startTimer 2 on");
@@ -146,10 +151,10 @@ function GameCanvas() {
     } else if (phase === 'Game2') {
       if (gamers[3].name === myUserName) {
         setIAmSolverRender(true);
-      //YEONGWOO: 월요일 데모 직전 수정) 방해하기 버튼 가진 사람이 제시어가 안보이는 버그 수정 
-      }else if (gamers[0].name === myUserName){
+        //YEONGWOO: 월요일 데모 직전 수정) 방해하기 버튼 가진 사람이 제시어가 안보이는 버그 수정 
+      } else if (gamers[0].name === myUserName) {
         setIAmSolverRender(false);
-      } else if (gamers[2].name === myUserName){
+      } else if (gamers[2].name === myUserName) {
         setIAmSolverRender(false);
       }
     }
@@ -185,6 +190,7 @@ function GameCanvas() {
 
   // MRSEO: 정답 제출
   const submitAns = () => {
+    SubmitSound.play(); // SANGYOON: sound 추가
     if (!useStore.getState().canSubmitAns) return;
     if (round === 1) {
       if (ans === suggestWord) {
@@ -234,6 +240,7 @@ function GameCanvas() {
 
   // SANGYOON: 1. PASS 누르면 서버(index.js)로 발신(emit)
   const handlePass = () => {
+    SubmitSound.play(); // sound 추가
     socket.emit('updateQuestWords');
   };
 
@@ -257,7 +264,7 @@ function GameCanvas() {
 
 
 
-  
+
 
 
 
@@ -267,66 +274,66 @@ function GameCanvas() {
       {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
 
       <Flex className="RealCanvas_3" width="50%" height="30%">
-          <Flex className="제시어" textAlign="center">
-            {/* SANGYOON: 제시어 */}
-            {!iAmSolverRender && <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>}
-          </Flex>
-          <Flex>
-            <RealCanvas mySessionId={mySessionId} myUserName={myUserName} />
-          </Flex>
-          <div className='ButtonZone'>
-            {phase === 'Game1' || phase === 'Game2' ? (
-              <>
-                {/* MRSEO: 조건 수정 */}
-                {(round === 1 && team === 'red' && iAmSolverRender === true) || (round === 2 && team === 'blue' && iAmSolverRender === true) ?
-                  (
-                    // JANG: TODO - 정답 입력창 css 수정
-                    <div>
-                      <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)} />
-                      <Button colorScheme='blue' onClick={submitAns}>제출</Button>
-                    </div>
-                  ) : null}
-                  {/* JUNHO: 그리는 사람 pass 기능 추가 */}
-                  {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ?
-                  (
-                    /* SANGYOON: PASS 버튼 기능 */
-                    <div>
-                      <Button colorScheme='blue' size='lg' onClick={handlePass}>PASS</Button>
-                    </div>
-                  ) :null}
-              </>
-            ) : null}
-            {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? (
-              <Button
-                colorScheme='green'
-                size='lg'
-                onClick={hacking}
-              >
-                방해하기!
-              </Button>
-            ) : null}
-
-            <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
-              {/* MRSEO: 조건 추가 */}
-
-              <div>
-                {round1Countdown === true ? (
-                  <>
-                    <h1 style={{ fontWeight: "bold" }}>레드팀 준비해주세요~!</h1>
-                    < Countdown />
-                  </>
-                ) : null}
-                {round2Countdown === true ? (
-                  <>
-                    <h1 style={{ fontWeight: "bold" }}>블루팀 준비해주세요~!</h1>
-                    < Countdown />
-                  </>
-                ) : null}
-              </div>
-
-            </div>
-          </div>
+        <Flex className="제시어" textAlign="center">
+          {/* SANGYOON: 제시어 */}
+          {!iAmSolverRender && <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>}
         </Flex>
+        <Flex>
+          <RealCanvas mySessionId={mySessionId} myUserName={myUserName} />
+        </Flex>
+        <div className='ButtonZone'>
+          {phase === 'Game1' || phase === 'Game2' ? (
+            <>
+              {/* MRSEO: 조건 수정 */}
+              {(round === 1 && team === 'red' && iAmSolverRender === true) || (round === 2 && team === 'blue' && iAmSolverRender === true) ?
+                (
+                  // JANG: TODO - 정답 입력창 css 수정
+                  <div>
+                    <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)} />
+                    <Button colorScheme='blue' onClick={submitAns}>제출</Button>
+                  </div>
+                ) : null}
+              {/* JUNHO: 그리는 사람 pass 기능 추가 */}
+              {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ?
+                (
+                  /* SANGYOON: PASS 버튼 기능 */
+                  <div>
+                    <Button colorScheme='blue' size='lg' onClick={handlePass}>PASS</Button>
+                  </div>
+                ) : null}
+            </>
+          ) : null}
+          {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? (
+            <Button
+              colorScheme='green'
+              size='lg'
+              onClick={hacking}
+            >
+              방해하기!
+            </Button>
+          ) : null}
+
+          <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
+            {/* MRSEO: 조건 추가 */}
+
+            <div>
+              {round1Countdown === true ? (
+                <>
+                  <h1 style={{ fontWeight: "bold" }}>레드팀 준비해주세요~!</h1>
+                  < Countdown />
+                </>
+              ) : null}
+              {round2Countdown === true ? (
+                <>
+                  <h1 style={{ fontWeight: "bold" }}>블루팀 준비해주세요~!</h1>
+                  < Countdown />
+                </>
+              ) : null}
+            </div>
+
+          </div>
+        </div>
+      </Flex>
 
       {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
 
