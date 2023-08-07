@@ -100,12 +100,13 @@ function BasicUI() {
           alignItems="center"
           spacing={4}
         >
-          <Navbar />
 
           {/*** @2-0. 게임 시작 전 ***/}
           {mode === 'waitingRoom' ? (
             <>
               {/* 모드 선택하는 창 */}
+              <Navbar />
+
               <Flex
                 h="66%"
                 w="100%"

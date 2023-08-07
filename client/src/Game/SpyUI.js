@@ -3,6 +3,8 @@ import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
 import "./BasicUI.css";
 
+import RealCanvas from "./For_canvas/RealCanvas";
+
 import socket from "../Openvidu/socket";
 
 // 게임 컴포넌트
@@ -10,6 +12,8 @@ import GameCanvas from "./For_canvas/GameCanvas";
 // JANG: 08.06 - 폭죽 애니메이션
 import confetti from "canvas-confetti";
 import Countdown from "./Countdown";
+
+import Navbar from "./For_screen/Navbar";
 
 // JANG: Chakra UI 추가
 import {
@@ -32,7 +36,6 @@ import {
   
 } from "@chakra-ui/react";
 
-import Navbar from "./For_screen/Navbar";
 
 
 const SpyUI = () => {
@@ -214,11 +217,11 @@ const SpyUI = () => {
       }
       setIAmSpy(false);
       console.log('모든 과정이 종료되었습니다.');
-      setSpyPhase('Vote');
+      setSpyPhase('Vote'); // JUNHO: 여기서 Vote로 바꿔줌
       setTimeout(() => {
         setSpyPhase('Result');
         socket.emit('submitVotedSpy', votedSpy);
-      }, [20000]);
+      }, [200000000000000000]);
     });
 
     socket.on('spyVoteResult', (votedSpy, result) => {
@@ -309,6 +312,9 @@ const SpyUI = () => {
     return(
         <>
             {/* JANG: 08.06 - ★★★ 상단 어떻게 처리할 건지..? */}
+             {/* JUNHO: 빨간색, 노란색, 파란색 상단 네모 3개 시작*/}
+             <Navbar />
+
             <Flex alignItems="center" justifyContent="space-between">
                 <Box
                   bg="red.500"
@@ -320,6 +326,7 @@ const SpyUI = () => {
                 >
                   TIMER
                 </Box>
+
                 {!iAmSpy ? (
                   <Box
                     bg="yellow.500"
@@ -363,7 +370,13 @@ const SpyUI = () => {
                   </Button> */}
                 </Box>
               </Flex>
-              {/* JANG: 08.06 - ★★★ 상단 어떻게 처리할 건지..? */}
+
+                  {/* JUNHO: 빨간색, 노란색, 파란색 상단 네모 3개 끝 */}
+
+
+
+
+
 
               {/* JANG: 08.06 - 스파이모드 캔버스 영역 */}
               <Flex
@@ -388,7 +401,10 @@ const SpyUI = () => {
                     {/* JANG: 스파이모드 1 : 그냥 캔버스 */}
                     {spyPhase === "Game" ? (
                       <>
+                      <Grid>
+                      {/* //JUNHO: 시작버튼과 타이머영역 */}
                         <div Name="junhozone">
+                        <Flex>
                           <Button colorScheme="red" flex="1" color="white" size="lg"
                             m='10px' className="junhobtn" onClick={spyButtonHandler}>스파이모드 시작</Button>
 
@@ -399,23 +415,34 @@ const SpyUI = () => {
                           </Button>
 
                           {spyCountdown && <Countdown />}
-
+                        </Flex>
                         </div>
+
+                        {/* //JUNHO: 초록색 영역 */}
                         <Box
+                        name= "초록색영역" 
                         // JANG: 캔버스 크기 임시 조정
                           h="500px"
-                          w="300px"
+                          w="800px"
                           bg="teal"
                           display="flex"
                           alignItems="center"
                           justifyContent="center"
                           mb="10px"
                         >
-                          <GameCanvas />
+                          <RealCanvas />
                         </Box>
+                        </Grid>
                       </>
                       ):null}
                     
+
+
+
+
+
+
+                    {/* JUNHO: 스파이모드 투표하는 창 */}
                     {/* JANG: 스파이모드 2 : 투표 창 */}
                     {spyPhase === "Vote" ? (
                       <>
@@ -433,6 +460,10 @@ const SpyUI = () => {
                         justifyContent="center" // 중앙정렬
                         fontStyle={{ fontWeight: "bold", fontSize: "1.5rem" }}
                       >
+
+
+
+
                         <Grid
                           bg="rgba(255, 255, 255, 0.9)" // 반투명 하얀 배경색으로 설정
                           boxShadow="inset 0px 0px 10px rgba(0,0,0,0.1)" // 선명한 그림자 추가
@@ -443,12 +474,22 @@ const SpyUI = () => {
                           gridGap="1rem"
                           position="relative" // 자식 요소의 position을 absolute로 설정하기 위해 relative로 설정
                         >
+
+
                           <Text fontSize="xl" fontWeight="bold" mb="1rem" textAlign="center" color="darkgray">
                             스파이를 찾아라!
                           </Text>
+
+
+
                           <Grid flexDirection="column">
                             {/* JANG: ★★★★★★ 스파이 모드 투표 처리 */}
+
+
+
                             <form onSubmit={setVotedSpy} value={votedSpy}>
+
+
                             {/* <RadioGroup onChange={setVotedSpy} value={votedSpy}> */}
                               <Radio size="lg" colorScheme="teal" value={0}>
                                 <Text mr="1rem" flex="1" color="black">
@@ -471,30 +512,33 @@ const SpyUI = () => {
                                 </Text>
                               </Radio>
                             {/* </RadioGroup> */}
+
+
                               <Flex>
                                 <Button colorScheme="blue" onClick={votedSpyHandler}>
                                   제출하기
                                 </Button>
-                                <Img
-                                  src={`${process.env.PUBLIC_URL}/resources/images/game-spy-vote.png`}
-                                  alt="game-spy-vote"
-                                  width="30%"
-                                  height="30%"
-
-                                  position="absolute"
-                                  bottom="-10px"
-                                  right="-10px"
-                                  // zIndex="-1"
-                                  animation={animation}
-                                />
                               </Flex>
+
+                              
                             </form>
+
+
+
+
+
                           </Grid>
                         </Grid>
                       </Box>
                       </>
                     ) : null }
 
+
+
+
+
+
+                      {/* JUNHO: 스파이 모드 결과창 */}
                     {/* JANG: 스파이모드 3 : 결과 창 */}
                     {spyPhase === "Result" ? (
                       <>
@@ -530,6 +574,9 @@ const SpyUI = () => {
                 </Box>
               </Flex>
 
+
+
+              {/* JUNHO: 스파이가 입력하는 창  */}
               <Flex justifyContent="center" alignItems="center">
                 {/* JANG: 스파이만 이 입력 창 보이게끔 설정! */}
                 {iAmSpy ? (
