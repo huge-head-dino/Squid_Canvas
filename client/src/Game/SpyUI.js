@@ -99,8 +99,9 @@ const SpyUI = () => {
   const [playerTurn, setPlayerTrun] = useState(0);
   //JANG: 스파이 모드 결과창을 위해 상태 추가
   const [showSpy, setShowSpy] = useState('');
-  //YEONGWOO: 스파이 모드 에서 누가 그리고 있는지 알려주는 상태
+  //YEONGWOO: 스파이 모드 에서 현재 그리는 사람, 현재 라운드
   const [currentPainterId, setCurrentPainterId] = useState(null);
+  const [currentRound, setCurrentRound] = useState(-1);
 
   useEffect(() => {
     if (gamers.length === 4) {
@@ -288,11 +289,12 @@ const SpyUI = () => {
     // gamers[0].name === myUserName ? setIAmPainter(false) : setIAmPainter(true);
   };
 
-  //YEONGWOO: 스파이 모드에서 그리는 사람이 누구인지 알려주는 상태
+  //YEONGWOO: 스파이 모드에서 현재 그리는 사람 & 현재 라운드
   useEffect(() => {
-    if (currentPainterId) {
+    if(currentPainterId) {
       socket.emit('updateCurrentPainterId', currentPainterId);
     }
+    setCurrentRound(currentRound + 1);
   }, [currentPainterId]);
 
   useEffect(() => {
@@ -372,18 +374,18 @@ const SpyUI = () => {
           </Box>
         ) : null}
 
-        <Box
-          bg="blue.500"
-          width="200px"
-          height="50px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          gap="5px"
-        >
-          당신은 {playerTurn}번째 차례입니다.
-          {/* JANG: 08.06 - ★★★ 입력칸과 제출 버튼 처리 어떻게..? */}
-          {/* <input
+          <Box
+            bg="blue.500"
+            width="200px"
+            height="50px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            gap="5px"
+          >
+                내 순서 : {playerTurn} 번째
+                  {/* JANG: 08.06 - ★★★ 입력칸과 제출 버튼 처리 어떻게..? */}
+                  {/* <input
                     placeholder="입력하세요"
                     style={{
                       width: "130px",
@@ -400,19 +402,18 @@ const SpyUI = () => {
                   >
                     제출
                   </Button> */}
-        </Box>
-        {/* YEONGWOO: 현재 누가 그리고 있는지 확인 */}
-        <Box
-          bg="blue.500"
-          width="200px"
-          height="50px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          gap="5px"
-        >
-          현재 {currentPainterId}님이 그리고 있습니다.
-        </Box>
+            </Box>
+            <Box
+              bg="blue.500"
+              width="200px"
+              height="50px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              gap="5px"
+            >
+              현재  4턴 중 {currentRound} 번째 차례 입니다.
+            </Box>
       </Flex>
 
       {/* JUNHO: 빨간색, 노란색, 파란색 상단 네모 3개 끝 */}
@@ -618,89 +619,89 @@ const SpyUI = () => {
       </Flex>
 
       {/* JANG: 08.06 - 게이머들 */}
-      <Flex
-        h="33%"
-        w="90%"
-        justifyContent="space-between"
-        margin="10px"
-      >
-        <Box
-          w="23%"
-          height="fit-content"
-          minHeight="150px"
-          bg="rgba(255, 255, 255, 0.7)"
-          backdropFilter="auto" // 블러
-          backdropBlur="5px"    // 블러
-          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-          borderRadius="20px"
-        >
-          {gamers[0] && (
-            <UserVideoComponent
-              streamManager={gamers[0].streamManager}
-              my_name={gamers[0].name}
-              key={gamers[0].name}
-            />
-          )}
-        </Box>
-        <Box
-          w="23%"
-          height="fit-content"
-          minHeight="150px"
-          bg="rgba(255, 255, 255, 0.7)"
-          backdropFilter="auto"
-          backdropBlur="5px"
-          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-          borderRadius="20px"
-        >
-          {gamers[1] && (
-            <UserVideoComponent
-              streamManager={gamers[1].streamManager}
-              my_name={gamers[1].name}
-              key={gamers[1].name}
-            />
-          )}
-        </Box>
-        <Box
-          w="23%"
-          height="fit-content"
-          minHeight="150px"
-          bg="rgba(255, 255, 255, 0.7)"
-          backdropFilter="auto"
-          backdropBlur="5px"
-          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-          borderRadius="20px"
-        >
-          {gamers[2] && (
-            <UserVideoComponent
-              streamManager={gamers[2].streamManager}
-              my_name={gamers[2].name}
-              key={gamers[2].name}
-            />
-          )}
-        </Box>
-        <Box
-          w="23%"
-          height="fit-content"
-          minHeight="150px"
-          bg="rgba(255, 255, 255, 0.7)"
-          backdropFilter="auto"
-          backdropBlur="5px"
-          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-          borderRadius="20px"
-        >
-          {gamers[3] && (
-            <UserVideoComponent
-              streamManager={gamers[3].streamManager}
-              my_name={gamers[3].name}
-              key={gamers[3].name}
-            />
-          )}
-        </Box>
-      </Flex>
-      <Flex>
-        <Button onClick={goToWaitingRoom}>대기방으로~</Button>
-      </Flex>
-      {/*** @2-2. 스파이 모드 ***/}
+              <Flex
+                  h="33%"
+                  w="90%"
+                  justifyContent="space-between"
+                  margin="10px"
+              >
+                <Box
+                    w="23%"
+                    height="fit-content"
+                    minHeight="150px"
+                    bg={gamers[0].name === currentPainterId ? "yellow" : "rgba(255, 255, 255, 0.7)"}
+                    backdropFilter="auto" // 블러
+                    backdropBlur="5px"    // 블러
+                    boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                    borderRadius="20px"
+                >
+                  {gamers[0] && (
+                    <UserVideoComponent
+                      streamManager={gamers[0].streamManager}
+                      my_name={gamers[0].name}
+                      key={gamers[0].name}
+                    />
+                  )}
+                </Box>
+                <Box
+                  w="23%"
+                  height="fit-content"
+                  minHeight="150px"
+                  bg={gamers[1].name === currentPainterId ? "yellow" : "rgba(255, 255, 255, 0.7)"}
+                  backdropFilter="auto"
+                  backdropBlur="5px"
+                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                  borderRadius="20px"
+                >
+                  {gamers[1] && (
+                    <UserVideoComponent
+                      streamManager={gamers[1].streamManager}
+                      my_name={gamers[1].name}
+                      key={gamers[1].name}
+                    />
+                  )}
+                </Box>
+                <Box
+                  w="23%"
+                  height="fit-content"
+                  minHeight="150px"
+                  bg={gamers[2].name === currentPainterId ? "yellow" : "rgba(255, 255, 255, 0.7)"}
+                  backdropFilter="auto"
+                  backdropBlur="5px"
+                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                  borderRadius="20px"
+                >
+                  {gamers[2] && (
+                    <UserVideoComponent
+                      streamManager={gamers[2].streamManager}
+                      my_name={gamers[2].name}
+                      key={gamers[2].name}
+                    />
+                  )}
+                </Box>
+                <Box
+                  w="23%"
+                  height="fit-content"
+                  minHeight="150px"
+                  bg={gamers[3].name === currentPainterId ? "yellow" : "rgba(255, 255, 255, 0.7)"}
+                  backdropFilter="auto"
+                  backdropBlur="5px"
+                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                  borderRadius="20px"
+                >
+                  {gamers[3] && (
+                    <UserVideoComponent
+                      streamManager={gamers[3].streamManager}
+                      my_name={gamers[3].name}
+                      key={gamers[3].name}
+                    />
+                  )}
+                </Box>
+              </Flex>
+              <Flex>
+              <Button onClick={goToWaitingRoom}>대기방으로~</Button>
+              </Flex>
+              {/*** @2-2. 스파이 모드 ***/}
     </>
   )
 }
