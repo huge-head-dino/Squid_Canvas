@@ -40,7 +40,7 @@ import {
 
 const SpyUI = () => {
 
-    // MRSEO: 타이머 값 상태
+  // MRSEO: 타이머 값 상태
   const [suggestWord, setSuggestWord] = useState('');
   const [ans, setAns] = useState('');
 
@@ -234,21 +234,20 @@ const SpyUI = () => {
       setSpyPhase('Vote'); // JUNHO: 여기서 Vote로 바꿔줌
       setTimeout(() => {
         setSpyPhase('Result');
-        socket.emit('submitVotedSpy', votedSpy);
-      },200000000000000000);
+      }, 20000);
     });
 
-    socket.on('spyVoteResult', (votedSpy, result) => {
+    socket.on('spyVoteResult', (spy, result) => {
       console.log('spyVoteResult');
-      if ( result === 'spyWin' ) {
-        alert('스파이가 승리했습니다.');
-      } else if ( result === 'spyLose' ){
-        alert('스파이가 패배했습니다.');
-      } else {
-        alert('error');
+      setSpyHowToWin('vote');
+      if (result === 'spyWin') {
+        setSpyWin(true);
+        console.log('스파이가 승리했습니다.');
+      } else if (result === 'spyLose') {
+        console.log('스파이가 패배했습니다.');
       }
-      setShowSpy(gamers[votedSpy].name);
-      alert('스파이는 ' + gamers[votedSpy].name + '입니다.')
+      setShowSpy(gamers[spy].name);
+      console.log('스파이는 ' + gamers[spy].name + '입니다.')
     });
 
     //YEONGWOO: 현재 그리는 사람의 id 전달
@@ -279,6 +278,8 @@ const SpyUI = () => {
   const [votedSpy, setVotedSpy] = React.useState('유저1');
   const [spyPhase, setSpyPhase] = React.useState('Game');
   const [selectedGamer, setSelectedGamer] = useState("");
+  const [spyHowToWin, setSpyHowToWin] = useState(''); // vote or submit
+  const [spyWin, setSpyWin] = useState(false);
 
   // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
   const spyButtonHandler = () => {
@@ -289,7 +290,7 @@ const SpyUI = () => {
 
   //YEONGWOO: 스파이 모드에서 그리는 사람이 누구인지 알려주는 상태
   useEffect(() => {
-    if(currentPainterId) {
+    if (currentPainterId) {
       socket.emit('updateCurrentPainterId', currentPainterId);
     }
   }, [currentPainterId]);
@@ -305,7 +306,7 @@ const SpyUI = () => {
       socket.off('suggestWord', suggestWords);
     };
   }, [socket]);
-  
+
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 이벤트 핸들러
   useEffect(() => {
     socket.on('gameEnd', () => {
@@ -316,18 +317,21 @@ const SpyUI = () => {
     return () => {
       socket.off('gameEnd');
     }
-  },[socket]);
+  }, [socket]);
 
   const spySubmitHandler = () => {
     if (suggestWord === ans) {
-      alert('정답입니다.');
+      setSpyHowToWin('submit');
+      setSpyPhase('Result');
+      setSpyWin(true);
     }
   };
 
-  const votedSpyHandler = () => {
-
+  const votedSpyHandler = (selectedGamer) => {
+    socket.emit('submitVotedSpy', selectedGamer);
+    // setSpyPhase('loading'); // TODO: 제출 이후 로딩창
   };
- 
+
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 함수
   const goToWaitingRoom = () => {
     setIAmSpy(false);
@@ -337,49 +341,49 @@ const SpyUI = () => {
 
   // JUNHO: 스파이모드 끝
 
-    return(
-        <>
-            {/* JANG: 08.06 - ★★★ 상단 어떻게 처리할 건지..? */}
-             {/* JUNHO: 빨간색, 노란색, 파란색 상단 네모 3개 시작*/}
-             <Navbar />
+  return (
+    <>
+      {/* JANG: 08.06 - ★★★ 상단 어떻게 처리할 건지..? */}
+      {/* JUNHO: 빨간색, 노란색, 파란색 상단 네모 3개 시작*/}
+      <Navbar />
 
-            <Flex alignItems="center" justifyContent="space-between">
-                <Box
-                  bg="red.500"
-                  width="100px"
-                  height="50px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  TIMER
-                </Box>
+      <Flex alignItems="center" justifyContent="space-between">
+        <Box
+          bg="red.500"
+          width="100px"
+          height="50px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          TIMER
+        </Box>
 
-                {!iAmSpy ? (
-                  <Box
-                    bg="yellow.500"
-                    width="100px"
-                    height="50px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    {suggestWord}
-                  </Box>
-                ) : null}
+        {!iAmSpy ? (
+          <Box
+            bg="yellow.500"
+            width="100px"
+            height="50px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            {suggestWord}
+          </Box>
+        ) : null}
 
-                <Box
-                  bg="blue.500"
-                  width="200px"
-                  height="50px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  gap="5px"
-                >
-                  당신은 {playerTurn}번째 차례입니다.
-                  {/* JANG: 08.06 - ★★★ 입력칸과 제출 버튼 처리 어떻게..? */}
-                  {/* <input
+        <Box
+          bg="blue.500"
+          width="200px"
+          height="50px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          gap="5px"
+        >
+          당신은 {playerTurn}번째 차례입니다.
+          {/* JANG: 08.06 - ★★★ 입력칸과 제출 버튼 처리 어떻게..? */}
+          {/* <input
                     placeholder="입력하세요"
                     style={{
                       width: "130px",
@@ -396,299 +400,309 @@ const SpyUI = () => {
                   >
                     제출
                   </Button> */}
-                </Box>
-                {/* YEONGWOO: 현재 누가 그리고 있는지 확인 */}
-                <Box
-                  bg="blue.500"
-                  width="200px"
-                  height="50px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  gap="5px"
-                >
-                  현재 {currentPainterId}님이 그리고 있습니다.
-                </Box>
-              </Flex>
+        </Box>
+        {/* YEONGWOO: 현재 누가 그리고 있는지 확인 */}
+        <Box
+          bg="blue.500"
+          width="200px"
+          height="50px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          gap="5px"
+        >
+          현재 {currentPainterId}님이 그리고 있습니다.
+        </Box>
+      </Flex>
 
-                  {/* JUNHO: 빨간색, 노란색, 파란색 상단 네모 3개 끝 */}
-
-
+      {/* JUNHO: 빨간색, 노란색, 파란색 상단 네모 3개 끝 */}
 
 
 
 
-              {/* JANG: 08.06 - 스파이모드 캔버스 영역 */}
-              <Flex
-                h="66%"
-                w="100%"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Box
-                  h="100%"
-                  bg="transparent"
-                  w="50%"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Flex
+
+
+      {/* JANG: 08.06 - 스파이모드 캔버스 영역 */}
+      <Flex
+        h="66%"
+        w="100%"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Box
+          h="100%"
+          bg="transparent"
+          w="50%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Flex
+            justifyContent="center"
+            alignContent="center"
+            width="60%"
+          >
+            {/* JANG: 스파이모드 1 : 그냥 캔버스 */}
+            {spyPhase === "Game" ? (
+              <>
+                <Grid>
+                  {/* //JUNHO: 시작버튼과 타이머영역 */}
+                  <div Name="junhozone">
+                    <Flex>
+                      <Button colorScheme="red" flex="1" color="white" size="lg"
+                        m='10px' className="junhobtn" onClick={spyButtonHandler}>스파이모드 시작</Button>
+
+                      <h2></h2>
+
+                      <Button colorScheme="yellow" flex="1" color="white" size="lg">
+                        <h1 style={{ fontWeight: "bold" }}>타이머 : {spyTimerValue}</h1>
+                      </Button>
+
+                      {spyCountdown && <Countdown />}
+                    </Flex>
+                  </div>
+
+                  {/* //JUNHO: 초록색 영역 */}
+                  <Box
+                    name="초록색영역"
+                    // JANG: 캔버스 크기 임시 조정
+                    h="500px"
+                    w="800px"
+                    bg="teal"
+                    display="flex"
+                    alignItems="center"
                     justifyContent="center"
-                    alignContent="center"
-                    width="60%"
+                    mb="10px"
                   >
-                    {/* JANG: 스파이모드 1 : 그냥 캔버스 */}
-                    {spyPhase === "Game" ? (
-                      <>
-                      <Grid>
-                      {/* //JUNHO: 시작버튼과 타이머영역 */}
-                        <div Name="junhozone">
-                        <Flex>
-                          <Button colorScheme="red" flex="1" color="white" size="lg"
-                            m='10px' className="junhobtn" onClick={spyButtonHandler}>스파이모드 시작</Button>
-
-                          <h2></h2>
-
-                          <Button colorScheme="yellow" flex="1" color="white" size="lg">
-                            <h1 style={{ fontWeight: "bold" }}>타이머 : {spyTimerValue}</h1>
-                          </Button>
-
-                          {spyCountdown && <Countdown />}
-                        </Flex>
-                        </div>
-
-                        {/* //JUNHO: 초록색 영역 */}
-                        <Box
-                        name= "초록색영역" 
-                        // JANG: 캔버스 크기 임시 조정
-                          h="500px"
-                          w="800px"
-                          bg="teal"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          mb="10px"
-                        >
-                          <RealCanvas />
-                        </Box>
-                        </Grid>
-                      </>
-                      ):null}
-                    
+                    <RealCanvas />
+                  </Box>
+                </Grid>
+              </>
+            ) : null}
 
 
 
 
 
 
-                    {/* JUNHO: 스파이모드 투표하는 창 */}
-                    {/* JANG: 스파이모드 2 : 투표 창 */}
-                    {spyPhase === "Result" ? (
-                      <>
-                      <Box
-                        width="100%"
-                        height="100%"
-                        bg="rgba(255, 255, 255, 0.7)"
-                        backdropFilter="auto" // 블러
-                        backdropBlur="5px"    // 블러
-                        boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                        mr={4}
-                        borderRadius="20px" // 모서리 둥글게
-                        display="flex"
-                        alignItems="center" // 중앙정렬
-                        justifyContent="center" // 중앙정렬
-                        fontStyle={{ fontWeight: "bold", fontSize: "1.5rem" }}
-                      >
 
-                        <Grid
-                          bg="rgba(255, 255, 255, 0.9)" // 반투명 하얀 배경색으로 설정
-                          boxShadow="inset 0px 0px 10px rgba(0,0,0,0.1)" // 선명한 그림자 추가
-                          padding="20px"
-                          borderRadius="10px"
-                          display="grid"
-                          gridTemplateRows="auto 1fr auto"
-                          gridGap="1rem"
-                          position="relative" // 자식 요소의 position을 absolute로 설정하기 위해 relative로 설정
-                        >
-
-
-                          <Text fontSize="xl" fontWeight="bold" mb="1rem" textAlign="center" color="black">
-                            스파이를 찾아라!
-                          </Text>
-
-                          <Grid flexDirection="column">
-                            {/* JANG: ★★★★★★ 스파이 모드 투표 처리 */}
-
-                            <form onSubmit={setVotedSpy} value={votedSpy}>
-
-                            <Select placehloder="스파이 선택" size="lg" onChange={(e) => setSelectedGamer(e.target.value)}>
-                              <option value={0}>{gamers[0].name}</option>
-                              <option value={1}>{gamers[1].name}</option>
-                              <option value={2}>{gamers[2].name}</option>
-                              <option value={3}>{gamers[3].name}</option>
-                            </Select>
-
-                              <Flex>
-                                <Button colorScheme="blue" onClick={votedSpyHandler}>
-                                  제출하기
-                                </Button>
-                              </Flex>
-
-                              
-                            </form>
-
-
-
-
-
-                          </Grid>
-                        </Grid>
-                      </Box>
-                      </>
-                    ) : null }
-
-
-
-
-
-
-                      {/* JUNHO: 스파이 모드 결과창 */}
-                    {/* JANG: 스파이모드 3 : 결과 창 */}
-                    {spyPhase === "Vote" ? (
-                      <>
-                        <Box
-                          width="100%"
-                          height="100%"
-                          minHeight="500px"
-                          bg="rgba(255, 255, 255, 0.7)"
-                          backdropFilter="auto"
-                          backdropBlur="5px"
-                          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                          borderRadius="20px"
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          {/* <img src={mafia} alt=""></img> */}
-                          <Grid>
-                            <Text style={{fontSize: "1rem", fontWeight: "bold"}}>
-                              스파이는 <span style={{color: "red"}}>{showSpy}</span>였습니다!
-                            </Text>
-                            <br />
-                            <Text style={{fontSize: "1rem", fontWeight: "bold"}}>
-                              제시어는 <span style={{color: "red"}}>{suggestWord}</span>였습니다!
-                            </Text>
-                          </Grid>
-                        {/* JANG: 위에 value와 setValue 참고해서, 스파이 띄우기! */}
-                        </Box>
-                      </>
-                      ) : null}
-                  </Flex>
-                </Box>
-              </Flex>
-
-
-
-              {/* JUNHO: 스파이가 입력하는 창  */}
-              <Flex justifyContent="center" alignItems="center">
-                {/* JANG: 스파이만 이 입력 창 보이게끔 설정! */}
-                {iAmSpy ? (
-                  <FormControl>
-                    <FormLabel><h5 style={{ color: "black" }}>스파이만 보이는 입력칸</h5></FormLabel>
-                    <Input placehloder="정답은?" value={ans} onChange={(e) => setAns(e.target.value)} />
-                    <Button colorScheme="blue" onClick={spySubmitHandler}>제출</Button>
-                  </FormControl>
-                ) : null}
-              </Flex>
-
-              {/* JANG: 08.06 - 게이머들 */}
-              <Flex
-                h="33%"
-                w="90%"
-                justifyContent="space-between"
-                margin="10px"
-              >
+            {/* JUNHO: 스파이모드 투표하는 창 */}
+            {/* JANG: 스파이모드 2 : 투표 창 */}
+            {spyPhase === "Vote" ? (
+              <>
                 <Box
-                  w="23%"
-                  height="fit-content"
-                  minHeight="150px"
+                  width="100%"
+                  height="100%"
                   bg="rgba(255, 255, 255, 0.7)"
                   backdropFilter="auto" // 블러
                   backdropBlur="5px"    // 블러
                   boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                  borderRadius="20px"
+                  mr={4}
+                  borderRadius="20px" // 모서리 둥글게
+                  display="flex"
+                  alignItems="center" // 중앙정렬
+                  justifyContent="center" // 중앙정렬
+                  fontStyle={{ fontWeight: "bold", fontSize: "1.5rem" }}
                 >
-                  {gamers[0] && (
-                    <UserVideoComponent
-                      streamManager={gamers[0].streamManager}
-                      my_name={gamers[0].name}
-                      key={gamers[0].name}
-                    />
-                  )}
+
+                  <Grid
+                    bg="rgba(255, 255, 255, 0.9)" // 반투명 하얀 배경색으로 설정
+                    boxShadow="inset 0px 0px 10px rgba(0,0,0,0.1)" // 선명한 그림자 추가
+                    padding="20px"
+                    borderRadius="10px"
+                    display="grid"
+                    gridTemplateRows="auto 1fr auto"
+                    gridGap="1rem"
+                    position="relative" // 자식 요소의 position을 absolute로 설정하기 위해 relative로 설정
+                  >
+
+
+                    <Text fontSize="xl" fontWeight="bold" mb="1rem" textAlign="center" color="black">
+                      스파이를 찾아라!
+                    </Text>
+
+                    <Grid flexDirection="column">
+                      {/* JANG: ★★★★★★ 스파이 모드 투표 처리 */}
+
+
+                      <Select placeholder="스파이 선택" size="lg" onChange={(e) => setSelectedGamer(e.target.value)}>
+                        <option value={0}>{gamers[0].name}</option>
+                        <option value={1}>{gamers[1].name}</option>
+                        <option value={2}>{gamers[2].name}</option>
+                        <option value={3}>{gamers[3].name}</option>
+                      </Select>
+
+                      <Flex>
+                        <Button colorScheme="blue" onClick={()=>{votedSpyHandler(selectedGamer)}}>
+                          제출하기
+                        </Button>
+                      </Flex>
+                    </Grid>
+                  </Grid>
                 </Box>
+              </>
+            ) : null}
+
+
+
+
+
+
+            {/* JUNHO: 스파이 모드 결과창 */}
+            {/* JANG: 스파이모드 3 : 결과 창 */}
+            {spyPhase === "Result" ? (
+              <>
                 <Box
-                  w="23%"
-                  height="fit-content"
-                  minHeight="150px"
+                  width="100%"
+                  height="100%"
+                  minHeight="500px"
                   bg="rgba(255, 255, 255, 0.7)"
                   backdropFilter="auto"
                   backdropBlur="5px"
                   boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
                   borderRadius="20px"
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                  {gamers[1] && (
-                    <UserVideoComponent
-                      streamManager={gamers[1].streamManager}
-                      my_name={gamers[1].name}
-                      key={gamers[1].name}
-                    />
-                  )}
+                  {/* <img src={mafia} alt=""></img> */}
+                  <Grid>
+                    <Text style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                      스파이는 <span style={{ color: "red" }}>{showSpy}</span>였습니다!
+                    </Text>
+                    <br />
+                    <Text style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                      제시어는 <span style={{ color: "red" }}>{suggestWord}</span>였습니다!
+                    </Text>
+                    <br />
+                    {spyWin ? (
+                      <>
+                        {spyHowToWin === 'vote' ? (
+                          <Text style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                            게임 결과 : 투표로 스파이 승리!
+                          </Text>
+                        ) : (
+                          <Text style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                            게임 결과 : 제시어로 스파이 승리!
+                          </Text>
+                        )}
+                      </>
+                    ) : (
+                      <Text style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                        게임 결과 : 스파이 패배!
+                      </Text>
+                    )}
+
+                  </Grid>
+                  {/* JANG: 위에 value와 setValue 참고해서, 스파이 띄우기! */}
                 </Box>
-                <Box
-                  w="23%"
-                  height="fit-content"
-                  minHeight="150px"
-                  bg="rgba(255, 255, 255, 0.7)"
-                  backdropFilter="auto"
-                  backdropBlur="5px"
-                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                  borderRadius="20px"
-                >
-                  {gamers[2] && (
-                    <UserVideoComponent
-                      streamManager={gamers[2].streamManager}
-                      my_name={gamers[2].name}
-                      key={gamers[2].name}
-                    />
-                  )}
-                </Box>
-                <Box
-                  w="23%"
-                  height="fit-content"
-                  minHeight="150px"
-                  bg="rgba(255, 255, 255, 0.7)"
-                  backdropFilter="auto"
-                  backdropBlur="5px"
-                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                  borderRadius="20px"
-                >
-                  {gamers[3] && (
-                    <UserVideoComponent
-                      streamManager={gamers[3].streamManager}
-                      my_name={gamers[3].name}
-                      key={gamers[3].name}
-                    />
-                  )}
-                </Box>
-              </Flex>
-              <Flex>
-              <Button onClick={goToWaitingRoom}>대기방으로~</Button>
-              </Flex>
-              {/*** @2-2. 스파이 모드 ***/}
-        </>
-    )
+              </>
+            ) : null}
+          </Flex>
+        </Box>
+      </Flex>
+
+
+
+      {/* JUNHO: 스파이가 입력하는 창  */}
+      <Flex justifyContent="center" alignItems="center">
+        {/* JANG: 스파이만 이 입력 창 보이게끔 설정! */}
+        {iAmSpy ? (
+          <FormControl>
+            <FormLabel><h5 style={{ color: "black" }}>스파이만 보이는 입력칸</h5></FormLabel>
+            <Input placehloder="정답은?" value={ans} onChange={(e) => setAns(e.target.value)} />
+            <Button colorScheme="blue" onClick={spySubmitHandler}>제출</Button>
+          </FormControl>
+        ) : null}
+      </Flex>
+
+      {/* JANG: 08.06 - 게이머들 */}
+      <Flex
+        h="33%"
+        w="90%"
+        justifyContent="space-between"
+        margin="10px"
+      >
+        <Box
+          w="23%"
+          height="fit-content"
+          minHeight="150px"
+          bg="rgba(255, 255, 255, 0.7)"
+          backdropFilter="auto" // 블러
+          backdropBlur="5px"    // 블러
+          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+          borderRadius="20px"
+        >
+          {gamers[0] && (
+            <UserVideoComponent
+              streamManager={gamers[0].streamManager}
+              my_name={gamers[0].name}
+              key={gamers[0].name}
+            />
+          )}
+        </Box>
+        <Box
+          w="23%"
+          height="fit-content"
+          minHeight="150px"
+          bg="rgba(255, 255, 255, 0.7)"
+          backdropFilter="auto"
+          backdropBlur="5px"
+          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+          borderRadius="20px"
+        >
+          {gamers[1] && (
+            <UserVideoComponent
+              streamManager={gamers[1].streamManager}
+              my_name={gamers[1].name}
+              key={gamers[1].name}
+            />
+          )}
+        </Box>
+        <Box
+          w="23%"
+          height="fit-content"
+          minHeight="150px"
+          bg="rgba(255, 255, 255, 0.7)"
+          backdropFilter="auto"
+          backdropBlur="5px"
+          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+          borderRadius="20px"
+        >
+          {gamers[2] && (
+            <UserVideoComponent
+              streamManager={gamers[2].streamManager}
+              my_name={gamers[2].name}
+              key={gamers[2].name}
+            />
+          )}
+        </Box>
+        <Box
+          w="23%"
+          height="fit-content"
+          minHeight="150px"
+          bg="rgba(255, 255, 255, 0.7)"
+          backdropFilter="auto"
+          backdropBlur="5px"
+          boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+          borderRadius="20px"
+        >
+          {gamers[3] && (
+            <UserVideoComponent
+              streamManager={gamers[3].streamManager}
+              my_name={gamers[3].name}
+              key={gamers[3].name}
+            />
+          )}
+        </Box>
+      </Flex>
+      <Flex>
+        <Button onClick={goToWaitingRoom}>대기방으로~</Button>
+      </Flex>
+      {/*** @2-2. 스파이 모드 ***/}
+    </>
+  )
 }
 
 

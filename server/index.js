@@ -27,6 +27,7 @@ app.use(express.json());
 let numClients = 0;
 let redScore = 0;
 let blueScore = 0;
+let votedSpyList = [0, 0, 0, 0];
 
 // ---- socket.io
 const io = socketIO(server, {
@@ -70,18 +71,6 @@ io.on('connection', (socket) => {
     clearvar();
     io.emit('gameEnd')
   })
-
-  socket.on('leaveSession', () => {
-    console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession');
-    if (timerModule.getIntervalId()) {
-      console.log('타이머 종료');
-      clearInterval(timerModule.getIntervalId());
-    }
-    cur_ComIndex = 0;
-    cur_SpyIndex = 0;
-    redScore = 0;
-    blueScore = 0;
-  });
 
   socket.on('drawing', (data) => {
     // console.log(data);
@@ -156,12 +145,21 @@ io.on('connection', (socket) => {
 
   const spyPlayers = [0, 1, 2, 3];
   let spy = 0;
-  const votedSpyList = [0, 0, 0, 0];
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]]; // swap
     }
+  }
+
+  const sum = (arr) => {
+    return arr.reduce((acc, val) => acc + (typeof val === "number" ? val : 0), 0);
+  }
+
+  const max = (arr) => {
+    const maxValue = Math.max(...arr);
+    const indexOfMaxValue = arr.indexOf(maxValue);
+    return indexOfMaxValue;
   }
 
   //1번 대기
@@ -240,17 +238,19 @@ io.on('connection', (socket) => {
   //YEONGWOO: 현재 그리는 사람의 id 전달
   socket.on('updateCurrentPainterId', (currentPainterId) => {
     console.log('updateCurrentPainterId_server: ', currentPainterId);
-    io.emit('updateCurrentPainterId', currentPainterId);
+    socket.broadcast.emit('updateCurrentPainterId', currentPainterId);
   });
 
   socket.on('submitVotedSpy', (votedSpy) => {
     console.log('submitVotedSpy_server');
-    votedSpyList[votedSpy]++;
+    votedSpyList[votedSpy] = votedSpyList[votedSpy] + 1;
     if (sum(votedSpyList) === 4) {
-      elected = votedSpyList.index(max(votedSpyList))
+      elected = votedSpyList[max(votedSpyList)]
       if (elected === spy) {
+        console.log('스파이 패배')
         io.emit('spyVoteResult', spy, 'spyLose');
       } else {
+        console.log('스파이 승리')
         io.emit('spyVoteResult', spy, 'spyWin');
       }
     }
@@ -281,7 +281,10 @@ const clearvar = () => {
   currentSuggestIndex = 0;
   redScore = 0;
   blueScore = 0;
+  votedSpyList = [0, 0, 0, 0];
 };
+
+
 
 // ---- Server Application Connect
 server.listen(SERVER_PORT, () => {
