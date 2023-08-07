@@ -152,6 +152,11 @@ function GameCanvas() {
     } else if (phase === 'Game2') {
       if (gamers[3].name === myUserName) {
         setIAmSolverRender(true);
+      //YEONGWOO: 월요일 데모 직전 수정) 방해하기 버튼 가진 사람이 제시어가 안보이는 버그 수정 
+      }else if (gamers[0].name === myUserName){
+        setIAmSolverRender(false);
+      } else if (gamers[2].name === myUserName){
+        setIAmSolverRender(false);
       }
     }
   }, [phase]);

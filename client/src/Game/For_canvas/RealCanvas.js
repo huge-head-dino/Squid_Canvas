@@ -270,33 +270,48 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         <div className="RealCanvas_1">
             <canvas ref={canvasRef} className="whiteboard"/>
             {/* YEONGWOO: clearCanvas 동기화, colorpicker수정, icon 수정 */}
-            <ColorLensIcon
-                onClick={handleToggle}
-                className="palleteBtn"
-                sx={{ fontSize: 80, color: green[500] }}
-            />
-            <CircleIcon
-                onClick={() => changeLineWidth(2)}
-                sx={{ fontSize: 20, color: color }}
-            />
-            <CircleIcon
-                onClick={() => changeLineWidth(6)}
-                sx={{ fontSize: 40, color: color }}
-            />
-            <CircleIcon
-                onClick={() => changeLineWidth(12)}
-                sx={{ fontSize: 60, color: color }}
-            />
-            <CircleIcon
-                onClick={() => changeLineWidth(20)}
-                sx={{ fontSize: 80, color: color }}
-            />
-            <DeleteForeverIcon
-                className="clearBtn"
-                onClick={handleClearCanvas}
-                sx={{ fontSize: 80, color: red[500] }}
-            />
-        
+            <div className="btn_zone" style ={{ display: 'flex', justifyContent: 'center',alignItems: 'center', gap: '20px', margin: 'auto' }}>
+                <div>
+                    <ColorLensIcon
+                        onClick={handleToggle}
+                        className="palleteBtn"
+                        sx={{ fontSize: 50, color: green[500] }}
+                    />
+                </div>
+                <div>
+                    <CircleIcon
+                        onClick={() => changeLineWidth(2)}
+                        sx={{ fontSize: 10, color: color }}
+                    />
+                </div>
+                <div>
+                    <CircleIcon
+                        onClick={() => changeLineWidth(6)}
+                        sx={{ fontSize: 20, color: color }}
+                    />
+                </div>
+                <div>
+                    <CircleIcon
+                        onClick={() => changeLineWidth(12)}
+                        sx={{ fontSize: 30, color: color }}
+                    />
+                </div>
+                <div>
+                    <CircleIcon
+                        onClick={() => changeLineWidth(20)}
+                        sx={{ fontSize: 40, color: color }}
+                    />
+                </div>
+                <div>
+                    <DeleteForeverIcon
+                        className="clearBtn"
+                        onClick={handleClearCanvas}
+                        sx={{ fontSize: 50, color: red[500] }}
+                    />
+                </div>
+                
+            </div>
+
             {toggle && (
                 <GithubPicker
                     width="auto"
