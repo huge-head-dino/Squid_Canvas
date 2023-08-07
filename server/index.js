@@ -48,19 +48,28 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
     // 클라이언트가 연결 해제될 때마다 클라이언트 수 감소
     numClients--;
-
+    if (roomMembers === 0) {
+      clearvar();
+    }
     console.log('현재 클라이언트 수:', numClients);
-  });
-
-  socket.on('leaveSession', (mySessionId) => {
-    console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession');
-    socket.leave(mySessionId);
   });
 
   socket.on('joinRoom', (mySessionId) => {
     // console.log('$$$$$$$$$$$$$$$$$$$$$$$joinRoom: ', mySessionId);
     socket.join(mySessionId);
   });
+
+  socket.on('leaveSession', (mySessionId) => {
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession');
+    clearvar();
+    socket.leave(mySessionId);
+  });
+  
+  socket.on('goToWaitingRoom', () => {
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$goToWatingRoom');
+    clearvar();
+    io.emit('gameEnd')
+  })
 
   socket.on('leaveSession', () => {
     console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession');
@@ -252,6 +261,16 @@ io.on('connection', (socket) => {
 
 });
 
+const clearvar = () => {
+  if (timerModule.getIntervalId()) {
+    console.log('타이머 종료');
+    clearInterval(timerModule.getIntervalId());
+  }
+  currentSuggestIndex = 0;
+  redScore = 0;
+  blueScore = 0;
+};
+
 // ---- Server Application Connect
 server.listen(SERVER_PORT, () => {
   console.log("Application started on port: " + SERVER_PORT);
@@ -291,6 +310,7 @@ mongoose
 
 // ---- SANGYOON: 제시어 받는 API
 const FruitWord = require("./models/fruits");
+const { clear } = require("console");
 let selectQuestWords = [];
 let currentSuggestIndex = 0;
 

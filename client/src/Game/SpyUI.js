@@ -43,52 +43,25 @@ const SpyUI = () => {
 
   const {
     gamers,
-    playerCount,
     setPlayerCount,
-    myUserID,
-    setMyIndex,
     curSession,
-    redScoreCnt,
-    blueScoreCnt,
-    setRedScoreCnt,
-    setBlueScoreCnt,
-    round,
-    setRound,
     sortGamer,
-    setCanSeeAns,
-    setDrawable,
-    setIAmPainter,
-    phase,
-    setPhase,
     myUserId,
     iAmSpy,
     setIAmSpy,
     setSpyPainter,
-    host,
+    setMode,
   } = useStore(
     state => ({
       gamers: state.gamers,
-      playerCount: state.playerCount,
       setPlayerCount: state.setPlayerCount,
-      myUserID: state.myUserID,
-      setMyIndex: state.setMyIndex,
       curSession: state.curSession,
-      setRedScoreCnt: state.setRedScoreCnt,
-      setBlueScoreCnt: state.setBlueScoreCnt,
-      round: state.round,
-      setRound: state.setRound,
       sortGamer: state.sortGamer,
-      setCanSeeAns: state.setCanSeeAns,
-      setDrawable: state.setDrawable,
-      setIAmPainter: state.setIAmPainter,
-      phase: state.phase,
-      setPhase: state.setPhase,
       myUserId: state.myUserId,
       iAmSpy: state.iAmSpy,
-      myUserId: state.myUserId,
       setIAmSpy: state.setIAmSpy,
       setSpyPainter: state.setSpyPainter,
-      host: state.host,
+      setMode: state.setMode,
     })
   );
 
@@ -300,7 +273,19 @@ const SpyUI = () => {
     return () => {
       socket.off('suggestWord', suggestWords);
     };
-  }, []);
+  }, [socket]);
+  
+  // MRSEO: 대기실 버튼으로 대기실로 돌아가는 이벤트 핸들러
+  useEffect(() => {
+    socket.on('gameEnd', () => {
+      alert('게임이 종료되었습니다.');
+      setMode('waitingRoom');
+    })
+
+    return () => {
+      socket.off('gameEnd');
+    }
+  },[socket]);
 
   const spySubmitHandler = () => {
     if (suggestWord === ans) {
@@ -310,6 +295,13 @@ const SpyUI = () => {
 
   const votedSpyHandler = () => {
 
+  };
+ 
+  // MRSEO: 대기실 버튼으로 대기실로 돌아가는 함수
+  const goToWaitingRoom = () => {
+    setIAmSpy(false);
+    setSpyPainter(false);
+    socket.emit('goToWaitingRoom')
   };
 
   // JUNHO: 스파이모드 끝
@@ -628,6 +620,9 @@ const SpyUI = () => {
                     />
                   )}
                 </Box>
+              </Flex>
+              <Flex>
+              <Button onClick={goToWaitingRoom}>대기방으로~</Button>
               </Flex>
               {/*** @2-2. 스파이 모드 ***/}
         </>

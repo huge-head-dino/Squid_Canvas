@@ -40,59 +40,17 @@ import Navbar from "./For_screen/Navbar";
 
 
 function BasicUI() {
-  // MRSEO: 타이머 값 상태
-  const [timerValue, setTimerValue] = useState(0);
-  const [suggestWord, setSuggestWord] = useState('');
-  const [ans, setAns] = useState('');
-
   const {
     gamers,
-    playerCount,
     setPlayerCount,
-    myUserID,
-    setMyIndex,
     curSession,
-    redScoreCnt,
-    blueScoreCnt,
-    setRedScoreCnt,
-    setBlueScoreCnt,
-    round,
-    setRound,
     sortGamer,
-    setCanSeeAns,
-    setDrawable,
-    setIAmPainter,
-    phase,
-    setPhase,
-    myUserId,
-    iAmSpy,
-    setIAmSpy,
-    setSpyPainter,
-    host,
   } = useStore(
     state => ({
       gamers: state.gamers,
-      playerCount: state.playerCount,
       setPlayerCount: state.setPlayerCount,
-      myUserID: state.myUserID,
-      setMyIndex: state.setMyIndex,
       curSession: state.curSession,
-      setRedScoreCnt: state.setRedScoreCnt,
-      setBlueScoreCnt: state.setBlueScoreCnt,
-      round: state.round,
-      setRound: state.setRound,
       sortGamer: state.sortGamer,
-      setCanSeeAns: state.setCanSeeAns,
-      setDrawable: state.setDrawable,
-      setIAmPainter: state.setIAmPainter,
-      phase: state.phase,
-      setPhase: state.setPhase,
-      myUserId: state.myUserId,
-      iAmSpy: state.iAmSpy,
-      myUserId: state.myUserId,
-      setIAmSpy: state.setIAmSpy,
-      setSpyPainter: state.setSpyPainter,
-      host: state.host,
     })
   );
 
@@ -145,7 +103,7 @@ function BasicUI() {
           <Navbar />
 
           {/*** @2-0. 게임 시작 전 ***/}
-          {mode === undefined ? (
+          {mode === 'waitingRoom' ? (
             <>
               {/* 모드 선택하는 창 */}
               <Flex

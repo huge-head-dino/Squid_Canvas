@@ -63,14 +63,9 @@ const Webcam = () => {
 
   // MRSEO: ZUSTAND 상태 변수 선언
   const {
-    ans,
-    setAns,
     round,
     redScoreCnt,
-    setRedScoreCnt,
     blueScoreCnt,
-    setBlueScoreCnt,
-    canSubmitAns,
     phase,
     setPhase,
     gamers,
@@ -82,23 +77,18 @@ const Webcam = () => {
     setIAmPainter,
     setTeam,
     team,
-    myUserId,
     setMyUserId,
     iAmSolver,
     iAmPainter,
     setIAmSolver,
     spyPainter,
     iAmSpy,
+    setMode,
   } = useStore(
     state => ({
-      ans: state.ans,
-      setAns: state.setAns,
       round: state.round,
       redScoreCnt: state.redScoreCnt,
-      setRedScoreCnt: state.setRedScoreCnt,
       blueScoreCnt: state.blueScoreCnt,
-      setBlueScoreCnt: state.setBlueScoreCnt,
-      canSubmitAns: state.canSubmitAns,
       phase: state.phase,
       setPhase: state.setPhase,
       gamers: state.gamers,
@@ -107,16 +97,16 @@ const Webcam = () => {
       setHost: state.setHost,
       setCanSeeAns: state.setCanSeeAns,
       setDrawable: state.setDrawable,
-      iAmPainter: state.iAmPainter,
       setIAmPainter: state.setIAmPainter,
       setTeam: state.setTeam,
       team: state.team,
-      myUserId: state.myUserId,
       setMyUserId: state.setMyUserId,
       iAmSolver: state.iAmSolver,
+      iAmPainter: state.iAmPainter,
       setIAmSolver: state.setIAmSolver,
       spyPainter: state.spyPainter,
       iAmSpy: state.iAmSpy,
+      setMode: state.setMode,
     })
   );
 
@@ -235,7 +225,7 @@ const Webcam = () => {
 
           // useStore.getState().setMyUserID(myUserName);
           setPublisher(publisher);
-          socket.emit('joinSession', myUserName);
+          setMode('waitingRoom')
         })
     }
     catch (error) {
@@ -422,6 +412,7 @@ const Webcam = () => {
     console.log("iAmPainter : ", iAmPainter);
     console.log("spyPainter : ", spyPainter);
     console.log("spy : ", iAmSpy);
+    console.log("mode : "+ useStore.getState().mode);
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
   }
@@ -645,6 +636,7 @@ const Webcam = () => {
 
                   {/* MRSEO: 참가자 수 출력 테스트 -> 나중에 버릴 것! */}
                   <Button onClick={consoleCommand} marginRight="10px">test</Button>
+
 
                   {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
                   {myUserName === host && gamers?.length === 4 ? (
