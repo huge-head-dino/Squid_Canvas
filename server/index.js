@@ -52,6 +52,11 @@ io.on('connection', (socket) => {
     console.log('현재 클라이언트 수:', numClients);
   });
 
+  socket.on('leaveSession', (mySessionId) => {
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession');
+    socket.leave(mySessionId);
+  });
+
   socket.on('joinRoom', (mySessionId) => {
     // console.log('$$$$$$$$$$$$$$$$$$$$$$$joinRoom: ', mySessionId);
     socket.join(mySessionId);

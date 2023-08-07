@@ -256,8 +256,7 @@ const Webcam = () => {
       mySession.disconnect();
     }
 
-    socket.emit('leaveSession');
-    socket.leave(mySessionId);
+    socket.emit('leaveSession', mySessionId);
     useStore.getState().clearGamer();
 
     setSession(undefined);

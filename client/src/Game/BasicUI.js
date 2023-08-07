@@ -154,8 +154,6 @@ function BasicUI() {
   100% { transform: translateY(15px); }
   `;
   const animation = `${bounce} infinite 2s ease`;
-  // JANG: 08.06 - ★★★ 아래 요소는 임시로 넣어 둠 (투표 결과창 보이기!)
-  const [voteResultRender, setVoteResultRender] = useState(false);
 
   //MRSEO: 08.06 useState를 useEffect로 바꿈.
   useEffect(() => {
@@ -192,7 +190,7 @@ function BasicUI() {
     socket.on('spy1GO', (spyPlayer1, spy, spyPlayers) => {
       console.log('spy1GO');
       console.log(spy)
-      setSpyPlayers(spyPlayers);
+      setSpyPlayers(spyPlayers); // spyPlayers 순서 배정을 위해저장.
 
       if (gamers[spy].name === myUserId) {
         setIAmSpy(true)
@@ -288,9 +286,9 @@ function BasicUI() {
       }
       setIAmSpy(false);
       console.log('모든 과정이 종료되었습니다.');
-      setSpyVoteRender(true);
+      setSpyPhase('Vote');
       setTimeout(() => {
-        setSpyVoteRender(false);
+        setSpyPhase('Result');
         socket.emit('submitVotedSpy', votedSpy);
       }, [20000]);
     });
@@ -328,7 +326,7 @@ function BasicUI() {
 
   // JANG: 08.06 - 스파이 투표 상태 -> "유저1" 변경!!!
   const [votedSpy, setVotedSpy] = React.useState('유저1');
-  const [spyVoteRender, setSpyVoteRender] = React.useState(false);
+  const [spyPhase, setSpyPhase] = React.useState('Game');
 
   // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
   const spyButtonHandler = () => {
