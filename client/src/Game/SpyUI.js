@@ -283,7 +283,7 @@ const SpyUI = () => {
   // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
   const spyButtonHandler = () => {
     socket.emit('spy1Ready');
-    socket.emit('updateQuestWords');
+    socket.emit('updateQuestWords_Spy');
     // gamers[0].name === myUserName ? setIAmPainter(false) : setIAmPainter(true);
   };
 

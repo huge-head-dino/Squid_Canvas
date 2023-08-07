@@ -1,5 +1,5 @@
-// SANGYOON: Competition DB 스키마 추가
-const mongoose = require("mongoose")
+// SANGYOON: Spy DB 스키마 추가
+const mongoose = require('mongoose')
 
 // ---- mongoDB에 제시어를 저장할 스키마
 const themeWord = new mongoose.Schema({
@@ -8,5 +8,5 @@ const themeWord = new mongoose.Schema({
 });
 
 // ---- 제시어 모델정의
-const FruitWord = mongoose.model('Fruit', themeWord)
-module.exports = FruitWord
+const SpyWord = mongoose.model('Spy', themeWord)
+module.exports = SpyWord

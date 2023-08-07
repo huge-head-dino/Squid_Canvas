@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
     clearvar();
     socket.leave(mySessionId);
   });
-  
+
   socket.on('goToWaitingRoom', () => {
     console.log('$$$$$$$$$$$$$$$$$$$$$$$goToWatingRoom');
     clearvar();
@@ -77,7 +77,8 @@ io.on('connection', (socket) => {
       console.log('타이머 종료');
       clearInterval(timerModule.getIntervalId());
     }
-    currentSuggestIndex = 0;
+    cur_ComIndex = 0;
+    cur_SpyIndex = 0;
     redScore = 0;
     blueScore = 0;
   });
@@ -140,10 +141,15 @@ io.on('connection', (socket) => {
     io.emit('scoreUpdate', { redScore, blueScore });
   });
 
-  // SANGYOON: 2. Webcam.js에서 PASS 수신(on)
-  socket.on('updateQuestWords', () => {
-    updateQuestWords();
-  })
+  // SANGYOON: 2-1. Competition Mode - socket.on 수신
+  socket.on('updateQuestWords_Com', () => {
+    updateQuestWords_Com();
+  });
+
+  // SANGYOON: 2-2. Spy Mode - socket.on 수신
+  socket.on('updateQuestWords_Spy', () => {
+    updateQuestWords_Spy();
+  });
 
   // ------------------------ JUNHO: 스파이모드 시작 ------------------------
   //TODO: 타이머 만들기
@@ -242,8 +248,8 @@ io.on('connection', (socket) => {
     votedSpyList[votedSpy]++;
     if (sum(votedSpyList) === 4) {
       elected = votedSpyList.index(max(votedSpyList))
-      if (elected === spy){
-        io.emit('spyVoteResult', spy,'spyLose');
+      if (elected === spy) {
+        io.emit('spyVoteResult', spy, 'spyLose');
       } else {
         io.emit('spyVoteResult', spy, 'spyWin');
       }
@@ -316,18 +322,37 @@ mongoose
 
 // ---- SANGYOON: 제시어 받는 API
 const FruitWord = require("./models/fruits");
-const { clear } = require("console");
-let selectQuestWords = [];
-let currentSuggestIndex = 0;
+const SpyWord = require("./models/spies");
+// const { clear } = require("console");
+let selectComWords = [];
+let selectSpyWords = [];
+let cur_ComIndex = 0;
+let cur_SpyIndex = 0;
 
-const updateQuestWords = async () => {
+// ---- SANGYOON: Competition DB
+const updateQuestWords_Com = async () => {
   try {
-    const FruitWords = await FruitWord.aggregate([{ $limit: 20 }]);
-    selectQuestWords = FruitWords;
-    const names = selectQuestWords.map((word) => word.name);
-    const nextSuggestIndex = currentSuggestIndex % names.length;
+    const FruitWords = await FruitWord.aggregate([{ $limit: 7 }]);
+    selectComWords = FruitWords;
+    const names = selectComWords.map((word) => word.name);
+    const nextSuggestIndex = cur_ComIndex % names.length;
     io.emit('suggestWord', names[nextSuggestIndex]); // 3. GameCanvas.js로 emit
-    currentSuggestIndex++;
+    cur_ComIndex++;
+    console.log(names);
+  } catch (error) {
+    console.log(error);
+  };
+};
+
+// ---- SANGYOON: Spy DB
+const updateQuestWords_Spy = async () => {
+  try {
+    const SpyWords = await SpyWord.aggregate([{ $limit: 2 }]);
+    selectSpyWords = SpyWords;
+    const names = selectSpyWords.map((word) => word.name);
+    const nextSuggestIndex = cur_SpyIndex % names.length;
+    io.emit('suggestWord', names[nextSuggestIndex]); // 3. SpyUI.js로 emit
+    cur_SpyIndex++;
     console.log(names);
   } catch (error) {
     console.log(error);

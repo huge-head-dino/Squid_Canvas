@@ -88,7 +88,7 @@ function GameCanvas() {
         console.log(useStore.getState().host, myUserName);
         if (useStore.getState().host === myUserName) {
           //SANGYOON: 스타트 버튼 누르면 제시어 생성
-          socket.emit('updateQuestWords');
+          socket.emit('updateQuestWords_Com');
           console.log('Round 1 - 제시어 나옴');
           console.log("startTimer 1 on");
           socket.emit('startTimer1');
@@ -109,7 +109,7 @@ function GameCanvas() {
           //SANGYOON: 스타트 버튼 누르면 제시어 생성
           RoundMusic.play();
           RoundMusic.volume = 0.5;
-          socket.emit('updateQuestWords');
+          socket.emit('updateQuestWords_Com');
           console.log('Round 2 - 제시어 나옴');
           console.log("startTimer 2 on");
           socket.emit('startTimer2');
@@ -205,7 +205,7 @@ function GameCanvas() {
 
         socket.emit('sendScore', team);
         socket.emit('req_changeSolver', 'red')
-        socket.emit('updateQuestWords')
+        socket.emit('updateQuestWords_Com')
       }
     }
     if (round === 2) {
@@ -221,7 +221,7 @@ function GameCanvas() {
 
         socket.emit('sendScore', team);
         socket.emit('req_changeSolver', 'blue');
-        socket.emit('updateQuestWords')
+        socket.emit('updateQuestWords_Com')
       }
     }
     setAns('');
@@ -241,7 +241,7 @@ function GameCanvas() {
   // SANGYOON: 1. PASS 누르면 서버(index.js)로 발신(emit)
   const handlePass = () => {
     SubmitSound.play(); // sound 추가
-    socket.emit('updateQuestWords');
+    socket.emit('updateQuestWords_Com');
   };
 
   // SANGYOON: 4. 제시어를 서버(index.js)에서 수신
