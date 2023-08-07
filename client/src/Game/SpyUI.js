@@ -33,7 +33,7 @@ import {
   Img,
   FormControl,
   FormLabel,
-  
+  Select,
 } from "@chakra-ui/react";
 
 
@@ -235,7 +235,7 @@ const SpyUI = () => {
       setTimeout(() => {
         setSpyPhase('Result');
         socket.emit('submitVotedSpy', votedSpy);
-      }, [200000000000000000]);
+      },200000000000000000);
     });
 
     socket.on('spyVoteResult', (votedSpy, result) => {
@@ -278,6 +278,7 @@ const SpyUI = () => {
   // JANG: 08.06 - 스파이 투표 상태 -> "유저1" 변경!!!
   const [votedSpy, setVotedSpy] = React.useState('유저1');
   const [spyPhase, setSpyPhase] = React.useState('Game');
+  const [selectedGamer, setSelectedGamer] = useState("");
 
   // JUNHO: 스파이 모드 시작 버튼 핸들러// 루프 시작하는 버튼
   const spyButtonHandler = () => {
@@ -483,7 +484,7 @@ const SpyUI = () => {
 
                     {/* JUNHO: 스파이모드 투표하는 창 */}
                     {/* JANG: 스파이모드 2 : 투표 창 */}
-                    {spyPhase === "Vote" ? (
+                    {spyPhase === "Result" ? (
                       <>
                       <Box
                         width="100%"
@@ -500,9 +501,6 @@ const SpyUI = () => {
                         fontStyle={{ fontWeight: "bold", fontSize: "1.5rem" }}
                       >
 
-
-
-
                         <Grid
                           bg="rgba(255, 255, 255, 0.9)" // 반투명 하얀 배경색으로 설정
                           boxShadow="inset 0px 0px 10px rgba(0,0,0,0.1)" // 선명한 그림자 추가
@@ -515,43 +513,21 @@ const SpyUI = () => {
                         >
 
 
-                          <Text fontSize="xl" fontWeight="bold" mb="1rem" textAlign="center" color="darkgray">
+                          <Text fontSize="xl" fontWeight="bold" mb="1rem" textAlign="center" color="black">
                             스파이를 찾아라!
                           </Text>
-
-
 
                           <Grid flexDirection="column">
                             {/* JANG: ★★★★★★ 스파이 모드 투표 처리 */}
 
-
-
                             <form onSubmit={setVotedSpy} value={votedSpy}>
 
-
-                            {/* <RadioGroup onChange={setVotedSpy} value={votedSpy}> */}
-                              <Radio size="lg" colorScheme="teal" value={0}>
-                                <Text mr="1rem" flex="1" color="black">
-                                  {gamers[0].name}
-                                </Text>
-                              </Radio>
-                              <Radio size="lg" colorScheme="teal" value={1}>
-                                <Text mr="1rem" flex="1" color="black">
-                                  {/* {gamers[1].name} */}
-                                </Text>
-                              </Radio>
-                              <Radio size="lg" colorScheme="teal" value={2}>
-                                <Text mr="1rem" flex="1" color="black">
-                                  {/* {gamers[2].name} */}
-                                </Text>
-                              </Radio>
-                              <Radio size="lg" colorScheme="teal" value={3}>
-                                <Text mr="1rem" flex="1" color="black">
-                                  {/* {gamers[3].name} */}
-                                </Text>
-                              </Radio>
-                            {/* </RadioGroup> */}
-
+                            <Select placehloder="스파이 선택" size="lg" onChange={(e) => setSelectedGamer(e.target.value)}>
+                              <option value={0}>{gamers[0].name}</option>
+                              <option value={1}>{gamers[1].name}</option>
+                              <option value={2}>{gamers[2].name}</option>
+                              <option value={3}>{gamers[3].name}</option>
+                            </Select>
 
                               <Flex>
                                 <Button colorScheme="blue" onClick={votedSpyHandler}>
@@ -579,7 +555,7 @@ const SpyUI = () => {
 
                       {/* JUNHO: 스파이 모드 결과창 */}
                     {/* JANG: 스파이모드 3 : 결과 창 */}
-                    {spyPhase === "Result" ? (
+                    {spyPhase === "Vote" ? (
                       <>
                         <Box
                           width="100%"
