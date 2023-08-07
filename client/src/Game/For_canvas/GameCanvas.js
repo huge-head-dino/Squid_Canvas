@@ -284,16 +284,16 @@ function GameCanvas() {
                     <div>
                       <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)} />
                       <Button colorScheme='blue' onClick={submitAns}>제출</Button>
-                      {/* SANGYOON: PASS 버튼 기능 */}
-                      <Button
-                        colorScheme='blue'
-                        size='lg'
-                        onClick={handlePass}
-                      >
-                        PASS
-                      </Button>
                     </div>
                   ) : null}
+                  //JUNHO: 그리는 사람 pass 기능 추가
+                  {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ?
+                  (
+                    /* SANGYOON: PASS 버튼 기능 */
+                    <div>
+                      <Button colorScheme='blue' size='lg' onClick={handlePass}>PASS</Button>
+                    </div>
+                  ) :null}
               </>
             ) : null}
             {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? (

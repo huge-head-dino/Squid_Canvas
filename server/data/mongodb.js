@@ -29,7 +29,15 @@ const FruitWords = [
   },
   {
     theme: '과일',
+    name: '두리안'
+  },
+  {
+    theme: '과일',
     name: '사과'
+  },
+  {
+    theme: '과일',
+    name: '수박'
   },
   // 블루팀용
   {
@@ -71,10 +79,6 @@ const FruitWords = [
   },
   {
     theme: '과일',
-    name: '두리안'
-  },
-  {
-    theme: '과일',
     name: '곶감'
   },
   {
@@ -91,15 +95,11 @@ const FruitWords = [
   },
   {
     theme: '과일',
-    name: '수박'
+    name: '포도'
   },
   {
     theme: '과일',
     name: '라임'
-  },
-  {
-    theme: '과일',
-    name: '수박'
   }
 ];
 
