@@ -179,10 +179,12 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             canvas.addEventListener('mousedown', onMouseDown, false);
             canvas.addEventListener('mousemove', throttle(onMouseMove, 10), false);
             canvas.addEventListener('mouseup', onMouseUp, false);
+            canvas.addEventListener('mouseout', onMouseUp, false);
         } else {
             canvas.removeEventListener('mousedown', onMouseDown, false);
             canvas.removeEventListener('mousemove', throttle(onMouseMove, 10), false);
             canvas.removeEventListener('mouseup', onMouseUp, false);
+            canvas.removeEventListener('mouseout', onMouseUp, false);
         }
 
         
