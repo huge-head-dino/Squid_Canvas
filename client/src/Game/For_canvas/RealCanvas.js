@@ -198,6 +198,9 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 canvas.height = height * 2;
                 canvas.style.width = `${width}px`;
                 canvas.style.height = `${height}px`;
+
+                canvas.style.boxShadow = "10px 10px 5px grey";
+
                 context.scale(2, 2);
 
                 canvasInitializedRef.current = true;

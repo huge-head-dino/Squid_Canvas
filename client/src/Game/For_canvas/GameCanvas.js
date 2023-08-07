@@ -272,13 +272,14 @@ function GameCanvas() {
     <>
       {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
 
-      <Flex height="100%">
-        <div className="RealCanvas_3">
-          <div className='RealCanvas_2' style={{ height: "100%", width: "100%"}}>
-            <RealCanvas mySessionId={mySessionId} myUserName={myUserName} />
+      <Flex className="RealCanvas_3" width="50%" height="30%">
+          <Flex className="제시어" textAlign="center">
             {/* SANGYOON: 제시어 */}
             {!iAmSolverRender && <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>}
-          </div>
+          </Flex>
+          <Flex>
+            <RealCanvas mySessionId={mySessionId} myUserName={myUserName} />
+          </Flex>
           <div className='ButtonZone'>
             {phase === 'Game1' || phase === 'Game2' ? (
               <>
@@ -291,7 +292,7 @@ function GameCanvas() {
                       <Button colorScheme='blue' onClick={submitAns}>제출</Button>
                     </div>
                   ) : null}
-                  //JUNHO: 그리는 사람 pass 기능 추가
+                  {/* JUNHO: 그리는 사람 pass 기능 추가 */}
                   {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ?
                   (
                     /* SANGYOON: PASS 버튼 기능 */
@@ -310,11 +311,6 @@ function GameCanvas() {
                 방해하기!
               </Button>
             ) : null}
-
-
-
-
-
 
             <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
               {/* MRSEO: 조건 추가 */}
@@ -336,8 +332,7 @@ function GameCanvas() {
 
             </div>
           </div>
-        </div>
-      </Flex>
+        </Flex>
 
       {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
 
