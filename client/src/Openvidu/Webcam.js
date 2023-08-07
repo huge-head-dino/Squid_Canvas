@@ -50,12 +50,13 @@ import "./Webcam.css";
 
 
 // NOTE: 배포 전 확인!
-const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
-  const [mySessionId, setMySessionId] = useState('SessionA');
-  const [myUserName, setMyUserName] = useState('Participant' + Math.floor(Math.random() * 100));
+  //JUNHO: 8.7 플레이스 홀더 변경
+  const [mySessionId, setMySessionId] = useState('');
+  const [myUserName, setMyUserName] = useState('Participant' + 1);
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
