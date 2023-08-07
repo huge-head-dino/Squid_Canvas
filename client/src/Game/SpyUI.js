@@ -406,7 +406,7 @@ const SpyUI = () => {
                   justifyContent="center"
                   gap="5px"
                 >
-                  현재 {currentDrawerId}님이 그리고 있습니다.
+                  현재 {currentPainterId}님이 그리고 있습니다.
                 </Box>
               </Flex>
 
