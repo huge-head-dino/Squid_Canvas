@@ -25,6 +25,9 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     // Add state for the pen's thickness
     const [thickness, setThickness] = useState(2);
 
+    //JUNHO: 캔버스 크기 조정 문제 해결
+    const canvasInitializedRef = useRef(false);
+
     const canvasRef = useRef(null);
     const socketRef = useRef(null);
     const { iAmPainter, spyPainter, mode } = useStore(
@@ -56,14 +59,14 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     useEffect(() => {
         const canvas = canvasRef.current;
         //JUNHO: canvas 크기 조정
-        const parent = canvas.parentElement;
-        const width = parent.offsetWidth * 0.95;
-        const height = parent.offsetHeight * 0.95;
+        // const parent = canvas.parentElement;
+        // const width = parent.offsetWidth * 0.95;
+        // const height = parent.offsetHeight * 0.95;
 
-        canvas.width = width * 2;
-        canvas.height = height * 2;
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
+        // canvas.width = width * 2;
+        // canvas.height = height * 2;
+        // canvas.style.width = `${width}px`;
+        // canvas.style.height = `${height}px`;
         // JANG: 08.06 - 캔버스 그림자 효과 제거함..!
         // canvas.style.boxShadow = "10px 10px 5px grey";
 
@@ -182,16 +185,21 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             canvas.removeEventListener('mouseup', onMouseUp, false);
         }
 
+        
         const onResize = () => {
-        const parent = canvas.parentElement;
-        const width = parent.offsetWidth * 0.95;
-        const height = parent.offsetHeight * 0.95;
+            if(!canvasInitializedRef.current){
+                const parent = canvas.parentElement;
+                const width = parent.offsetWidth * 0.95;
+                const height = parent.offsetHeight * 0.95;
 
-        canvas.width = width * 2;
-        canvas.height = height * 2;
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
-        context.scale(2, 2);
+                canvas.width = width * 2;
+                canvas.height = height * 2;
+                canvas.style.width = `${width}px`;
+                canvas.style.height = `${height}px`;
+                context.scale(2, 2);
+
+                canvasInitializedRef.current = true;
+            }
         }
 
         window.addEventListener('resize', onResize, false);
@@ -225,6 +233,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             canvas.removeEventListener('mousedown', onMouseDown, false);
             canvas.removeEventListener('mousemove', throttle(onMouseMove, 10), false);
             canvas.removeEventListener('mouseup', onMouseUp, false);
+            window.removeEventListener('resize', onResize, false);
         };
 
     }, [iAmPainter,spyPainter, socketRef]);

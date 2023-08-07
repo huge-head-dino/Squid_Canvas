@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
 
   socket.on('startTimer1', () => {
     console.log('🟡 startTimer1_server !!!!!');
-    timerModule.startTimer(io, 50, () => {
+    timerModule.startTimer(io, 70, () => {
       console.log('타이머 종료');
       io.emit('round2Countdown');
     });
@@ -101,7 +101,7 @@ io.on('connection', (socket) => {
 
   socket.on('startTimer2', () => {
     console.log('🟢 startTimer2_server !!!!!');
-    timerModule.startTimer(io, 50, () => {
+    timerModule.startTimer(io, 70, () => {
       console.log('타이머 종료');
       // 최종 스코어 로직
       if (redScore > blueScore) {
