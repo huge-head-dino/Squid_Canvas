@@ -457,8 +457,9 @@ const Webcam = () => {
     setXy({ x: mouseX, y: mouseY });
   };
   return (
-    // JANG: 08.06 - 마우스 캐릭터
-    <div
+    <div>
+    {/* // JANG: 08.06 - 마우스 캐릭터 -> 나중에 주석 해지하기!! */}
+    {/* <div
       onMouseMove={xyHandler}
       onMouseDown={() => {
         setPointerSize(40);
@@ -482,7 +483,7 @@ const Webcam = () => {
           zIndex: "1000",
           pointerEvents: "none",
         }}
-      />
+      /> */}
 
       {session === undefined ? (
         <Box textAlign="center" className="Home_Screen">
@@ -625,34 +626,27 @@ const Webcam = () => {
           {/* MRSEO: useStore.getState()지움 */}
           {phase === "Ready" || phase === "Game1" || phase === "Game2" ? (
             // JANG: 게임 대기방으로 만들기!
-            <Box textAlign="center" height="100vh">
-              <Flex
-                height="80%"
+              <Flex className="Game_Screen_in1"
+                textAlign="center"
+                height="100vh" 
+                width="100vw"
                 flexDirection="column"
-                alignItems="center"
+                alignItems="center" // 자식 요소들이 교차 축을 최대한 차지하도록 설정
                 justifyContent="center"
               >
                 {/* JANG: 게임 대기방 */}
+              <Flex flex="9.3" width="100%">
                 <SessionContext.Provider value={{ mySessionId, myUserName }}>
                   <BasicUI />
                 </SessionContext.Provider>
               </Flex>
-
-              <Flex flex="1.7" minWidth='max-content' alignItems='center' justifyContent='center' gap='2'>
-
-
-                {/* MRSEO: 참가자 수 출력 테스트 */}
-                {/* JANG: 나중에 확인하고 버릴 거! */}
-                <Button onClick={consoleCommand}>test</Button>
-
-
-              </Flex>
-              {/* JANG: 08.06 - ★★★ 여기까지 재검토 */}
-
-
-              <Flex height="5%" alignItems="flex-end" justifyContent="flex-end">
+              <Flex flex="0.7" alignItems="flex-end" justifyContent="flex-end" width="100%">
                 {/* <Spacer /> */}
                 <ButtonGroup gap="2" mb="2">
+
+                  {/* MRSEO: 참가자 수 출력 테스트 -> 나중에 버릴 것! */}
+                  <Button onClick={consoleCommand} marginRight="10px">test</Button>
+
                   {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
                   {myUserName === host && gamers?.length === 4 ? (
                     <Button
@@ -675,7 +669,7 @@ const Webcam = () => {
                   </Button>
                 </ButtonGroup>
               </Flex>
-            </Box>
+              </Flex>
           ) : null}
         </div>
       ) : null}

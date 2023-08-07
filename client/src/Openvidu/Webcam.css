@@ -36,7 +36,7 @@
 	background-image: url("../../public/resources/images/main-bg1.png");
 	height: 100vh;
 	width: 100vw;
-	background-size: cover;
+	background-size: 100% 100%; /* 배경 이미지를 너비, 높이 100 100으로 확대 또는 축소 */
 	background-position: center;
   }
   
