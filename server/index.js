@@ -231,6 +231,12 @@ io.on('connection', (socket) => {
     });
   });
 
+  //YEONGWOO: 현재 그리는 사람의 id 전달
+  socket.on('updateCurrentPainterId', (currentPainterId) => {
+    console.log('updateCurrentPainterId_server: ', currentPainterId);
+    io.emit('updateCurrentPainterId', currentPainterId);
+  });
+
   socket.on('submitVotedSpy', (votedSpy) => {
     console.log('submitVotedSpy_server');
     votedSpyList[votedSpy]++;

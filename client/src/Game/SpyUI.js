@@ -97,8 +97,10 @@ const SpyUI = () => {
   const [spyCountdown, setSpyCountdown] = useState(false);
   const [spyPlayers, setSpyPlayers] = useState([0, 1, 2, 3]);
   const [playerTurn, setPlayerTrun] = useState(0);
- //JANG: 스파이 모드 결과창을 위해 상태 추가
- const [showSpy, setShowSpy] = useState('');
+  //JANG: 스파이 모드 결과창을 위해 상태 추가
+  const [showSpy, setShowSpy] = useState('');
+  //YEONGWOO: 스파이 모드 에서 누가 그리고 있는지 알려주는 상태
+  const [currentPainterId, setCurrentPainterId] = useState(null);
 
   useEffect(() => {
     if (gamers.length === 4) {
@@ -126,7 +128,10 @@ const SpyUI = () => {
       if (gamers[spy].name === myUserId) {
         setIAmSpy(true)
       }
+
       setSpyCountdown(true);
+      setCurrentPainterId(gamers[spyPlayer1].name);
+
       setTimeout(() => {
         setSpyCountdown(false);
         if (gamers[spyPlayer1].name === myUserId) {
@@ -150,7 +155,10 @@ const SpyUI = () => {
 
     socket.on('spy2GO', (spyPlayer2) => {
       console.log('spy2GO');
+
       setSpyCountdown(true);
+      setCurrentPainterId(gamers[spyPlayer2].name);
+
       setTimeout(() => {
         setSpyCountdown(false);
         console.log("spyPlayer2 : " + spyPlayer2);
@@ -175,7 +183,10 @@ const SpyUI = () => {
 
     socket.on('spy3GO', (spyPlayer3) => {
       console.log('spy3GO');
+
       setSpyCountdown(true);
+      setCurrentPainterId(gamers[spyPlayer3].name);
+
       setTimeout(() => {
         setSpyCountdown(false);
         if (gamers[spyPlayer3].name === myUserId) {
@@ -199,7 +210,10 @@ const SpyUI = () => {
 
     socket.on('spy4GO', (spyPlayer4) => {
       console.log('spy4GO');
+
       setSpyCountdown(true);
+      setCurrentPainterId(gamers[spyPlayer4].name);
+
       setTimeout(() => {
         if (gamers[spyPlayer4].name === myUserId) {
           setSpyPainter(true);
@@ -237,6 +251,11 @@ const SpyUI = () => {
       alert('스파이는 ' + gamers[votedSpy].name + '입니다.')
     });
 
+    //YEONGWOO: 현재 그리는 사람의 id 전달
+    socket.on('updateCurrentPainterId', (currentPainterId) => {
+      console.log('updateCurrentPainterId_client: ', currentPainterId);
+      setCurrentPainterId(currentPainterId);
+    });
 
     socket.on('spyTimerUpdate', spyTimerUpdateHandler);
     return () => {
@@ -250,6 +269,7 @@ const SpyUI = () => {
       socket.off('spyTimer3End');
       socket.off('spyTimer4End');
       socket.off('spyVoteResult');
+      socket.off('updateCurrentPainterId');
     }
 
   }, [socket, myUserId, gamers]);
@@ -265,6 +285,13 @@ const SpyUI = () => {
     socket.emit('updateQuestWords');
     // gamers[0].name === myUserName ? setIAmPainter(false) : setIAmPainter(true);
   };
+
+  //YEONGWOO: 스파이 모드에서 그리는 사람이 누구인지 알려주는 상태
+  useEffect(() => {
+    if(currentPainterId) {
+      socket.emit('updateCurrentPainterId', currentPainterId);
+    }
+  }, [currentPainterId]);
 
   useEffect(() => {
     const suggestWords = (names) => {
@@ -368,6 +395,18 @@ const SpyUI = () => {
                   >
                     제출
                   </Button> */}
+                </Box>
+                {/* YEONGWOO: 현재 누가 그리고 있는지 확인 */}
+                <Box
+                  bg="blue.500"
+                  width="200px"
+                  height="50px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  gap="5px"
+                >
+                  현재 {currentDrawerId}님이 그리고 있습니다.
                 </Box>
               </Flex>
 
