@@ -143,8 +143,8 @@ const CompetitionUI = () => {
   return (
     <>
       {/* JANG: 화면 전체 높이는 다시 수정 */}
-      <div style={{ height: "93vh", width: "100%" }}>
-        <Navbar />
+      <div style={{ height: "100%", width: "100%" }}>
+        {/* <Navbar /> */}
 
         {/*** @2-1. 경쟁 모드 ***/}
         <Grid h="10%" w="100%" templateColumns="2fr 5fr 2fr">
@@ -201,17 +201,20 @@ const CompetitionUI = () => {
         <Grid
           h="90%"
           w="100%"
-          marginLeft="20px"
           templateColumns="2fr 5fr 2fr"
           marginTop="10px"
+          justifyContent="center"
+          alignItems="center"
         >
           {/* 왼쪽 박스 1과 2 */}
           <Flex
             flexDirection="column"
             justifyContent="space-between"
+            alignItems="center"
             h="90%"
             w="90%"
             gap="10px"
+            margin="auto"
           >
             <Box
               className="Gamer_Box"
@@ -266,7 +269,7 @@ const CompetitionUI = () => {
               width: "100%",
               height: "100%",
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "center",
               alignItems: "center",
               position: "relative",
             }}
@@ -279,9 +282,11 @@ const CompetitionUI = () => {
           <Flex
             flexDirection="column"
             justifyContent="space-between"
+            alignItems="center"
             h="90%"
             w="90%"
             gap="10px"
+            margin="auto"
           >
             <Box
               className="Gamer_Box"
@@ -324,10 +329,10 @@ const CompetitionUI = () => {
               )}
             </Box>
           </Flex>
-          <Flex>
-            <Button onClick={goToWaitingRoom}>대기방으로~</Button>
-          </Flex>
         </Grid>
+        <Flex>
+          <Button colorScheme='teal' variant='solid' onClick={goToWaitingRoom} margin="10px">대기방으로~</Button>
+        </Flex>
         {/*** @2-1. 경쟁 모드 ***/}
       </div>
 

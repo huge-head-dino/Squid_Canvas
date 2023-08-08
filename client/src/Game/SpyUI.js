@@ -347,7 +347,7 @@ const SpyUI = () => {
     <>
       {/* JANG: 08.06 - ★★★ 상단 어떻게 처리할 건지..? */}
       {/* JUNHO: 빨간색, 노란색, 파란색 상단 네모 3개 시작*/}
-      <Navbar />
+      {/* <Navbar /> */}
 
       <Flex alignItems="center" justifyContent="space-between">
         <Box

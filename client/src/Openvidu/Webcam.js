@@ -451,6 +451,7 @@ const Webcam = () => {
   };
   return (
     <div>
+
       {/* // JANG: 08.06 - 마우스 캐릭터 -> 나중에 주석 해지하기!! */}
       {/* <div
       onMouseMove={xyHandler}
@@ -618,25 +619,25 @@ const Webcam = () => {
       ) : null}
 
       {session !== undefined ? (
-        <div className="Game_Screen">
+        <Box textAlign="center" className="Game_Screen">
           {/* MRSEO: useStore.getState()지움 */}
           {phase === "Ready" || phase === "Game1" || phase === "Game2" ? (
             // JANG: 게임 대기방으로 만들기!
             <Flex className="Game_Screen_in1"
               textAlign="center"
-              height="100vh"
-              width="100vw"
+              height="100%"
+              width="100%"
               flexDirection="column"
               alignItems="center" // 자식 요소들이 교차 축을 최대한 차지하도록 설정
               justifyContent="center"
             >
               {/* JANG: 게임 대기방 */}
-              <Flex flex="9.3" width="100%">
+              <Flex flex="9.5" width="100%">
                 <SessionContext.Provider value={{ mySessionId, myUserName }}>
                   <BasicUI />
                 </SessionContext.Provider>
               </Flex>
-              <Flex flex="0.7" alignItems="flex-end" justifyContent="flex-end" width="100%">
+              <Flex flex="0.5" alignItems="flex-end" justifyContent="flex-end" width="100%">
                 {/* <Spacer /> */}
                 <ButtonGroup gap="2" mb="2">
 
@@ -668,7 +669,7 @@ const Webcam = () => {
               </Flex>
             </Flex>
           ) : null}
-        </div>
+        </Box>
       ) : null}
     </div>
   );

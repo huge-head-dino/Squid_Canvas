@@ -15,6 +15,8 @@ import CircleIcon from '@mui/icons-material/Circle';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { red, green } from '@mui/material/colors';
 
+import { Img } from "@chakra-ui/react";
+
 const RealCanvas = ({mySessionId, myUserName}) => {
     const current = useRef({
         color: 'black',
@@ -199,7 +201,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 canvas.style.width = `${width}px`;
                 canvas.style.height = `${height}px`;
 
-                canvas.style.boxShadow = "10px 10px 5px grey";
+                // canvas.style.boxShadow = "10px 10px 5px grey";
 
                 context.scale(2, 2);
 
@@ -272,8 +274,19 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     ];
 
     return (
-        <div className="RealCanvas_1" style={{width: "100%", height: "100%"}}>
-            <canvas ref={canvasRef} className="whiteboard" style={{width: "90%", height: "90%"}}/>
+        <div className="RealCanvas_1" style={{ position: "relative", width: "100%", height: "100%"}}>
+            {/* JANG: 캔버스 임시 꾸미기 */}
+            <Img
+                    src={`${process.env.PUBLIC_URL}/resources/images/whiteboard.png`}
+                    alt="character"
+                    width="20%"
+                    height="20%"
+                    position="absolute"
+                    top="750px"
+                    left="50px"
+            />
+            <canvas ref={canvasRef} className="whiteboard" style={{width: "100%", height: "90%"}}/>
+            
             {/* YEONGWOO: clearCanvas 동기화, colorpicker수정, icon 수정 */}
             <div className="btn_zone" style ={{ display: 'flex', justifyContent: 'center',alignItems: 'center', gap: '20px', margin: 'auto' }}>
                 <div>

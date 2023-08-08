@@ -267,37 +267,37 @@ function GameCanvas() {
               
               {/* 캔버스 상단 - 제시어 0.5 */}
               {/* JANG: 폰트 크기, 굵기, 스타일 수정! */}
-              <Flex className="제시어" textAlign="center" justifyContent="center" flex="1"> 
-                {!iAmSolverRender && <h1 style={{ color: "white" }}>제시어 : {suggestWord}</h1>}
+              <Flex className="제시어" textAlign="center" justifyContent="center" alignItems="center" flex="0.7"> 
+                {!iAmSolverRender && <h1 style={{ color: "white"}}>제시어 : {suggestWord}</h1>}
               </Flex>
 
-              {/* 캔버스 중단 - 진짜 캔버스 8 -> JANG: 크기 수정!!*/}
+              {/* 캔버스 중단 - 진짜 캔버스 8*/}
               <Flex className="진짜_캔버스" justifyContent="center" flex="8" width="90%">
                 <RealCanvas mySessionId={mySessionId} myUserName={myUserName} width="100%"/>
               </Flex>
 
               {/* 캔버스 하단 - 버튼 1.5 */}
-              <Flex className='ButtonZone' justifyContent="center" flex="1.5" >
-                {phase === 'Game1' || phase === 'Game2' ? (
+              <Flex className='ButtonZone' justifyContent="center" flex="1" >
+                {/* {phase === 'Game1' || phase === 'Game2' ? ( */}
                   <>
-                  <Flex justifyContent="center" gap="1px" width="80%">
+                  <Flex justifyContent="center" gap="2" width="80%">
 
-                    {(round === 1 && team === 'red' && iAmSolverRender === true) || (round === 2 && team === 'blue' && iAmSolverRender === true) ?
-                      (
+                    {/* {(round === 1 && team === 'red' && iAmSolverRender === true) || (round === 2 && team === 'blue' && iAmSolverRender === true) ?
+                      ( */}
                         <>
-                          <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)} />
+                          <Input placeholder='정답을 입력하시오' size='lg' value={ans} onChange={(e) => setAns(e.target.value)} />
                           <Button colorScheme='pink' size='lg' onClick={submitAns} style={{margin: "auto 1px auto 1px"}}>제출</Button>
                         </>
-                      ) : null} 
-                      {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ? 
-                      ( 
+                      {/* ) : null}  */}
+                      {/* {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ? 
+                      (  */}
                           <Button colorScheme='blue' size='lg' onClick={handlePass} style={{margin: "auto 1px auto 1px"}}>PASS</Button>
-                      ) :null} 
+                      {/* ) :null}  */}
 
                   </Flex>
                   </>
-                ) : null}
-                {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? (
+                {/* ) : null} */}
+                {/* {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? ( */}
                   <Button
                     colorScheme='green'
                     size='lg'
@@ -305,7 +305,7 @@ function GameCanvas() {
                   >
                     방해하기!
                   </Button>
-                ) : null}
+                {/* ) : null} */}
               </Flex>
             </Flex>
 

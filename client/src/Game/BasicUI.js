@@ -105,7 +105,7 @@ function BasicUI() {
           {mode === 'waitingRoom' ? (
             <>
               {/* 모드 선택하는 창 */}
-              <Navbar />
+              {/* <Navbar /> */}
 
               <Flex
                 h="66%"
@@ -277,12 +277,12 @@ function BasicUI() {
               {/*** @2-0. 게임 시작 전 ***/}
             </>
           ) : mode === "competition" ? (
-            <div>
+            <>
               
               <CompetitionUI />
             
               {/*** @2-1. 경쟁 모드 ***/}
-            </div>
+            </>
           ) : (
             <>
               {/*** @2-2. 스파이 모드 ***/}
