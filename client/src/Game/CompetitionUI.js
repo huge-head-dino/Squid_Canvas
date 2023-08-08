@@ -56,6 +56,8 @@ const CompetitionUI = () => {
     sortGamer,
     setPhase,
     setMode,
+    iAmPainter,
+    iAmSolver,
   } = useStore((state) => ({
     gamers: state.gamers,
     setPlayerCount: state.setPlayerCount,
@@ -67,6 +69,8 @@ const CompetitionUI = () => {
     sortGamer: state.sortGamer,
     setPhase: state.setPhase,
     setMode: state.setMode,
+    iAmPainter: state.iAmPainter,
+    iAmSolver: state.iAmSolver,
   }));
 
   useEffect(() => {
@@ -135,11 +139,11 @@ const CompetitionUI = () => {
   }, [socket]);
 
   useEffect(() => {
-    socket.on('completitionFinish', () => {
-      alert('경쟁모드가 종료되었습니다.');
+    socket.on("completitionFinish", () => {
+      alert("경쟁모드가 종료되었습니다.");
       competitionUIInitializer();
-      setMode('waitingRoom');
-    })
+      setMode("waitingRoom");
+    });
   });
 
   // MRSEO: 경쟁모드 초기화 함수
@@ -251,6 +255,7 @@ const CompetitionUI = () => {
                 //   : {} // 특정 조건이 아닐 때는 빈 객체를 전달하여 hover 효과를 적용하지 않음
               }}
             >
+              <div style={{position: 'relative'}}>
               {gamers[0] && (
                 <UserVideoComponent
                   streamManager={gamers[0].streamManager}
@@ -258,6 +263,34 @@ const CompetitionUI = () => {
                   key={gamers[0].name}
                 />
               )}
+
+              {iAmPainter&&(
+              <Img
+                src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                alt="character"
+                width="30%"
+                height="30%"
+                style={{
+                  position: "absolute",
+                  top: "0%", // Adjust as necessary
+                  left: "0%", // Centering the image if it's 80% width
+                }}
+              />
+              )}
+              {iAmSolver&&(
+              <Img
+                src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
+                alt="character"
+                width="30%"
+                height="30%"
+                style={{
+                  position: "absolute",
+                  top: "0%", // Adjust as necessary
+                  left: "0%", // Centering the image if it's 80% width
+                }}
+              />
+              )}
+              </div>
             </Box>
             <Box
               className="Gamer_Box"
@@ -271,6 +304,7 @@ const CompetitionUI = () => {
                 boxShadow: "0 0 20px rgba(255, 0, 0, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과
               }}
             >
+              <div style={{position: 'relative'}}>
               {gamers[2] && (
                 <UserVideoComponent
                   streamManager={gamers[2].streamManager}
@@ -278,6 +312,33 @@ const CompetitionUI = () => {
                   key={gamers[2].name}
                 />
               )}
+              {iAmPainter&&(
+              <Img
+                src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                alt="character"
+                width="30%"
+                height="30%"
+                style={{
+                  position: "absolute",
+                  top: "0%", // Adjust as necessary
+                  left: "0%", // Centering the image if it's 80% width
+                }}
+              />
+              )}
+              {iAmSolver&&(
+              <Img
+                src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
+                alt="character"
+                width="30%"
+                height="30%"
+                style={{
+                  position: "absolute",
+                  top: "0%", // Adjust as necessary
+                  left: "0%", // Centering the image if it's 80% width
+                }}
+              />
+              )}
+              </div>
             </Box>
           </Flex>
 
@@ -318,6 +379,7 @@ const CompetitionUI = () => {
                 boxShadow: "0 0 20px rgba(0, 0, 255, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (파란색)
               }}
             >
+              <div style={{position: 'relative'}}>
               {gamers[1] && (
                 <UserVideoComponent
                   streamManager={gamers[1].streamManager}
@@ -325,6 +387,33 @@ const CompetitionUI = () => {
                   key={gamers[1].name}
                 />
               )}
+              {iAmPainter&&(
+              <Img
+                src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                alt="character"
+                width="30%"
+                height="30%"
+                style={{
+                  position: "absolute",
+                  top: "0%", // Adjust as necessary
+                  left: "0%", // Centering the image if it's 80% width
+                }}
+              />
+              )}
+              {iAmSolver&&(
+              <Img
+                src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
+                alt="character"
+                width="30%"
+                height="30%"
+                style={{
+                  position: "absolute",
+                  top: "0%", // Adjust as necessary
+                  left: "0%", // Centering the image if it's 80% width
+                }}
+              />
+              )}
+              </div>
             </Box>
             <Box
               className="Gamer_Box"
@@ -338,6 +427,7 @@ const CompetitionUI = () => {
                 boxShadow: "0 0 20px rgba(0, 0, 255, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (파란색)
               }}
             >
+              <div style={{position: 'relative'}}>
               {gamers[3] && (
                 <UserVideoComponent
                   streamManager={gamers[3].streamManager}
@@ -345,11 +435,45 @@ const CompetitionUI = () => {
                   key={gamers[3].name}
                 />
               )}
+              {iAmPainter&&(
+              <Img
+                src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                alt="character"
+                width="30%"
+                height="30%"
+                style={{
+                  position: "absolute",
+                  top: "0%", // Adjust as necessary
+                  left: "0%", // Centering the image if it's 80% width
+                }}
+              />
+              )}
+              {iAmSolver&&(
+              <Img
+                src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
+                alt="character"
+                width="30%"
+                height="30%"
+                style={{
+                  position: "absolute",
+                  top: "0%", // Adjust as necessary
+                  left: "0%", // Centering the image if it's 80% width
+                }}
+              />
+              )}
+              </div>
             </Box>
           </Flex>
         </Grid>
         <Flex>
-          <Button colorScheme='teal' variant='solid' onClick={goToWaitingRoom} margin="10px">대기방으로~</Button>
+          <Button
+            colorScheme="teal"
+            variant="solid"
+            onClick={goToWaitingRoom}
+            margin="10px"
+          >
+            대기방으로~
+          </Button>
         </Flex>
         {/*** @2-1. 경쟁 모드 ***/}
       </div>
