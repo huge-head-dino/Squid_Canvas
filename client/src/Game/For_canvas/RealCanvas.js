@@ -193,7 +193,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
         const onResize = () => {
             if(!canvasInitializedRef.current){
                 const parent = canvas.parentElement;
-                const width = parent.offsetWidth * 0.95;
+                const width = parent.offsetWidth * 1;
                 const height = parent.offsetHeight * 0.95;
 
                 canvas.width = width * 2;
@@ -276,7 +276,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     return (
         <div className="RealCanvas_1" style={{ position: "relative", width: "100%", height: "100%"}}>
             {/* JANG: 캔버스 임시 꾸미기 */}
-            <Img
+            {/* <Img
                     src={`${process.env.PUBLIC_URL}/resources/images/whiteboard.png`}
                     alt="character"
                     width="20%"
@@ -284,18 +284,29 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                     position="absolute"
                     top="750px"
                     left="50px"
-            />
+            /> */}
             <canvas ref={canvasRef} className="whiteboard" style={{width: "100%", height: "90%"}}/>
             
             {/* YEONGWOO: clearCanvas 동기화, colorpicker수정, icon 수정 */}
-            <div className="btn_zone" style ={{ display: 'flex', justifyContent: 'center',alignItems: 'center', gap: '20px', margin: 'auto' }}>
-                <div>
+            <div className="btn_zone" style ={{ display: 'flex', justifyContent: 'center',alignItems: 'center', gap: '20px', margin: '20px auto 0 auto' }}>
+                <div style={{position:"relative"}} >
                     <ColorLensIcon
                         onClick={handleToggle}
                         className="palleteBtn"
                         sx={{ fontSize: 50, color: green[500] }}
-                    />
+                        />
                 </div>
+                        {toggle && (
+                            <GithubPicker
+                                width="57%"
+                                margin="auto"
+                                colors={colors}
+                                className="color"
+                                onChangeComplete={onChangeComplete}
+                                position="absolute"
+                                
+                            />
+                        )}
                 <div>
                     <CircleIcon
                         onClick={() => changeLineWidth(2)}
@@ -330,14 +341,6 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                 
             </div>
 
-            {toggle && (
-                <GithubPicker
-                    width="auto"
-                    colors={colors}
-                    className="color"
-                    onChangeComplete={onChangeComplete}
-                />
-            )}
         </div>
     );
 }
