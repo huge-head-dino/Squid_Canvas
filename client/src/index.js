@@ -4,7 +4,7 @@ import reportWebVitals from './[X] Lib_Chakra/reportWebVitals';
 import * as serviceWorker from './[X] Lib_Chakra/serviceWorker';
 
 // Chakra UI
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { ColorModeScript } from '@chakra-ui/react';
 import theme from './[X] Lib_Chakra/theme'
 
@@ -16,12 +16,19 @@ import Webcam from './Openvidu/Webcam';
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
+const customTheme = extendTheme({
+  fonts: {
+    body: '"Yeon Sung", sans-serif', // 폰트 이름을 정확하게 지정
+    heading: '"Yeon Sung", sans-serif', // 폰트 이름을 정확하게 지정
+  },
+});
+
 root.render(
   <StrictMode>
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={customTheme}>
       {/* JANG: 08.06 - 다크 모드 해결이 안 됨.. */}
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <Webcam />
+      <Webcam />
     </ChakraProvider>
   </StrictMode>
 );
