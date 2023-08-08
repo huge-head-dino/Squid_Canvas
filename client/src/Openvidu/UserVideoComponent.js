@@ -20,7 +20,7 @@ export default class UserVideoComponent extends Component {
                         <div className="streamcomponent" style={{height: '100%'}}>
                             <OpenViduVideoComponent streamManager={this.props.streamManager} style={{height: '70%'}}/>
                             {/* JANG: 색상 변경 나중에!!!!!!*/}
-                            <p style={{color: "white"}}><h3>{this.getNicknameTag()}</h3></p>
+                            <p style={{color: "black"}}><h3>{this.getNicknameTag()}</h3></p>
                         </div>
                     ) : null}
                 </div>

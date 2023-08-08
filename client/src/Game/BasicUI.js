@@ -128,7 +128,7 @@ function BasicUI() {
                   justifyContent="center" // 중앙정렬
                 >
                   <Img
-                    src={`${process.env.PUBLIC_URL}/resources/images/jingjing.png`}
+                    // src={`${process.env.PUBLIC_URL}/resources/images/jingjing.png`}
                     alt="character"
                     width="80%"
                     animation={animation}

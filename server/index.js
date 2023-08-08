@@ -168,10 +168,11 @@ io.on('connection', (socket) => {
     console.log(spyPlayers);
     //플레이어 순서 섞기
     shuffleArray(spyPlayers);
-    spy = Math.floor(Math.random() * 4);
-    while (spy === spyPlayers[0]) {
-      spy = Math.floor(Math.random() * 4);
-    }
+    // spy = Math.floor(Math.random() * 4);
+    // while (spy === spyPlayers[0]) {
+    //   spy = Math.floor(Math.random() * 4);
+    // } FIXME: 스파이 고정
+    spy = 0;
     console.log(spyPlayers);
     io.emit('spy1GO', spyPlayers[0], spy, spyPlayers);
   });
@@ -278,10 +279,15 @@ const clearvar = () => {
     console.log('타이머 종료');
     clearInterval(timerModule.getIntervalId());
   }
-  currentSuggestIndex = 0;
+  if (spyTimerModule.getIntervalId()) {
+    console.log('타이머 종료');
+    clearInterval(spyTimerModule.getIntervalId());
+  }
   redScore = 0;
   blueScore = 0;
   votedSpyList = [0, 0, 0, 0];
+  cur_ComIndex = 0;
+  cur_SpyIndex = 0;
 };
 
 

@@ -469,7 +469,7 @@ const SpyUI = () => {
                     // JANG: 캔버스 크기 임시 조정
                     h="500px"
                     w="800px"
-                    bg="teal"
+                    bg="white"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
