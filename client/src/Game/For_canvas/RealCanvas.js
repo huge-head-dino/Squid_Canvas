@@ -272,8 +272,8 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     ];
 
     return (
-        <div className="RealCanvas_1">
-            <canvas ref={canvasRef} className="whiteboard"/>
+        <div className="RealCanvas_1" style={{width: "100%", height: "100%"}}>
+            <canvas ref={canvasRef} className="whiteboard" style={{width: "90%", height: "90%"}}/>
             {/* YEONGWOO: clearCanvas 동기화, colorpicker수정, icon 수정 */}
             <div className="btn_zone" style ={{ display: 'flex', justifyContent: 'center',alignItems: 'center', gap: '20px', margin: 'auto' }}>
                 <div>

@@ -11,15 +11,14 @@ import useStore from "../../store";
 
 // SANGYOON: Sound Effect 추가
 import { RoundMusic, SubmitSound } from "../audio";
-
 // JANG: 08.06 - chakra-ui 추가 + react-bootstrap 변경할 것!
 import {
   Box,
   Input,
   Flex,
-  Grid
+  Grid,
+  Button
 } from '@chakra-ui/react'
-import { Button } from 'react-bootstrap'
 
 
 function GameCanvas() {
@@ -261,82 +260,76 @@ function GameCanvas() {
 
 
 
-
-
-
-
-
-
-
-
   return (
-    <>
-      {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
+    <>    
+    {/* JANG: 08 - 1. 캔버스 크기 및 제시어 조정 */}
+            <Flex Flex className="RealCanvas_3" flexDirection="column" justifyContent="center" alignItems="center">
+              
+              {/* 캔버스 상단 - 제시어 0.5 */}
+              {/* JANG: 폰트 크기, 굵기, 스타일 수정! */}
+              <Flex className="제시어" textAlign="center" justifyContent="center" flex="1"> 
+                {!iAmSolverRender && <h1 style={{ color: "white" }}>제시어 : {suggestWord}</h1>}
+              </Flex>
 
-      <Flex className="RealCanvas_3" width="50%" height="30%">
-        <Flex className="제시어" textAlign="center">
-          {/* SANGYOON: 제시어 */}
-          {!iAmSolverRender && <h1 style={{ color: "tomato" }}>제시어 : {suggestWord}</h1>}
-        </Flex>
-        <Flex>
-          <RealCanvas mySessionId={mySessionId} myUserName={myUserName} />
-        </Flex>
-        <div className='ButtonZone'>
-          {phase === 'Game1' || phase === 'Game2' ? (
-            <>
-              {/* MRSEO: 조건 수정 */}
-              {(round === 1 && team === 'red' && iAmSolverRender === true) || (round === 2 && team === 'blue' && iAmSolverRender === true) ?
-                (
-                  // JANG: TODO - 정답 입력창 css 수정
-                  <div>
-                    <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)} />
-                    <Button colorScheme='blue' onClick={submitAns}>제출</Button>
-                  </div>
+              {/* 캔버스 중단 - 진짜 캔버스 8 -> JANG: 크기 수정!!*/}
+              <Flex className="진짜_캔버스" justifyContent="center" flex="8" width="90%">
+                <RealCanvas mySessionId={mySessionId} myUserName={myUserName} width="100%"/>
+              </Flex>
+
+              {/* 캔버스 하단 - 버튼 1.5 */}
+              <Flex className='ButtonZone' justifyContent="center" flex="1.5" >
+                {phase === 'Game1' || phase === 'Game2' ? (
+                  <>
+                  <Flex justifyContent="center" gap="1px" width="80%">
+
+                    {(round === 1 && team === 'red' && iAmSolverRender === true) || (round === 2 && team === 'blue' && iAmSolverRender === true) ?
+                      (
+                        <>
+                          <Input placeholder='정답을 입력하시오' value={ans} onChange={(e) => setAns(e.target.value)} />
+                          <Button colorScheme='pink' size='lg' onClick={submitAns} style={{margin: "auto 1px auto 1px"}}>제출</Button>
+                        </>
+                      ) : null} 
+                      {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ? 
+                      ( 
+                          <Button colorScheme='blue' size='lg' onClick={handlePass} style={{margin: "auto 1px auto 1px"}}>PASS</Button>
+                      ) :null} 
+
+                  </Flex>
+                  </>
                 ) : null}
-              {/* JUNHO: 그리는 사람 pass 기능 추가 */}
-              {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ?
-                (
-                  /* SANGYOON: PASS 버튼 기능 */
-                  <div>
-                    <Button colorScheme='blue' size='lg' onClick={handlePass}>PASS</Button>
-                  </div>
+                {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? (
+                  <Button
+                    colorScheme='green'
+                    size='lg'
+                    onClick={hacking}
+                  >
+                    방해하기!
+                  </Button>
                 ) : null}
-            </>
-          ) : null}
-          {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? (
-            <Button
-              colorScheme='green'
-              size='lg'
-              onClick={hacking}
-            >
-              방해하기!
-            </Button>
-          ) : null}
+              </Flex>
+            </Flex>
 
-          <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}>
-            {/* MRSEO: 조건 추가 */}
-
-            <div>
-              {round1Countdown === true ? (
-                <>
-                  <h1 style={{ fontWeight: "bold" }}>레드팀 준비해주세요~!</h1>
-                  < Countdown />
-                </>
-              ) : null}
-              {round2Countdown === true ? (
-                <>
-                  <h1 style={{ fontWeight: "bold" }}>블루팀 준비해주세요~!</h1>
-                  < Countdown />
-                </>
-              ) : null}
-            </div>
-
-          </div>
-        </div>
-      </Flex>
-
-      {/* JANG: 08.06 - ★★★ 이 부분 어떻게 처리할 건지?!! */}
-
+              
+              {/* 캔버스 이펙트 효과 */}
+              
+              {/* JANG: 카운트다운 위치 수정 */}
+              {/* <div style={{ position: "absolute", marginBottom: 'auto', color: "gray", fontSize: "24px", zIndex: 100 }}> */}
+              <div style={{ position: "fixed", 
+                            top:"45%", left:"42%",
+                            color: "gray", fontSize: "24px", zIndex: 100 }}>
+                  {round1Countdown === true ? (
+                    <>
+                      <h1 style={{ fontWeight: "bold" }}>레드팀 준비해주세요~!</h1>
+                      < Countdown />
+                    </>
+                  ) : null}
+                  {round2Countdown === true ? (
+                    <>
+                      <h1 style={{ fontWeight: "bold" }}>블루팀 준비해주세요~!</h1>
+                      < Countdown />
+                    </>
+                  ) : null}
+              </div>
 
     </>
   );

@@ -4,17 +4,29 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
+  /* JANG: 나중에 지우기! */
+  /* background-color: green; */
 }
 
 .RealCanvas_3{
-  width:90%;
+  width: 90%;
   height: 90%;
-
   position: absolute; /* 일반적인 문서 흐름에 따라 배치 (absolute와 fixed는 특정 위치 고집)*/
-  top: 50%; /* 부모 요소의 정중앙으로 위치하기 위해 50% 설정 */
+  top: 45%; /* 부모 요소의 정중앙으로 위치하기 위해 50% 설정 */
   left: 50%; 
   transform: translate(-50%, -50%); /*자기 자신의 크기만큼 왼쪽과 위로 이동하여 정중앙 정렬  */
 
   display: flex;
-  background-color: pink;
+  background-color: brown; /* JANG: 돌 질감으로 바꾸기!!*/
+
+  border-radius: 20px;
+  border: 5px solid #333;
 }
+
+/* JANG: 나중에 지우기! */
+
+.진짜_캔버스 {
+    background-color: white;
+}
+
