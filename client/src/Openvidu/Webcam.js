@@ -60,6 +60,7 @@ const Webcam = () => {
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
+  const [audio, setAudio] = useState(false);
 
   // MRSEO: ZUSTAND 상태 변수 선언
   const {
@@ -203,7 +204,7 @@ const Webcam = () => {
           let publisher = await OV.initPublisherAsync(undefined, {
             audioSource: undefined,
             videoSource: undefined,
-            publishAudio: true,
+            publishAudio: false,
             publishVideo: true,
             resolution: '640x480',
             frameRate: 30,
@@ -422,6 +423,9 @@ const Webcam = () => {
     console.log("mode : " + useStore.getState().mode);
     // setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
     // setDrawable(!gamers[0].drawable, gamers[0].name);
+    console.log('audio : ', audio);
+    publisher.publishAudio(!audio);
+    setAudio(!audio);
   }
 
   //JANG: 08.06 - Chakra UI, 애니메이션 효과
