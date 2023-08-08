@@ -43,6 +43,7 @@ function GameCanvas() {
     setRedScoreCnt,
     setBlueScoreCnt,
     setAns,
+    myUserId,
   } = useStore(
     state => ({
       setCanSubmitAns: state.setCanSubmitAns,
@@ -62,6 +63,7 @@ function GameCanvas() {
       setRedScoreCnt: state.setRedScoreCnt,
       setBlueScoreCnt: state.setBlueScoreCnt,
       setAns: state.setAns,
+      myUserId: state.myUserId,
     })
   )
 
@@ -127,6 +129,10 @@ function GameCanvas() {
         alert('블루팀 승리');
       } else {
         alert('무승부');
+      }
+      gameCanvasInitializer();
+      if (useStore.getState().host === myUserName) {
+        socket.emit('completitionFinish'); // competionGameFinish 이벤트 발생으로 게임 종료 후 결과 페이지로 이동
       }
     }
 
@@ -257,6 +263,21 @@ function GameCanvas() {
       socket.off('suggestWord', suggestWords);
     };
   }, []);
+
+  const gameCanvasInitializer = () => {
+    setRound1Countdown(false);
+    setRound2Countdown(false);
+    setIAmSolverRender(false);
+    setSuggestWord('');
+    setCanSubmitAns(false);
+    setIAmPainter(true);
+    setCanSeeAns(true, myUserId);
+    setDrawable(true, myUserId);
+    setIAmSolver(false);
+    setRedScoreCnt(0);
+    setBlueScoreCnt(0);
+    setAns('');
+  };
 
 
 

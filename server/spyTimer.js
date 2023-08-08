@@ -1,12 +1,14 @@
 // spyTimer.js
 let timerSeconds = 10;
+let intervalId = null;
+
 
 // 타이머 값을 1초마다 감소시키고 클라이언트들에게 전달하는 함수
 const startTimer = (io, initialTimerSeconds = 10, callback) => {
   console.log('타이머 시작');
   // MRSEO: 타이머 값 초기화
   timerSeconds = initialTimerSeconds; // set the initial timer seconds
-  let intervalId = setInterval(() => { 
+  intervalId = setInterval(() => { 
     sendTimerValueToClients(io);
     timerSeconds--;
 
@@ -35,8 +37,12 @@ const getTimerValue = () => {
   return timerSeconds;
 };
 
+const getIntervalId = () => {
+  return intervalId;
+}
 
 module.exports = {
   startTimer,
   getTimerValue,
+  getIntervalId,
 };

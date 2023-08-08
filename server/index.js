@@ -28,6 +28,7 @@ let numClients = 0;
 let redScore = 0;
 let blueScore = 0;
 let votedSpyList = [0, 0, 0, 0];
+let roomMembers = 0;
 
 // ---- socket.io
 const io = socketIO(server, {
@@ -49,6 +50,7 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
     // 클라이언트가 연결 해제될 때마다 클라이언트 수 감소
     numClients--;
+    console.log(roomMembers);
     if (roomMembers === 0) {
       clearvar();
     }
@@ -56,12 +58,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joinRoom', (mySessionId) => {
-    // console.log('$$$$$$$$$$$$$$$$$$$$$$$joinRoom: ', mySessionId);
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$joinRoom: ', mySessionId);
+    roomMembers++;
+    console.log(roomMembers);
     socket.join(mySessionId);
   });
 
   socket.on('leaveSession', (mySessionId) => {
     console.log('$$$$$$$$$$$$$$$$$$$$$$$leaveSession');
+    roomMembers--;
     clearvar();
     socket.leave(mySessionId);
   });
@@ -69,7 +74,7 @@ io.on('connection', (socket) => {
   socket.on('goToWaitingRoom', () => {
     console.log('$$$$$$$$$$$$$$$$$$$$$$$goToWatingRoom');
     clearvar();
-    io.emit('gameEnd')
+    io.emit('gameEndByButton')
   })
 
   socket.on('drawing', (data) => {
@@ -235,6 +240,16 @@ io.on('connection', (socket) => {
       io.emit('spyTimer4End', spyPlayer4);
     });
   });
+
+  socket.on('spyFinish', () => {
+    console.log('spyFinish');
+    io.emit('spyFinish');
+  });
+
+  socket.on('completitionFinish', () => {
+    console.log('completitionFinish');
+    io.emit('completitionFinish');
+  })
 
   //YEONGWOO: 현재 그리는 사람의 id 전달
   socket.on('updateCurrentPainterId', (currentPainterId) => {

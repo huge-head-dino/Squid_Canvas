@@ -56,7 +56,7 @@ const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'htt
 const Webcam = () => {
   //JUNHO: 8.7 플레이스 홀더 변경
   const [mySessionId, setMySessionId] = useState('');
-  const [myUserName, setMyUserName] = useState('Participant' + 1);
+  const [myUserName, setMyUserName] = useState('');
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
@@ -251,8 +251,8 @@ const Webcam = () => {
 
     setSession(undefined);
     setSubscribers([]);
-    setMySessionId('SessionA');
-    setMyUserName('Participant' + Math.floor(Math.random() * 100));
+    setMySessionId('');
+    setMyUserName('');
     setPublisher(undefined);
   };
 

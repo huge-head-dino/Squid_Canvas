@@ -120,24 +120,38 @@ const CompetitionUI = () => {
   }, []);
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 이벤트 핸들러
   useEffect(() => {
-    socket.on("gameEnd", () => {
+    socket.on("gameEndByButton", () => {
       alert("게임이 종료되었습니다.");
       setMode("waitingRoom");
     });
 
     return () => {
-      socket.off("gameEnd");
+      socket.off("gameEndByButton");
     };
   }, [socket]);
 
-  // MRSEO: 대기실 버튼으로 대기실로 돌아가는 함수
-  const goToWaitingRoom = () => {
+  useEffect(() => {
+    socket.on('completitionFinish', () => {
+      alert('경쟁모드가 종료되었습니다.');
+      competitionUIInitializer();
+      setMode('waitingRoom');
+    })
+  });
+
+  // MRSEO: 경쟁모드 초기화 함수
+  const competitionUIInitializer = () => {
     setRedScoreCnt(0);
     setBlueScoreCnt(0);
+    setTimerValue(0);
     setRound(1);
     setPhase("Ready");
     setMode("waitingRoom");
     socket.emit("goToWaitingRoom");
+  };
+
+  // MRSEO: 대기실 버튼으로 대기실로 돌아가는 함수
+  const goToWaitingRoom = () => {
+    competitionUIInitializer();
   };
 
   return (
