@@ -1,3 +1,5 @@
+
+
 .ButtonZone{
   height: 10%;
   display: flex;
@@ -32,3 +34,10 @@
     border: 5px solid #333;
 }
 
+/* // JUNHO: 깜박이는 애니메이션 */
+@keyframes blinking {
+	0% { opacity: 1; }
+	50% { opacity: 0; }
+	100% { opacity: 1; }
+  }
+  /* // JUNHO: 깜박이는 애니메이션 */

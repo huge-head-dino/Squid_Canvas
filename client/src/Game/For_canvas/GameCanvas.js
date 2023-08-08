@@ -67,8 +67,22 @@ function GameCanvas() {
 
   const [correctRender, setCorrectRender] = useState(false);
   const [incorrectRender, setIncorrectRender] = useState(false);
+  const [blinking, setBlinking] = useState(false);
 
+  
   // MRSEO:
+
+  // JUNHO: 깜박이는 애니메이션
+  const handleButtonClick = () => {
+    setBlinking(true);
+
+    // 10초 후에 깜박거리는 효과 종료
+    setTimeout(() => {
+      setBlinking(false);
+    }, 10000);
+  };
+  // JUNHO: 깜박이는 애니메이션
+
   useEffect(() => {
     // MRSEO: 이벤트 리스너 관리를 위한 함수 추가와 클린업 함수 추가
     const round1CountdownHandler = () => {
@@ -295,6 +309,7 @@ function GameCanvas() {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
+        animation={blinking ? "blinking 1s infinite" : ""}
       >
         {/* 캔버스 상단 - 제시어 0.5 */}
         {/* JANG: 폰트 크기, 굵기, 스타일 수정! */}
@@ -392,7 +407,8 @@ function GameCanvas() {
           </>
           {/* ) : null} */}
           {/* {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? ( */}
-          <Button colorScheme="green" size="lg" onClick={hacking}>
+          {/* JUNHO: 깜박이는 애니메이션 넣기 */}
+          <Button colorScheme="green" size="lg" onClick={()=>{hacking();handleButtonClick()}}>
             방해하기!
           </Button>
           {/* ) : null} */}

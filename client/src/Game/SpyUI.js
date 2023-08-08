@@ -417,21 +417,21 @@ const SpyUI = () => {
                 flexDirection="column" // 세로 정렬
                 alignItems="center" // 중앙정렬
                 justifyContent="center" // 중앙정렬
-                gap={10}
+                gap={20}
               >
                   <Flex>
                     {/* 왼쪽1 : 타이머 */}
                     <h1 style={{ fontWeight: "bold" }}>타이머 : {spyTimerValue}</h1>
                   </Flex>
                   <Flex>
+                    {/* 왼쪽3 : 현재 몇 번째 턴 */}
+                    <h3>현재  4턴 중 <br/><br/>
+                    <span style={{color: "red" }}>{currentRound}</span> 번째 차례 입니다.</h3>
+                  </Flex>
+                  <Flex>
                     {/* 왼쪽2 : 스파이모드 시작 */}
                     <Button colorScheme="red" flex="1" color="white" size="lg"
                       m='10px' className="junhobtn" onClick={spyButtonHandler}>스파이모드 시작</Button>
-                  </Flex>
-                  <Flex>
-                    {/* 왼쪽3 : 현재 몇 번째 턴 */}
-                    <h3>현재  4턴 중 <br/><br/>
-                    <span style={{color: "yellow" }}>{currentRound}</span> 번째 차례 입니다.</h3>
                   </Flex>
       
               </Box>
@@ -571,7 +571,7 @@ const SpyUI = () => {
                   
                   <Flex>
                     {/* 오른쪽1 : 내 순서 -> 나중에 빛나는 효과 입히기 */}
-                    <h3>내 순서 : <span style={{color: "yellow"}}>{playerTurn}</span> 번째</h3>
+                    <h3>내 순서 : <span style={{color: "red"}}>{playerTurn}</span> 번째</h3>
                   </Flex>
                   <Flex
                       flexDirection="column"
