@@ -5,6 +5,9 @@ import "./BasicUI.css";
 
 import socket from "../Openvidu/socket";
 
+// BGM
+import { WaitingSound } from "./audio";
+
 // 게임 컴포넌트
 import GameCanvas from "./For_canvas/GameCanvas";
 import Navbar from "./For_screen/Navbar";
@@ -118,6 +121,7 @@ const CompetitionUI = () => {
   useEffect(() => {
     confetti();
   }, []);
+
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 이벤트 핸들러
   useEffect(() => {
     socket.on("gameEndByButton", () => {

@@ -3,6 +3,9 @@
 // 1. import `extendTheme` function
 import { extendTheme } from '@chakra-ui/react'
 
+// SANGYOON: Fonts 설정
+import './theme.css';
+
 // 2. Add your color mode config
 const config = {
   initialColorMode: 'light',

@@ -11,7 +11,7 @@ export default function Navbar() {
       alignItems="center"
     >
       <Heading as="h1" className="logo">
-        <a href="https://mysquidcanvas.shop">JUNGLE CANVAS</a>
+        <a href="https://mysquidcanvas.shop" style={{ color: "springgreen" }} >JUNGLE CANVAS</a>
       </Heading>
       <Spacer />
       <HStack spacing="20px">
@@ -26,6 +26,5 @@ export default function Navbar() {
         </IconButton>
       </HStack>
     </Flex>
-    
   );
 }

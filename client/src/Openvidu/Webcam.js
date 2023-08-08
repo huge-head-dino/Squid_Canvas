@@ -18,7 +18,7 @@ import BasicUI from '../Game/BasicUI';
 // MRSEO: 
 import socket from './socket';
 
-import { RoundMusic, EntranceSound } from '../Game/audio';
+import { RoundMusic, WaitingSound, EntranceSound } from '../Game/audio';
 
 // JANG: 08.06 - Chakra UI 추가
 import {
@@ -329,6 +329,10 @@ const Webcam = () => {
   // SANGYOON: 입장하기 사운드
   const entranceSquid = () => {
     EntranceSound.play();
+    setTimeout(() => {
+      WaitingSound.loop = true;
+      WaitingSound.play();
+    }, 1000 * 4);
   };
 
   const handleGameStart = () => {

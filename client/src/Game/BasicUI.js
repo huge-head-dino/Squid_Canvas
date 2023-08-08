@@ -3,6 +3,9 @@ import UserVideoComponent from "../Openvidu/UserVideoComponent";
 import useStore from "../store";
 import "./BasicUI.css";
 
+// SANGYOON: BGM 설정
+import { WaitingSound } from "./audio";
+
 // JANG: 경쟁, 스파이 모드 컴포넌트 분리
 import CompetitionUI from "./CompetitionUI";
 import SpyUI from "./SpyUI";
@@ -33,7 +36,7 @@ import {
   Img,
   FormControl,
   FormLabel,
-  
+
 } from "@chakra-ui/react";
 
 import Navbar from "./For_screen/Navbar";
@@ -63,17 +66,23 @@ function BasicUI() {
 
   }, [gamers]);
 
-  
+
 
   const {
     mode,
     setMode
   } = useStore();
+
   const cllickCompetition = () => {
+    WaitingSound.pause(); // 경쟁모드 클릭시 WaitingSound play off
+    // 경쟁모드 클릭시 CompetitionSound play on
     setMode('competition');
   }
+
   const clickSpy = () => {
     setMode('spy');
+    // 스파이모드 클릭시 WaitingSound play off
+    // 스파이모드 클릭시 SpySound play off
   }
 
   // JANG: 08.06 - 모드 선택 애니메이션
@@ -89,7 +98,7 @@ function BasicUI() {
     confetti();
   }, []);
 
-   return (
+  return (
     <>
       <Flex height="100%" width="100%" flexDirection="column">
         {/********* @ 2. 게임 진행 창 **********/}
@@ -278,18 +287,18 @@ function BasicUI() {
             </>
           ) : mode === "competition" ? (
             <>
-              
+
               <CompetitionUI />
-            
+
               {/*** @2-1. 경쟁 모드 ***/}
             </>
           ) : (
             <>
               {/*** @2-2. 스파이 모드 ***/}
 
-              <SpyUI/>
+              <SpyUI />
 
-             {/*** @2-2. 스파이 모드 ***/}
+              {/*** @2-2. 스파이 모드 ***/}
 
             </>
           )}
