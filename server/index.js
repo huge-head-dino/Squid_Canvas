@@ -270,6 +270,7 @@ io.on('connection', (socket) => {
         io.emit('spyVoteResult', spy, 'spyWin');
       }
     }
+    votedSpyList = [0, 0, 0, 0]
   });
   // ------------------------ JUNHO: 스파이모드 끝 --------------------
 

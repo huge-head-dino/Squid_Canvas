@@ -130,6 +130,8 @@ const SpyUI = () => {
       console.log('spy1GO');
       console.log(spy)
       setSpyPlayers(spyPlayers); // spyPlayers 순서 배정을 위해저장.
+      setShowSpy(gamers[spy].name);
+      console.log('스파이는 ' + gamers[spy].name + '입니다.')
 
       if (gamers[spy].name === myUserId) {
         setIAmSpy(true)
@@ -255,15 +257,14 @@ const SpyUI = () => {
       } else if (result === 'spyLose') {
         console.log('스파이가 패배했습니다.');
       }
-      setShowSpy(gamers[spy].name);
-      console.log('스파이는 ' + gamers[spy].name + '입니다.')
+      
     });
 
     socket.on('spyFinish', () => {
       console.log('spyFinish');
       alert('스파이모드가 종료되었습니다.');
       spyUIInitializer();
-      setMode('waitingRoom');
+      // setMode('waitingRoom');
     });
 
     //YEONGWOO: 현재 그리는 사람의 id 전달
