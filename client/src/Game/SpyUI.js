@@ -129,6 +129,10 @@ const SpyUI = () => {
     socket.on('spy1GO', (spyPlayer1, spy, spyPlayers) => {
       console.log('spy1GO');
       console.log(spy)
+      //JANG: 08.09 - 스파이 모드 시작 버튼 눌렀을 때
+      setStartButton(true);
+
+
       setSpyPlayers(spyPlayers); // spyPlayers 순서 배정을 위해저장.
       setShowSpy(gamers[spy].name);
       console.log('스파이는 ' + gamers[spy].name + '입니다.')
@@ -303,6 +307,9 @@ const SpyUI = () => {
     socket.emit('spy1Ready');
     socket.emit('updateQuestWords_Spy');
     // gamers[0].name === myUserName ? setIAmPainter(false) : setIAmPainter(true);
+
+     // JANG: 08.09 - 스파이 모드 시작 버튼 누르면 제시어 뜨게끔 변경
+     setStartButton(true);
   };
 
   //YEONGWOO: 스파이 모드에서 현재 그리는 사람 & 현재 라운드
@@ -366,6 +373,9 @@ const SpyUI = () => {
     setShowSpy('');
     setCurrentPainterId(null);
     setCurrentRound(-1);
+    //JANG: 08.09 - 스파이 모드 시작 버튼 눌렀을 때
+    setStartButton(false);
+
   };
 
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 함수
@@ -385,6 +395,10 @@ const SpyUI = () => {
     WaitingSound.play();
     WaitingSound.volume = 0.5;
   };
+
+  //JANG: 스파이모드 버튼 누르면 제시어 뜨게끔 변경 (상태 추가)
+  const [startButton, setStartButton] = useState(false);
+
 
   return (
     <>
@@ -418,7 +432,7 @@ const SpyUI = () => {
 
               <Box
                 className="Game_Character"
-                h="100%"
+                h="80%"
                 w="20%"
                 bg="rgba(255, 255, 255, 0.7)"
                 backdropFilter="auto" // 블러
@@ -437,20 +451,50 @@ const SpyUI = () => {
                     <h1 style={{ fontWeight: "bold" }}>타이머 : {spyTimerValue}</h1>
                   </Flex>
                   <Flex>
-                    {/* 왼쪽3 : 현재 몇 번째 턴 */}
-                    <h3>현재  4턴 중 <br/><br/>
-                    <span style={{color: "red" }}>{currentRound}</span> 번째 차례 입니다.</h3>
-                  </Flex>
-                  <Flex>
-                    {/* 왼쪽2 : 스파이모드 시작 */}
-                    <Button colorScheme="red" flex="1" color="white" size="lg"
+                    {!startButton ? (
+                      <>
+                      {/* 왼쪽2 : 스파이모드 시작 */}
+                      <Button colorScheme="red" flex="1" color="white" size="lg"
                       m='10px' className="junhobtn" onClick={spyButtonHandler}>스파이모드 시작</Button>
+                      </>
+                    ) : (
+                      <>
+                      {!iAmSpy ? (
+                        <Flex
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <div>
+                              <h4 display="center">제시어</h4>
+                              <h1 >[ <span style={{color: "red"}}>{suggestWord}</span> ]</h1>
+                            </div>
+                        </Flex>
+                    ) : null}
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        gap={2}  // 이 Box 내부의 아이템 사이의 간격 설정
+                    >
+                      {iAmSpy ? (
+                            <div>
+                              <FormLabel><h5 style={{ color: "gray"}}>(쉿! 당신은 스파이입니다.)</h5></FormLabel>
+                              <Flex>
+                                <Input placehloder="정답은?" value={ans} onChange={(e) => setAns(e.target.value)} />
+                                <Button colorScheme="blue" onClick={spySubmitHandler} ml={1}>제출</Button>
+                              </Flex>
+                          </div>
+                      ) : null}
+                    </Box>
+                    </>
+                    )}
                   </Flex>
-      
               </Box>
 
               <Box
-                  h="100%"
+                  h="95%"
                   w="50%"
                   bgColor="brown"
                   // backdropFilter="auto"
@@ -573,7 +617,7 @@ const SpyUI = () => {
 
                 <Box
                   className="Game_Character"
-                  h="100%"
+                  h="80%"
                   w="20%"
                   bg="rgba(255, 255, 255, 0.7)"
                   backdropFilter="auto" // 블러
@@ -592,36 +636,10 @@ const SpyUI = () => {
                     {/* 오른쪽1 : 내 순서 -> 나중에 빛나는 효과 입히기 */}
                     <h3>내 순서 : <span style={{color: "red"}}>{playerTurn}</span> 번째</h3>
                   </Flex>
-                  <Flex
-                      flexDirection="column"
-                      gap={4}  // 이 Flex 내부의 아이템 사이의 간격 설정
-                  >
-                      {!iAmSpy ? (
-                          <Flex
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                          >
-                              <h1 style={{color: "red"}}>{suggestWord}</h1>
-                          </Flex>
-                      ) : null}
-                      <Box
-                          display="flex"
-                          flexDirection="column"
-                          justifyContent="center"
-                          alignItems="center"
-                          gap={2}  // 이 Box 내부의 아이템 사이의 간격 설정
-                      >
-                          {iAmSpy ? (
-                                <div>
-                                  <FormLabel><h5 style={{ color: "gray"}}>(쉿! 당신은 스파이입니다.)</h5></FormLabel>
-                                  <Flex>
-                                    <Input placehloder="정답은?" value={ans} onChange={(e) => setAns(e.target.value)} />
-                                    <Button colorScheme="blue" onClick={spySubmitHandler} ml={1}>제출</Button>
-                                  </Flex>
-                              </div>
-                          ) : null}
-                      </Box>
+                  <Flex>
+                    {/* 오른쪽2 : 현재 몇 번째 턴 */}
+                    <h3>현재  4턴 중 <br/><br/>
+                    <span style={{color: "red" }}>{currentRound}</span> 번째 차례 입니다.</h3>
                   </Flex>
 
                 </Box>

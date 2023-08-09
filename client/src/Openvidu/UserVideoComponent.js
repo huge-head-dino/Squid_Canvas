@@ -17,8 +17,8 @@ export default class UserVideoComponent extends Component {
                 {/* JANG: 08.06 - 비디오 크기 조정을 위해 클래스명 추가 */}
                 <div className="videoContainer" p="5px">
                     {this.props.streamManager !== undefined ? (
-                        <div className="streamcomponent" style={{height: '100%'}}>
-                            <OpenViduVideoComponent streamManager={this.props.streamManager} style={{height: '70%'}}/>
+                        <div className="streamcomponent">
+                            <OpenViduVideoComponent streamManager={this.props.streamManager}/>
                             {/* JANG: 색상 변경 나중에!!!!!!*/}
                             <p style={{color: "black"}}><h3>{this.getNicknameTag()}</h3></p>
                         </div>
