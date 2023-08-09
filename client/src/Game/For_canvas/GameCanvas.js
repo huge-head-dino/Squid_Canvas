@@ -117,7 +117,7 @@ function GameCanvas() {
           console.log("startTimer 1 on");
           socket.emit("startTimer1");
         }
-      }, 5000);
+      }, 3000);
     };
 
     const round2CountdownHandler = () => {
@@ -144,7 +144,7 @@ function GameCanvas() {
           console.log("startTimer 2 on");
           socket.emit("startTimer2");
         }
-      }, 5000);
+      }, 3000);
     };
 
     const round2EndHandler = (result) => {
@@ -222,12 +222,12 @@ function GameCanvas() {
   }, [socket, team, iAmSolver]);
 
   useEffect(() => {
-    socket.on('clearCanvas', () => {
+    socket.on('clearCanvasBySubmit', () => {
       canvas?.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     })
 
     return () => {
-      socket.off('clearCanvas');
+      socket.off('clearCanvasBySubmit');
     }
   }, [socket, canvas]);
 
@@ -238,7 +238,7 @@ function GameCanvas() {
     if (round === 1) {
       if (ans === suggestWord) {
         CorrectAnswer.play();
-        socket.emit("clearCanvas");
+        socket.emit("clearCanvasBySubmit");
 
         setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
         setDrawable(!gamers[0].drawable, gamers[0].name);
@@ -268,7 +268,7 @@ function GameCanvas() {
     if (round === 2) {
       if (ans === suggestWord) {
         CorrectAnswer.play();
-        socket.emit("clearCanvas");
+        socket.emit("clearCanvasBySubmit");
 
         setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
         setDrawable(!gamers[1].drawable, gamers[1].name);

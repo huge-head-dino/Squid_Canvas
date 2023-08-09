@@ -164,29 +164,28 @@ function BasicUI() {
                       flex={1}
                       size="xl"
                       fontSize="50px" // 글자 크기 조정
-                      onClick={showCompetitionDescription}
-                      className="Button_Mode"
-                      _hover={{ transform: "scale(1.1)" }} // hover시 커지게
-                    >
-                      오징어 격투
-                    </Button>
-
-                    <Button
-                      bgColor="green.500"
-                      color="white"
-                      flex={1}
-                      size="xl"
-                      fontSize="50px" // 글자 크기 조정
                       onClick={showSpyDescription}
                       className="Button_Mode"
                       _hover={{ transform: "scale(1.1)" }}
                     >
                       스파이 문어
                     </Button>
+                    <Button
+                      bgColor="green.500"
+                      color="white"
+                      flex={1}
+                      size="xl"
+                      fontSize="50px" // 글자 크기 조정
+                      onClick={showCompetitionDescription}
+                      className="Button_Mode"
+                      _hover={{ transform: "scale(1.1)" }} // hover시 커지게
+                    >
+                      스피드 퀴즈
+                    </Button>
 
                     {/* JUNHO: Join Button */}
 
-                    <Button
+                    {/* <Button
                       bgColor="green.500"
                       color="white"
                       flex={1}
@@ -197,7 +196,7 @@ function BasicUI() {
                       _hover={{ transform: "scale(1.1)" }}
                     >
                       게임룸 입장
-                    </Button>
+                    </Button> */}
                   </Grid>
                 </Box>
                 <Box
@@ -236,7 +235,7 @@ function BasicUI() {
                           />
                         <div style={{ textAlign: 'left' }}>
                         <h1 style={{color:"red"}}>
-                        이 모드는 오징어 격투 입니다. 
+                        이 모드는 스피드 퀴즈 입니다. 
                         </h1>
                         <br></br>
                         <h4>
@@ -254,6 +253,20 @@ function BasicUI() {
                         <h4>
                         4.'방해하기' 아이템을 통해 상대팀을 최대한 헷갈리게 해보세요!
                         </h4>
+                        
+                        <Button
+                          bgColor="green.500"
+                          color="white"
+                          flex={1}
+                          size="xl"
+                          fontSize="50px" // 글자 크기 조정
+                          onClick={joinSelectedMode}
+                          className="Button_Mode"
+                          _hover={{ transform: "scale(1.1)" }}
+                        >
+                          게임룸 입장
+                        </Button>
+
                         </div>
                       </>
                     )}
@@ -280,6 +293,19 @@ function BasicUI() {
                         {/* <br></br> <h4>5. 모든 플레이어가 그림을 그리기 전까지, 스파이가 제시어를 눈치채 정답을 맞추면 스파이의 승리! 답을 맞출 기회는 총 3번입니다.</h4> 
                         <br></br> <h4>6. 스파이가 답을 맞추지 못 한채로 모든 턴이 끝이 난다면, 플레이어들은 투표를 통해 스파이 문어를 색출합니다. </h4>
                         <br></br> <h4>7. 투표를 통해 색출한 플레이어가 스파이 문어이면 오징어들의 승리! 문어를 색출하지 못하면 스파이 문어의 승리입니다.</h4> */}
+
+                    <Button
+                      bgColor="green.500"
+                      color="white"
+                      flex={1}
+                      size="xl"
+                      fontSize="50px" // 글자 크기 조정
+                      onClick={joinSelectedMode}
+                      className="Button_Mode"
+                      _hover={{ transform: "scale(1.1)" }}
+                    >
+                      게임룸 입장
+                    </Button>
                       </div>
                       </>
                     )}

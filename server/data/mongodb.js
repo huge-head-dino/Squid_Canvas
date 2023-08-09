@@ -65,10 +65,10 @@ const insertFruitWords = async () => {
 insertFruitWords();
 
 const SpyWords = [
-  {
-    theme: '영화',
-    name: '라이언 일병 구하기'
-  },
+  // {
+  //   theme: '영화',
+  //   name: '라이언 일병 구하기'
+  // },
   {
     theme: '영화',
     name: '백설공주'

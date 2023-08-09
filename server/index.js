@@ -135,9 +135,9 @@ io.on('connection', (socket) => {
     io.emit('scoreUpdate', { redScore, blueScore });
   });
 
-  socket.on('clearCanvas', () => {
-    console.log('🟣 clearCanvas_server !!!!!');
-    io.emit('clearCanvas');
+  socket.on('clearCanvasBySubmit', () => {
+    console.log('🟣 clearCanvasBySubmit_server !!!!!');
+    io.emit('clearCanvasBySubmit');
   });
 
   // SANGYOON: 2-1. Competition Mode - socket.on 수신
@@ -189,7 +189,7 @@ io.on('connection', (socket) => {
   //1번 타이머 시작
   socket.on('startSpyTimer1', (spyPlayer1) => {
     console.log('startSpyTimer1');
-    spyTimerModule.startTimer(io, 10, () => {
+    spyTimerModule.startTimer(io, 15, () => {
       console.log('1번 타이머 종료');
       io.emit('spyTimer1End', spyPlayer1)
     });
@@ -206,7 +206,7 @@ io.on('connection', (socket) => {
   //2번 타이머 시작
   socket.on('startSpyTimer2', (spyPlayer2) => {
     console.log('startSpyTimer2');
-    spyTimerModule.startTimer(io, 10, () => {
+    spyTimerModule.startTimer(io, 15, () => {
       console.log('2번 타이머 종료');
       io.emit('spyTimer2End', spyPlayer2);
     });
@@ -222,7 +222,7 @@ io.on('connection', (socket) => {
   //3번 타이머 시작
   socket.on('startSpyTimer3', (spyPlayer3) => {
     console.log('startSpyTimer3');
-    spyTimerModule.startTimer(io, 10, () => {
+    spyTimerModule.startTimer(io, 15, () => {
       console.log('3번 타이머 종료');
       io.emit('spyTimer3End', spyPlayer3);
     });
@@ -239,9 +239,17 @@ io.on('connection', (socket) => {
   //4번 타이머 시작
   socket.on('startSpyTimer4', (spyPlayer4) => {
     console.log('startSpyTimer4');
-    spyTimerModule.startTimer(io, 10, () => {
+    spyTimerModule.startTimer(io, 15, () => {
       console.log('4번 타이머 종료');
       io.emit('spyTimer4End', spyPlayer4);
+    });
+  });
+
+  socket.on('spyVoteTimerStart', () => {
+    console.log('spyVoteTimerStart');
+    spyTimerModule.startTimer(io, 20, () => {
+      console.log('spyVoteTimerEnd');
+      io.emit('spyVoteTimerEnd');
     });
   });
 

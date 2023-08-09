@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const Countdown = () => {
     // ---- Countdown
-    const [count, setCount] = useState(5);
+    const [count, setCount] = useState(3);
     useEffect(() => {
 
         const timer = setInterval(() => {

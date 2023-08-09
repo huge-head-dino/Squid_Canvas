@@ -152,7 +152,7 @@ const SpyUI = () => {
         if (gamers[0].name === myUserId) {
           socket.emit('startSpyTimer1', spyPlayer1);
         }
-      }, 5000);
+      }, 3000);
     });
 
     socket.on('spyTimer1End', (spyPlayer1) => {
@@ -180,7 +180,7 @@ const SpyUI = () => {
         if (gamers[0].name === myUserId) {
           socket.emit('startSpyTimer2', spyPlayer2);
         }
-      }, 5000);
+      }, 3000);
     });
 
     socket.on('spyTimer2End', (spyPlayer2) => {
@@ -207,7 +207,7 @@ const SpyUI = () => {
         if (gamers[0].name === myUserId) {
           socket.emit('startSpyTimer3', spyPlayer3);
         }
-      }, 5000);
+      }, 3000);
     });
 
     socket.on('spyTimer3End', (spyPlayer3) => {
@@ -234,7 +234,7 @@ const SpyUI = () => {
         if (gamers[0].name === myUserId) {
           socket.emit('startSpyTimer4', spyPlayer4);
         }
-      }, 5000);
+      }, 3000);
     });
 
     socket.on('spyTimer4End', (spyPlayer4) => {
@@ -243,12 +243,16 @@ const SpyUI = () => {
       }
       console.log('모든 과정이 종료되었습니다.');
       setSpyPhase('Vote'); // JUNHO: 여기서 Vote로 바꿔줌
-      setTimeout(() => {
+      if (host === myUserId) {
+        socket.emit('spyVoteTimerStart');
+      }
+    });
+
+    socket.on('spyVoteTimerEnd', () => {
         setSpyPhase('Result');
         if (host === myUserId) {
           socket.emit('spyFinish');
         }
-      }, 20000);
     });
 
     socket.on('spyVoteResult', (spy, result) => {
@@ -577,11 +581,11 @@ const SpyUI = () => {
                                 스파이를 찾아라!
                               </Text>
 
-                              <Select placeholder="스파이 선택" size="lg" width="100%" onChange={(e) => setSelectedGamer(e.target.value)}>
-                                <option value={0}>{gamers[0].name}</option>
-                                <option value={1}>{gamers[1].name}</option>
-                                <option value={2}>{gamers[2].name}</option>
-                                <option value={3}>{gamers[3].name}</option>
+                              <Select placeholder="스파이 선택" size="lg" width="100%" onChange={(e) => setSelectedGamer(e.target.value)}> 
+                                <option style={{ fontSize: '40px' }} value={0}>{gamers[0].name}</option>
+                                <option style={{ fontSize: '40px' }} value={1}>{gamers[1].name}</option>
+                                <option style={{ fontSize: '40px' }} value={2}>{gamers[2].name}</option>
+                                <option style={{ fontSize: '40px' }} value={3}>{gamers[3].name}</option> 
                               </Select>
 
                               <Button colorScheme="green" height="100px" width="40%" onClick={() => { votedSpyHandler(selectedGamer) }}>

@@ -51,8 +51,8 @@ import "./Webcam.css";
 
 
 // NOTE: 배포 전 확인!
-// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
   //JUNHO: 8.7 플레이스 홀더 변경
