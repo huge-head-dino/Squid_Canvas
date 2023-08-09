@@ -135,6 +135,11 @@ io.on('connection', (socket) => {
     io.emit('scoreUpdate', { redScore, blueScore });
   });
 
+  socket.on('clearCanvas', () => {
+    console.log('🟣 clearCanvas_server !!!!!');
+    io.emit('clearCanvas');
+  });
+
   // SANGYOON: 2-1. Competition Mode - socket.on 수신
   socket.on('updateQuestWords_Com', () => {
     updateQuestWords_Com();
@@ -148,7 +153,7 @@ io.on('connection', (socket) => {
   // ------------------------ JUNHO: 스파이모드 시작 ------------------------
   //TODO: 타이머 만들기
 
-  const spyPlayers = [0, 1, 2, 3];
+  const spyPlayers = [1, 3, 0, 2];
   let spy = 0;
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -172,12 +177,11 @@ io.on('connection', (socket) => {
     console.log('spy1Ready');
     console.log(spyPlayers);
     //플레이어 순서 섞기
-    shuffleArray(spyPlayers);
+    // shuffleArray(spyPlayers);
     // spy = Math.floor(Math.random() * 4);
     // while (spy === spyPlayers[0]) {
     //   spy = Math.floor(Math.random() * 4);
     // } FIXME: 스파이 고정
-    spy = 0;
     console.log(spyPlayers);
     io.emit('spy1GO', spyPlayers[0], spy, spyPlayers);
   });
@@ -271,6 +275,12 @@ io.on('connection', (socket) => {
       }
     }
     votedSpyList = [0, 0, 0, 0]
+  });
+
+  socket.on('spyWinBySubmit', () => {
+    console.log('spyWinBySubmit_server');
+    io.emit('spyWinBySubmit');
+
   });
   // ------------------------ JUNHO: 스파이모드 끝 --------------------
 

@@ -37,11 +37,12 @@ const RealCanvas = ({mySessionId, myUserName}) => {
 
     const canvasRef = useRef(null);
     const socketRef = useRef(null);
-    const { iAmPainter, spyPainter, mode } = useStore(
+    const { iAmPainter, spyPainter, mode, setCanvas } = useStore(
         state => ({
             iAmPainter: state.iAmPainter,
             spyPainter: state.spyPainter,
             mode: state.mode,
+            setCanvas: state.setCanvas,
         })
     );
 
@@ -65,6 +66,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     
     useEffect(() => {
         const canvas = canvasRef.current;
+        setCanvas(canvas);
         //JUNHO: canvas 크기 조정
         // const parent = canvas.parentElement;
         // const width = parent.offsetWidth * 0.95;

@@ -1,15 +1,15 @@
 // 상태 관리 라이브러리로 'zustand' 사용
-import {create} from "zustand";
+import { create } from "zustand";
 import axios from "axios";
 
 // NOTE: 배포 시, 주소 확인!
-// const APPLICATION_SERVER_URL = 'https://mysquidcanvas.shop'
-const APPLICATION_SERVER_URL = 'http://localhost:5050';
+const APPLICATION_SERVER_URL = 'https://mysquidcanvas.shop'
+// const APPLICATION_SERVER_URL = 'http://localhost:5050';
 
 const useStore = create((set) => ({
-// 상태와 관련된 변수와 함수들을 정의 : create 함수
-// 상태를 변경하는 함수(상태 갱신 시, 리액티브하게 컴포넌트 업데이트 됨) : set 함수
- 
+  // 상태와 관련된 변수와 함수들을 정의 : create 함수
+  // 상태를 변경하는 함수(상태 갱신 시, 리액티브하게 컴포넌트 업데이트 됨) : set 함수
+
   gamers: [],
   // JANG: gamer 배열 중복 등록 방지 -> 수정
   setGamers: (newGamer) => {
@@ -77,58 +77,60 @@ const useStore = create((set) => ({
   },
 
   curSession: undefined,
-  setCurSession: (curSession) => { set({curSession: curSession}) },
+  setCurSession: (curSession) => { set({ curSession: curSession }) },
 
   myUserId: undefined,
-  setMyUserId: (myUserId) => { set({myUserId: myUserId}) },
+  setMyUserId: (myUserId) => { set({ myUserId: myUserId }) },
 
   playerCnt: 0,
-  setPlayerCount: (playerCnt) => { set({playerCnt: playerCnt}) },
+  setPlayerCount: (playerCnt) => { set({ playerCnt: playerCnt }) },
 
   phase: 'Ready',
-  setPhase: (phase) => { set({phase: phase}) },
+  setPhase: (phase) => { set({ phase: phase }) },
 
   iAmPainter: true,
-  setIAmPainter: (iAmPainter) => { set({iAmPainter: iAmPainter}) },
+  setIAmPainter: (iAmPainter) => { set({ iAmPainter: iAmPainter }) },
 
   iAmSolver: false,
-  setIAmSolver: (iAmSolver) => { set({iAmSolver: iAmSolver}) },
+  setIAmSolver: (iAmSolver) => { set({ iAmSolver: iAmSolver }) },
 
   redScoreCnt: 0,
-  setRedScoreCnt: (redScoreCnt) => { set({redScoreCnt: redScoreCnt}) },
+  setRedScoreCnt: (redScoreCnt) => { set({ redScoreCnt: redScoreCnt }) },
 
   blueScoreCnt: 0,
-  setBlueScoreCnt: (blueScoreCnt) => { set({blueScoreCnt: blueScoreCnt}) },
+  setBlueScoreCnt: (blueScoreCnt) => { set({ blueScoreCnt: blueScoreCnt }) },
 
   round: 1,
-  setRound: (round) => { set({round: round}) },
-  
+  setRound: (round) => { set({ round: round }) },
+
   ans: '',
-  setAns: (ans) => { set({ans: ans}) },
+  setAns: (ans) => { set({ ans: ans }) },
 
   canSubmitAns: false,
-  setCanSubmitAns: (canSubmitAns) => { set({canSubmitAns: canSubmitAns}) },
+  setCanSubmitAns: (canSubmitAns) => { set({ canSubmitAns: canSubmitAns }) },
 
   // JANG: 경쟁, 스파이 모드 추가 (임시)
   mode: undefined,
-  setMode: (mode) => { set({mode: mode}) },
+  setMode: (mode) => { set({ mode: mode }) },
 
   // MRSEO: 방장 설정
   host: undefined,
-  setHost: (host) => { set({host: host}) },
+  setHost: (host) => { set({ host: host }) },
 
   team: undefined,
-  setTeam: (team) => { set({team: team}) },
+  setTeam: (team) => { set({ team: team }) },
 
   spyPainter: false,
-  setSpyPainter: (spyPainter) => { set({spyPainter: spyPainter}) },
+  setSpyPainter: (spyPainter) => { set({ spyPainter: spyPainter }) },
 
   iAmSpy: false,
-  setIAmSpy: (iAmSpy) => { set({iAmSpy: iAmSpy}) },
+  setIAmSpy: (iAmSpy) => { set({ iAmSpy: iAmSpy }) },
 
   audio: true,
   setAudio: (audio) => { set({ audio: audio }) },
 
+  canvas: undefined,
+  setCanvas: (canvas) => { set({ canvas: canvas }) },
 
 }));
 
