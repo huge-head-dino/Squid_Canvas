@@ -333,11 +333,13 @@ function GameCanvas() {
     <>
       {/* JANG: 08 - 1. 캔버스 크기 및 제시어 조정 */}
       <Flex
-        Flex
+        width="100%"
+        height="100%"
         className="RealCanvas_3"
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
+        marginTop="0px"
         animation={blinking ? "blinking 1s infinite" : ""}
       >
         {/* 캔버스 상단 - 제시어 0.5 */}
@@ -347,7 +349,7 @@ function GameCanvas() {
           textAlign="center"
           justifyContent="center"
           alignItems="center"
-          flex="0.7"
+          flex="1"
         >
           {!iAmSolverRender && (
             <h1 style={{ color: "white" }}>제시어 : {suggestWord}</h1>
@@ -358,7 +360,7 @@ function GameCanvas() {
         <Flex
           className="진짜_캔버스"
           justifyContent="center"
-          flex="8"
+          flex="9"
           width="90%"
         >
           <div style={{position: 'relative'}}>
@@ -398,49 +400,59 @@ function GameCanvas() {
         </Flex>
 
         {/* 캔버스 하단 - 버튼 1.5 */}
-        <Flex className="ButtonZone" justifyContent="center" flex="1">
-          {/* {phase === 'Game1' || phase === 'Game2' ? ( */}
+        <Flex className="ButtonZone" justifyContent="center" flex="2">
+          {phase === 'Game1' || phase === 'Game2' ? (
           <>
             <Flex justifyContent="center" gap="2" width="80%">
-              {/* {(round === 1 && team === 'red' && iAmSolverRender === true) || (round === 2 && team === 'blue' && iAmSolverRender === true) ?
-                      ( */}
-              <>
-                <Input
-                  placeholder="정답을 입력하시오"
-                  size="lg"
-                  value={ans}
-                  onChange={(e) => setAns(e.target.value)}
-                />
-                <Button
-                  colorScheme="pink"
-                  size="lg"
-                  onClick={submitAns}
-                  style={{ margin: "auto 1px auto 1px" }}
-                >
-                  제출
-                </Button>
-              </>
-              {/* ) : null}  */}
-              {/* {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ? 
-                      (  */}
-              <Button
-                colorScheme="blue"
-                size="lg"
-                onClick={handlePass}
-                style={{ margin: "auto 1px auto 1px" }}
-              >
-                PASS
-              </Button>
-              {/* ) :null}  */}
+              {(round === 1 && team === 'red' && iAmSolverRender === true) || (round === 2 && team === 'blue' && iAmSolverRender === true) ?
+                ( 
+                <>
+                  <Input
+                    placeholder="정답을 입력하시오"
+                    size="lg"
+                    value={ans}
+                    onChange={(e) => setAns(e.target.value)}
+                    _placeholder={{ color: "white" }}
+                    color="white"
+                    fontSize="30px"
+                  />
+                  <Button
+                    colorScheme="facebook"
+                    size="lg"
+                    onClick={submitAns}
+                    style={{ margin: "auto 1px auto 1px" }}
+                    fontSize="30px"
+                  >
+                    제출
+                  </Button>
+                </>
+                ) : null}
+                {(round === 1 && team === 'red' && iAmPainter === true) || (round === 2 && team === 'blue' && iAmPainter === true) ? 
+                  (
+                  <Button
+                    colorScheme="blue"
+                    size="lg"
+                    onClick={handlePass}
+                    style={{ margin: "auto 1px auto 1px" }}
+                    fontSize="30px"
+                  >
+                    PASS
+                  </Button>
+              ) :null}
             </Flex>
           </>
-          {/* ) : null} */}
-          {/* {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? ( */}
-          {/* JUNHO: 깜박이는 애니메이션 넣기 */}
-          <Button colorScheme="green" size="lg" onClick={()=>{hacking();handleButtonClick()}}>
-            방해하기!
-          </Button>
-          {/* ) : null} */}
+          ) : null}
+
+          {(round === 1 && team === 'blue' && gamers[1].name === myUserName) || (round === 2 && team === 'red' && gamers[0].name === myUserName) ? ( 
+            <>
+            {/* JUNHO: 깜박이는 애니메이션 넣기 */}
+            <Button colorScheme="green" width="250px" size="lg" fontSize="30px"
+                    onClick={()=>{hacking();handleButtonClick()}}
+            >
+              방해하기!
+            </Button>
+            </>
+            ) : null}
         </Flex>
       </Flex>
 

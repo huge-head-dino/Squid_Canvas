@@ -11,8 +11,13 @@ import useStore from "../../store";
 // YEONGWOO: 색상 선택, 아이콘 추가
 import { GithubPicker } from 'react-color';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
-import CircleIcon from '@mui/icons-material/Circle';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+// import CircleIcon from '@mui/icons-material/Circle';
+import SignalCellular1BarOutlinedIcon from '@mui/icons-material/SignalCellular1BarOutlined';
+import SignalCellular2BarOutlinedIcon from '@mui/icons-material/SignalCellular2BarOutlined';
+import SignalCellular3BarOutlinedIcon from '@mui/icons-material/SignalCellular3BarOutlined';
+import SignalCellular4BarOutlinedIcon from '@mui/icons-material/SignalCellular4BarOutlined';
+
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { red, green } from '@mui/material/colors';
 
 import { Img } from "@chakra-ui/react";
@@ -274,7 +279,7 @@ const RealCanvas = ({mySessionId, myUserName}) => {
     ];
 
     return (
-        <div className="RealCanvas_1" style={{ position: "relative", width: "100%", height: "100%"}}>
+        <div className="RealCanvas_1" style={{ position: "relative", width: "100%", height: "95%"}}>
             {/* JANG: 캔버스 임시 꾸미기 */}
             {/* <Img
                     src={`${process.env.PUBLIC_URL}/resources/images/whiteboard.png`}
@@ -288,12 +293,12 @@ const RealCanvas = ({mySessionId, myUserName}) => {
             <canvas ref={canvasRef} className="whiteboard" style={{width: "100%", height: "90%"}}/>
             
             {/* YEONGWOO: clearCanvas 동기화, colorpicker수정, icon 수정 */}
-            <div className="btn_zone" style ={{ display: 'flex', justifyContent: 'center',alignItems: 'center', gap: '20px', margin: '20px auto 0 auto' }}>
+            <div className="btn_zone" style ={{ display: 'flex', justifyContent: 'center',alignItems: 'center', gap: '20px', margin: 'px auto 0 auto' }}>
                 <div style={{position:"relative"}} >
                     <ColorLensIcon
                         onClick={handleToggle}
                         className="palleteBtn"
-                        sx={{ fontSize: 50, color: green[500] }}
+                        sx={{ fontSize: 50, color: color }}
                         />
                 </div>
                         {toggle && (
@@ -308,34 +313,34 @@ const RealCanvas = ({mySessionId, myUserName}) => {
                             />
                         )}
                 <div>
-                    <CircleIcon
+                    <SignalCellular1BarOutlinedIcon
                         onClick={() => changeLineWidth(2)}
-                        sx={{ fontSize: 10, color: color }}
+                        sx={{ fontSize: 40, color: color }}
                     />
                 </div>
                 <div>
-                    <CircleIcon
+                    <SignalCellular2BarOutlinedIcon
                         onClick={() => changeLineWidth(6)}
-                        sx={{ fontSize: 20, color: color }}
+                        sx={{ fontSize: 40, color: color }}
                     />
                 </div>
                 <div>
-                    <CircleIcon
+                    <SignalCellular3BarOutlinedIcon
                         onClick={() => changeLineWidth(12)}
-                        sx={{ fontSize: 30, color: color }}
+                        sx={{ fontSize: 40, color: color }}
                     />
                 </div>
                 <div>
-                    <CircleIcon
+                    <SignalCellular4BarOutlinedIcon
                         onClick={() => changeLineWidth(20)}
                         sx={{ fontSize: 40, color: color }}
                     />
                 </div>
                 <div>
-                    <DeleteForeverIcon
+                    <DeleteForeverOutlinedIcon
                         className="clearBtn"
                         onClick={handleClearCanvas}
-                        sx={{ fontSize: 50, color: red[500] }}
+                        sx={{ fontSize: 50, color: color }}
                     />
                 </div>
                 

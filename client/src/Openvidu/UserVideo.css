@@ -1,15 +1,17 @@
 .videoContainer {
     /* 부모 요소의 크기를 기준으로 자식 요소의 크기를 결정 */
-    width: 100%;
-    height: 100%;
+    /* width: 100%; */
+    /* height: 100%; */
     /* height: fit-content; */
 
-    padding: 5px; /* 부모 Box에 5px의 padding 추가 */
+    padding: 0px; /* 부모 Box에 5px의 padding 추가 */
     box-sizing: border-box; /*padding을 박스 크기에 포함시키도록 설정 */
     position: relative;
 
     margin: auto;
     border-radius: 25px;
+
+    transform: scale(90%); 
 
 }
 
@@ -32,5 +34,12 @@ p{
     box-sizing: border-box; /*padding을 박스 크기에 포함시키도록 설정 */
     position: relative;
     height: fit-content;
-    /* border-radius: 5px; */
+    border-radius: 5px;
+
+    display: inline-block; 
+    border-radius: 50px;
+    overflow: hidden;
+    background-color: #38A169
+    ;
+
 }

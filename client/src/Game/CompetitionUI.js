@@ -133,7 +133,7 @@ const CompetitionUI = () => {
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 이벤트 핸들러
   useEffect(() => {
     socket.on("gameEndByButton", () => {
-      alert("게임이 종료되었습니다.");
+      // alert("게임이 종료되었습니다.");
       setMode("waitingRoom");
     });
 
@@ -144,7 +144,7 @@ const CompetitionUI = () => {
 
   useEffect(() => {
     socket.on("completitionFinish", () => {
-      alert("경쟁모드가 종료되었습니다.");
+      // alert("경쟁모드가 종료되었습니다.");
       competitionUIInitializer();
       setMode("waitingRoom");
     });
@@ -191,59 +191,70 @@ const CompetitionUI = () => {
           {/* <Navbar /> */}
   
           {/*** @2-1. 경쟁 모드 ***/}
-          <Grid h="10%" w="100%" templateColumns="2fr 5fr 2fr">
+          <Grid h="15%" w="100%" templateColumns="2fr 5fr 2fr">
             <Flex alignItems="center" justifyContent="center">
               <Box
                 className="Red_Score"
                 bg="red.500"
-                p="10px"
-                borderRadius="5px"
-                fontSize="x-large" // 글자 크기를 x-large로 설정
+                p="20px"
+                width="85%"
+                height="90%"
+                borderRadius="20px"
+                fontSize="40px" // 글자 크기를 x-large로 설정
                 fontWeight="bold" // 글자를 두껍게 설정
+                color= "white"
                 _hover={{
                   boxShadow: "0 0 20px rgba(255, 0, 0, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (빨간색)
                 }}
                 transition="box-shadow 0.3s ease-in-out" // 부드러운 애니메이션 효과
               >
-              RED SCORE : {useStore.getState().redScoreCnt}
+              <Text>SCORE <br/> {useStore.getState().redScoreCnt}</Text>
             </Box>
           </Flex>
           <Flex alignItems="center" justifyContent="center">
             <Box
               className="Round_Timer"
-              bg="yellow.500"
+              bg="yellowgreen"
               p="10px"
-              borderRadius="5px"
-              fontSize="x-large" // 글자 크기를 x-large로 설정
+              borderRadius="20px"
+              fontSize="40px" // 글자 크기를 x-large로 설정
               fontWeight="bold" // 글자를 두껍게 설정
+              color= "white"
+              
+              width="80%"
+              height="90%"
+
               _hover={{
                 boxShadow: "0 0 20px rgba(255, 255, 0, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (노란색)
               }}
               transition="box-shadow 0.3s ease-in-out" // 부드러운 애니메이션 효과
             >
-              ROUND : {round} / TIMER : {timerValue}
+              <p>ROUND {round}</p> <p>TIMER {timerValue}</p>
             </Box>
           </Flex>
           <Flex alignItems="center" justifyContent="center">
             <Box
               className="Blue_Score"
-              bg="blue.500"
-              p="10px"
-              borderRadius="5px"
-              fontSize="x-large" // 글자 크기를 x-large로 설정
+              bg="blue.600"
+              p="20px"
+              borderRadius="20px"
+              fontSize="40px" // 글자 크기를 x-large로 설정
+              color="white"
               fontWeight="bold" // 글자를 두껍게 설정
+              width="80%"
+              height="90%"
               _hover={{
                 boxShadow: "0 0 20px rgba(0, 0, 255, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (파란색)
               }}
               transition="box-shadow 0.3s ease-in-out" // 부드러운 애니메이션 효과
             >
-              BLUE SCORE : {useStore.getState().blueScoreCnt}
+              SCORE <br/> {useStore.getState().blueScoreCnt}
             </Box>
           </Flex>
         </Grid>
 
         <Grid
-          h="90%"
+          h="80%"
           w="100%"
           templateColumns="2fr 5fr 2fr"
           marginTop="10px"
@@ -264,18 +275,6 @@ const CompetitionUI = () => {
               className="Gamer_Box"
               w="100%"
               minHeight="20px"
-              bg="transparent" // 투명한 배경색으로 설정
-              boxShadow="rgba(0, 0, 0, 0.1) 0px 1px 8px" // 선명한 그림자 추가
-              border="4px dashed red" // 1px 굵기의 빨간 색 테두리 점선 추가
-              borderRadius="5px" // 5px의 둥근 모서리 추가
-              _hover={{
-                boxShadow: "0 0 20px rgba(255, 0, 0, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과
-                // shouldApplyHoverEffect
-                //   ? {
-                //       boxShadow: "0 0 20px rgba(0, 0, 255, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (파란색)
-                //     }
-                //   : {} // 특정 조건이 아닐 때는 빈 객체를 전달하여 hover 효과를 적용하지 않음
-              }}
             >
               <div style={{ position: 'relative' }}>
                 {gamers[0] && (
@@ -286,7 +285,7 @@ const CompetitionUI = () => {
                   />
                 )}
 
-{phase === 'Ready' && (
+            {phase === 'Ready' && (
                   <>
                     {iAmPainterRender && (
                       <Img
@@ -343,13 +342,6 @@ const CompetitionUI = () => {
               className="Gamer_Box"
               w="100%"
               minHeight="20px"
-              bg="transparent" // 투명한 배경색으로 설정
-              boxShadow="rgba(0, 0, 0, 0.1) 0px 1px 8px" // 선명한 그림자 추가
-              border="4px dashed red" // 1px 굵기의 빨간 색 테두리 점선 추가
-              borderRadius="5px" // 5px의 둥근 모서리 추가
-              _hover={{
-                boxShadow: "0 0 20px rgba(255, 0, 0, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과
-              }}
             >
               <div style={{ position: 'relative' }}>
                 {gamers[2] && (
@@ -443,13 +435,6 @@ const CompetitionUI = () => {
               className="Gamer_Box"
               w="100%"
               minHeight="20px"
-              bg="transparent" // 투명한 배경색으로 설정
-              boxShadow="rgba(0, 0, 0, 0.1) 0px 1px 8px" // 선명한 그림자 추가
-              border="4px dashed blue" // 1px 굵기의 파란색 테두리 점선 추가
-              borderRadius="5px" // 5px의 둥근 모서리 추가
-              _hover={{
-                boxShadow: "0 0 20px rgba(0, 0, 255, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (파란색)
-              }}
             >
               <div style={{ position: 'relative' }}>
                 {gamers[1] && (
@@ -516,13 +501,6 @@ const CompetitionUI = () => {
               className="Gamer_Box"
               w="100%"
               minHeight="20px"
-              bg="transparent" // 투명한 배경색으로 설정
-              boxShadow="rgba(0, 0, 0, 0.1) 0px 1px 8px" // 선명한 그림자 추가
-              border="4px dashed blue" // 1px 굵기의 파란색 테두리 점선 추가
-              borderRadius="5px" // 5px의 둥근 모서리 추가
-              _hover={{
-                boxShadow: "0 0 20px rgba(0, 0, 255, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (파란색)
-              }}
             >
               <div style={{ position: 'relative' }}>
                 {gamers[3] && (
@@ -588,7 +566,8 @@ const CompetitionUI = () => {
             </Box>
           </Flex>
         </Grid>
-        <Flex>
+        {/* JANG: 대기실로 이동 버튼!! */}
+        {/* <Flex>
           <Button
             colorScheme="teal"
             variant="solid"
@@ -600,7 +579,7 @@ const CompetitionUI = () => {
           >
             대기실로 이동
           </Button>
-        </Flex>
+        </Flex> */}
         {/*** @2-1. 경쟁 모드 ***/}
       </div>
 

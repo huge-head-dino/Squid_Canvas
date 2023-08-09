@@ -122,7 +122,7 @@ function BasicUI() {
 
   return (
     <>
-      <Flex height="100%" width="100%" flexDirection="column">
+      <Flex height="100vh" width="100%" flexDirection="column">
         {/********* @ 2. 게임 진행 창 **********/}
         <VStack
           height="100%"
@@ -147,10 +147,10 @@ function BasicUI() {
                   className="Game_Character"
                   h="90%"
                   w="15%"
-                  bg="rgba(255, 255, 255, 0.7)"
-                  backdropFilter="auto" // 블러
-                  backdropBlur="5px" // 블러
-                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                  // bg="rgba(255, 255, 255, 0.7)"
+                  // backdropFilter="auto" // 블러
+                  // backdropBlur="5px" // 블러
+                  // boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
                   mr={4}
                   borderRadius="20px" // 모서리 둥글게
                   display="flex"
@@ -159,7 +159,8 @@ function BasicUI() {
                 >
                   <Grid gap={20}>
                     <Button
-                      colorScheme="teal"
+                      bgColor="green.500"
+                      color="white"
                       flex={1}
                       size="xl"
                       fontSize="50px" // 글자 크기 조정
@@ -171,7 +172,8 @@ function BasicUI() {
                     </Button>
 
                     <Button
-                      colorScheme="teal"
+                      bgColor="green.500"
+                      color="white"
                       flex={1}
                       size="xl"
                       fontSize="50px" // 글자 크기 조정
@@ -185,7 +187,8 @@ function BasicUI() {
                     {/* JUNHO: Join Button */}
 
                     <Button
-                      colorScheme="teal"
+                      bgColor="green.500"
+                      color="white"
                       flex={1}
                       size="xl"
                       fontSize="50px" // 글자 크기 조정
@@ -209,14 +212,6 @@ function BasicUI() {
                   justifyContent="center"
                   className="Game_Mode"
                   borderRadius="20px" // 모서리 둥글게
-                  transition="0.3s ease" // 부드러운 애니메이션
-                  _hover={{
-                    // hover시 효과 설정 (그림자, 크기)
-                    boxShadow: "15px 15px 50px rgba(0, 0, 0, .2)",
-                    transformOrigin: "right top", // 원점 설정
-                    transform:
-                      "perspective(1000px) rotateX(2deg) rotateY(-2deg) rotateZ(0.1deg)", // 회전
-                  }} // Hover시 tilt 효과
                 >
                   {/* @2-1. 경쟁/스파이 모드 선택 */}
                   <Flex
@@ -304,11 +299,11 @@ function BasicUI() {
                   w="23%"
                   height="fit-content" // 내용물에 맞게 높이 조절
                   minHeight="150px"
-                  bg="rgba(255, 255, 255, 0.7)" // 반투명 하얀 배경색으로 설정
-                  backdropFilter="auto" // 블러
-                  backdropBlur="5px" // 블러
-                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px" // 선명한 그림자 추가
-                  borderRadius="20px" // 모서리 둥글게
+                  // bg="rgba(255, 255, 255, 0.7)" // 반투명 하얀 배경색으로 설정
+                  // backdropFilter="auto" // 블러
+                  // backdropBlur="5px" // 블러
+                  // boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px" // 선명한 그림자 추가
+                  // borderRadius="20px" // 모서리 둥글게
                 >
                   {gamers[0] && (
                     <UserVideoComponent
@@ -324,11 +319,11 @@ function BasicUI() {
                   w="23%"
                   height="fit-content"
                   minHeight="150px"
-                  bg="rgba(255, 255, 255, 0.7)"
-                  backdropFilter="auto"
-                  backdropBlur="5px"
-                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                  borderRadius="20px"
+                  // bg="rgba(255, 255, 255, 0.7)"
+                  // backdropFilter="auto"
+                  // backdropBlur="5px"
+                  // boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                  // borderRadius="20px"
                 >
                   {gamers[1] && (
                     <UserVideoComponent
@@ -344,11 +339,11 @@ function BasicUI() {
                   w="23%"
                   height="fit-content"
                   minHeight="150px"
-                  bg="rgba(255, 255, 255, 0.7)"
-                  backdropFilter="auto"
-                  backdropBlur="5px"
-                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                  borderRadius="20px"
+                  // bg="rgba(255, 255, 255, 0.7)"
+                  // backdropFilter="auto"
+                  // backdropBlur="5px"
+                  // boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                  // borderRadius="20px"
                 >
                   {gamers[2] && (
                     <UserVideoComponent
@@ -364,11 +359,11 @@ function BasicUI() {
                   w="23%"
                   height="fit-content"
                   minHeight="150px"
-                  bg="rgba(255, 255, 255, 0.7)"
-                  backdropFilter="auto"
-                  backdropBlur="5px"
-                  boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                  borderRadius="20px"
+                  // bg="rgba(255, 255, 255, 0.7)"
+                  // backdropFilter="auto"
+                  // backdropBlur="5px"
+                  // boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
+                  // borderRadius="20px"
                 >
                   {gamers[3] && (
                     <UserVideoComponent

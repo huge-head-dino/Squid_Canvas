@@ -266,7 +266,7 @@ const SpyUI = () => {
 
     socket.on('spyFinish', () => {
       console.log('spyFinish');
-      alert('스파이모드가 종료되었습니다.');
+      // alert('스파이모드가 종료되었습니다.');
       spyUIInitializer();
       // setMode('waitingRoom');
     });
@@ -424,7 +424,7 @@ const SpyUI = () => {
               </Flex> */}
 
               <Flex
-                h="66%"
+                h="90%"
                 w="100%"
                 alignItems="center"
                 justifyContent="center"
@@ -433,7 +433,7 @@ const SpyUI = () => {
               <Box
                 className="Game_Character"
                 h="80%"
-                w="20%"
+                w="15%"
                 bg="rgba(255, 255, 255, 0.7)"
                 backdropFilter="auto" // 블러
                 backdropBlur="5px"    // 블러
@@ -481,10 +481,14 @@ const SpyUI = () => {
                       {iAmSpy ? (
                             <div>
                               <FormLabel><h5 style={{ color: "gray"}}>(쉿! 당신은 스파이입니다.)</h5></FormLabel>
-                              <Flex>
+                              <VStack>
+                                <Flex>
                                 <Input placehloder="정답은?" value={ans} onChange={(e) => setAns(e.target.value)} />
-                                <Button colorScheme="blue" onClick={spySubmitHandler} ml={1}>제출</Button>
-                              </Flex>
+                                </Flex>
+                                <Flex>
+                                <Button size="lg" colorScheme="blue" onClick={spySubmitHandler} ml={1}>제출</Button>
+                                </Flex>
+                              </VStack>
                           </div>
                       ) : null}
                     </Box>
@@ -494,9 +498,9 @@ const SpyUI = () => {
               </Box>
 
               <Box
-                  h="95%"
-                  w="50%"
-                  bgColor="brown"
+                  h="100%"
+                  w="65%"
+                  bgColor="blue.600"
                   // backdropFilter="auto"
                   // backdropBlur="5px"
                   boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
@@ -512,12 +516,12 @@ const SpyUI = () => {
                         justifyContent="center"
                         alignContent="center"
                         width="90%"
-                        h="80%"
+                        h="90%"
                         className="캔버스Box1"
                       >
                         {/* JANG: 스파이모드 1 : 그냥 캔버스 */}
-                        {spyPhase === "Game" ? (
-                          <> 
+                         {spyPhase === "Game" ? (
+                          <>  
                               {/* //JUNHO: 초록색 영역 */}
                               <Box
                                 name="초록색영역"
@@ -527,9 +531,10 @@ const SpyUI = () => {
                                 alignItems="center"
                                 justifyContent="center"
                                 width="100%"
-                                mb="20px"
+                                mb="10px"
                                 //JANG: 타이머 위치 조정
                                 position="relative"
+                                borderRadius="20px" // 모서리 둥글게
                               >
                                 <RealCanvas />
                                 {/* JANG: 타이머 위치 조정 */}
@@ -546,14 +551,14 @@ const SpyUI = () => {
                             <Center
                               width="100%"
                               height="100%"
-                              bg="rgba(255, 255, 255, 0.7)"
+                              bg="white"
                               boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
                               mr={4}
                               borderRadius="20px" // 모서리 둥글게
                               fontStyle={{ fontWeight: "bold", fontSize: "1.5rem" }}
                             >
                                <VStack spacing={6} w="80%" alignItems="center"> 
-                                <Text fontSize="3xl" fontWeight="bold" textAlign="center" color="black">
+                                <Text fontSize="50px" fontWeight="bold" textAlign="center" color="black">
                                     스파이를 찾아라!
                                 </Text>
 
@@ -564,13 +569,13 @@ const SpyUI = () => {
                                     <option value={3}>{gamers[3].name}</option>
                                 </Select>
 
-                                <Button colorScheme="green" width="50%" onClick={() => { votedSpyHandler(selectedGamer) }}>
-                                    제출하기
+                                <Button colorScheme="green" height="100px" width="40%" onClick={() => { votedSpyHandler(selectedGamer) }}>
+                                    <h1>제출하기</h1>
                                 </Button>
                             </VStack>
                             </Center>
                           </> 
-                       ) : null} 
+                       ) : null}
 
                         {/* JANG: 스파이모드 3 : 결과 창 */}
                         {spyPhase === "Result" ? (
@@ -618,7 +623,7 @@ const SpyUI = () => {
                 <Box
                   className="Game_Character"
                   h="80%"
-                  w="20%"
+                  w="15%"
                   bg="rgba(255, 255, 255, 0.7)"
                   backdropFilter="auto" // 블러
                   backdropBlur="5px"    // 블러
@@ -634,12 +639,12 @@ const SpyUI = () => {
                   
                   <Flex>
                     {/* 오른쪽1 : 내 순서 -> 나중에 빛나는 효과 입히기 */}
-                    <h3>내 순서 : <span style={{color: "red"}}>{playerTurn}</span> 번째</h3>
+                    <p style={{fontSize: "40px"}}>내 순서 : <br/><span style={{color: "red"}}>{playerTurn}</span> 번째</p>
                   </Flex>
                   <Flex>
                     {/* 오른쪽2 : 현재 몇 번째 턴 */}
-                    <h3>현재  4턴 중 <br/><br/>
-                    <span style={{color: "red" }}>{currentRound}</span> 번째 차례 입니다.</h3>
+                    <p style={{fontSize: "40px"}}>현재 순서: <br/>
+                    <span style={{color: "red" }}>{currentRound}</span> 번째</p>
                   </Flex>
 
                 </Box>
@@ -651,17 +656,18 @@ const SpyUI = () => {
               h="30%"
               w="90%"
               justifyContent="space-between"
-              margin="10px"
+              // margin="10px"
             >
               <Box
-                w="23%"
-                height="fit-content"
+                w="20%"
+                h="100%"
+                // height="fit-content"
                 minHeight="150px"
-                bg={gamers[0].name === currentPainterId ? "yellow" : "rgba(255, 255, 255, 0.7)"}
+                bg={gamers[0].name === currentPainterId ? "yellow" : null}
                 backdropFilter="auto" // 블러
                 backdropBlur="5px"    // 블러
                 boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                borderRadius="20px"
+                borderRadius="50px"
               >
                 {gamers[0] && (
                   <UserVideoComponent
@@ -672,14 +678,15 @@ const SpyUI = () => {
                 )}
               </Box>
               <Box
-                w="23%"
-                height="fit-content"
+                w="20%"
+                h="100%"
+                // height="fit-content"
                 minHeight="150px"
-                bg={gamers[1].name === currentPainterId ? "yellow" : "rgba(255, 255, 255, 0.7)"}
-                backdropFilter="auto"
-                backdropBlur="5px"
+                bg={gamers[1].name === currentPainterId ? "yellow" : null}
+                backdropFilter="auto" // 블러
+                backdropBlur="5px"    // 블러
                 boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                borderRadius="20px"
+                borderRadius="50px"
               >
                 {gamers[1] && (
                   <UserVideoComponent
@@ -690,14 +697,15 @@ const SpyUI = () => {
                 )}
               </Box>
               <Box
-                w="23%"
-                height="fit-content"
+                w="20%"
+                h="100%"
+                // height="fit-content"
                 minHeight="150px"
-                bg={gamers[2].name === currentPainterId ? "yellow" : "rgba(255, 255, 255, 0.7)"}
-                backdropFilter="auto"
-                backdropBlur="5px"
+                bg={gamers[2].name === currentPainterId ? "yellow" : null}
+                backdropFilter="auto" // 블러
+                backdropBlur="5px"    // 블러
                 boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                borderRadius="20px"
+                borderRadius="50px"
               >
                 {gamers[2] && (
                   <UserVideoComponent
@@ -708,14 +716,15 @@ const SpyUI = () => {
                 )}
               </Box>
               <Box
-                w="23%"
-                height="fit-content"
+                w="20%"
+                h="100%"
+                // height="fit-content"
                 minHeight="150px"
-                bg={gamers[3].name === currentPainterId ? "yellow" : "rgba(255, 255, 255, 0.7)"}
-                backdropFilter="auto"
-                backdropBlur="5px"
+                bg={gamers[3].name === currentPainterId ? "yellow" : null}
+                backdropFilter="auto" // 블러
+                backdropBlur="5px"    // 블러
                 boxShadow="rgba(0, 0, 0, 0.2) 0px 1px 8px"
-                borderRadius="20px"
+                borderRadius="50px"
               >
                 {gamers[3] && (
                   <UserVideoComponent
@@ -729,14 +738,18 @@ const SpyUI = () => {
             {/* JANG: 푸시 때 주석 해제! */}
             {/*** @2-2. 스파이 모드 ***/}
           </VStack>
-          <Button 
+          {/* JANG: 대기실로 이동 버튼 일단 지움!! */}
+          {/* <Button 
             onClick={() => {
               goToWaitingRoom();
               waitingroomSound();
             }}
             style={{width: "min-content", position: "relative"}}>
             대기실로 이동
-          </Button>
+          </Button> */}
+          <div style={{marginBottom: "10px"}}>
+
+          </div>
         </Flex>
         </>
         ) : (

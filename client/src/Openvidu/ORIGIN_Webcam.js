@@ -636,7 +636,7 @@ const Webcam = () => {
         </Box>
       ) : null}
 
-{session !== undefined ? (
+      {session !== undefined ? (
         <Box textAlign="center" className="Game_Screen">
           {/* MRSEO: useStore.getState()지움 */}
           {phase === "Ready" || phase === "Game1" || phase === "Game2" ? (
@@ -655,9 +655,16 @@ const Webcam = () => {
                   <BasicUI />
                 </SessionContext.Provider>
               </Flex>
+              {/* <Flex flex="0.5" alignItems="flex-end" justifyContent="flex-end" width="100%"> */}
+                {/* <Spacer /> */}
+                <ButtonGroup gap="2" mb="2">
 
-              {/* JANG: 하단에 Test 버튼과 EXIT 버튼 임시로 ORIGIN_Webcam.js에 넣어둠 */}
-              {myUserName === host && gamers?.length === 4 ? (
+                  {/* MRSEO: 참가자 수 출력 테스트 -> 나중에 버릴 것! */}
+                  <Button onClick={consoleCommand} marginRight="10px">test</Button>
+
+
+                  {/* Start 버튼은 4명이 다 차면 뜨도록 변경! */}
+                  {myUserName === host && gamers?.length === 4 ? (
                     <Button
                       colorScheme="Messenger"
                       size="lg"
@@ -666,14 +673,22 @@ const Webcam = () => {
                     >
                       Start
                     </Button>
-              ) : null}
-              
+                  ) : null}
+                  <Button
+                    colorScheme="red"
+                    size="lg"
+                    onClick={leaveSession}
+                    marginRight="10px"
+                    _hover={{ transform: "scale(1.1)" }} // 마우스 올리면 확대
+                  >
+                    Exit
+                  </Button>
+                </ButtonGroup>
               </Flex>
             // </Flex>
           ) : null}
         </Box>
       ) : null}
-
     </div>
   );
 };
