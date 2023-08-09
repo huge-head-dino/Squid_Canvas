@@ -18,8 +18,8 @@ const root = ReactDOM.createRoot(container);
 
 const customTheme = extendTheme({
   fonts: {
-    body: '"Yeon Sung", sans-serif', // 폰트 이름을 정확하게 지정
-    heading: '"Yeon Sung", sans-serif', // 폰트 이름을 정확하게 지정
+    body: '"OAGothic-ExtraBold", sans-serif', // 폰트 이름을 정확하게 지정
+    heading: '"OAGothic-ExtraBold", sans-serif', // 폰트 이름을 정확하게 지정
   },
 });
 
