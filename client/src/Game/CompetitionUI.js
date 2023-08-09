@@ -185,26 +185,26 @@ const CompetitionUI = () => {
   };
 
   return (
-    <>
-      {/* JANG: 화면 전체 높이는 다시 수정 */}
-      <div style={{ height: "100%", width: "100%" }}>
-        {/* <Navbar /> */}
-
-        {/*** @2-1. 경쟁 모드 ***/}
-        <Grid h="10%" w="100%" templateColumns="2fr 5fr 2fr">
-          <Flex alignItems="center" justifyContent="center">
-            <Box
-              className="Red_Score"
-              bg="red.500"
-              p="10px"
-              borderRadius="5px"
-              fontSize="x-large" // 글자 크기를 x-large로 설정
-              fontWeight="bold" // 글자를 두껍게 설정
-              _hover={{
-                boxShadow: "0 0 20px rgba(255, 0, 0, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (빨간색)
-              }}
-              transition="box-shadow 0.3s ease-in-out" // 부드러운 애니메이션 효과
-            >
+      <>
+        {/* JANG: 화면 전체 높이는 다시 수정 */}
+        <div style={{ height: "100%", width: "100%" }}>
+          {/* <Navbar /> */}
+  
+          {/*** @2-1. 경쟁 모드 ***/}
+          <Grid h="10%" w="100%" templateColumns="2fr 5fr 2fr">
+            <Flex alignItems="center" justifyContent="center">
+              <Box
+                className="Red_Score"
+                bg="red.500"
+                p="10px"
+                borderRadius="5px"
+                fontSize="x-large" // 글자 크기를 x-large로 설정
+                fontWeight="bold" // 글자를 두껍게 설정
+                _hover={{
+                  boxShadow: "0 0 20px rgba(255, 0, 0, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (빨간색)
+                }}
+                transition="box-shadow 0.3s ease-in-out" // 부드러운 애니메이션 효과
+              >
               RED SCORE : {useStore.getState().redScoreCnt}
             </Box>
           </Flex>

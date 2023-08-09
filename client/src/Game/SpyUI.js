@@ -483,8 +483,14 @@ const SpyUI = () => {
                                 justifyContent="center"
                                 width="100%"
                                 mb="20px"
+                                //JANG: 타이머 위치 조정
+                                position="relative"
                               >
                                 <RealCanvas />
+                                {/* JANG: 타이머 위치 조정 */}
+                                <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)"}}>
+                                  {spyCountdown && <Countdown />}
+                                </div>
                               </Box>
                           </> 
                         ) : null}
