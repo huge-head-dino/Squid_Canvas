@@ -9,8 +9,9 @@ import SessionContext from "../../Openvidu/SessionContext";
 import "./GameCanvas.css";
 import useStore from "../../store";
 
-// SANGYOON: Sound Effect 추가
-import { RoundMusic, SubmitSound } from "../audio";
+// SANGYOON: Sound Effect
+import { RoundMusic, SubmitSound, CorrectAnswer, WrongAnswer } from "../audio";
+
 // JANG: 08.06 - chakra-ui 추가 + react-bootstrap 변경할 것!
 import { Box, Input, Flex, Grid, Button, Img } from "@chakra-ui/react";
 
@@ -198,10 +199,12 @@ function GameCanvas() {
 
   // MRSEO: 정답 제출
   const submitAns = () => {
-    SubmitSound.play(); // SANGYOON: sound 추가
+    // SubmitSound.play(); // SANGYOON: 정답, 오답시 sound effect 추가
     if (!useStore.getState().canSubmitAns) return;
     if (round === 1) {
       if (ans === suggestWord) {
+        CorrectAnswer.play();
+
         setCanSeeAns(!gamers[0].canSeeAns, gamers[0].name);
         setDrawable(!gamers[0].drawable, gamers[0].name);
 
@@ -219,6 +222,8 @@ function GameCanvas() {
         socket.emit("req_changeSolver", "red");
         socket.emit("updateQuestWords_Com");
       } else {
+        WrongAnswer.play();
+
         setIncorrectRender(true);
         setTimeout(() => {
           setIncorrectRender(false);
@@ -227,6 +232,8 @@ function GameCanvas() {
     }
     if (round === 2) {
       if (ans === suggestWord) {
+        CorrectAnswer.play();
+
         setCanSeeAns(!gamers[1].canSeeAns, gamers[1].name);
         setDrawable(!gamers[1].drawable, gamers[1].name);
 
@@ -244,6 +251,8 @@ function GameCanvas() {
         socket.emit("req_changeSolver", "blue");
         socket.emit("updateQuestWords_Com");
       } else {
+        WrongAnswer.play();
+
         setIncorrectRender(true);
         setTimeout(() => {
           setIncorrectRender(false);

@@ -5,8 +5,8 @@ import "./BasicUI.css";
 
 import socket from "../Openvidu/socket";
 
-// BGM
-import { WaitingSound } from "./audio";
+// SANGYOON: Competition Sound
+import { WaitingSound, CompetitionSound, EntranceEffect } from "./audio";
 
 // 게임 컴포넌트
 import GameCanvas from "./For_canvas/GameCanvas";
@@ -160,6 +160,16 @@ const CompetitionUI = () => {
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 함수
   const goToWaitingRoom = () => {
     competitionUIInitializer();
+  };
+
+  // SANGYOON: 대기실로 돌아가서 대기실 sound on
+  const waitingroomSound = () => {
+    CompetitionSound.pause();
+    EntranceEffect.play();
+    WaitingSound.loop = true;
+    WaitingSound.currentTime = 0;
+    WaitingSound.play();
+    WaitingSound.volume = 0.5;
   };
 
   return (
@@ -469,10 +479,13 @@ const CompetitionUI = () => {
           <Button
             colorScheme="teal"
             variant="solid"
-            onClick={goToWaitingRoom}
+            onClick={() => {
+              goToWaitingRoom();
+              waitingroomSound();
+            }}
             margin="10px"
           >
-            대기방으로~
+            대기실로 이동
           </Button>
         </Flex>
         {/*** @2-1. 경쟁 모드 ***/}

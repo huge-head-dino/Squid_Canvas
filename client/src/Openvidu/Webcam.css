@@ -4,43 +4,47 @@
 	background-image: url("../../public/resources/images/home-bg1.png");
 	height: 100vh;
 	width: 100vw;
-	background-size: 100% 100%; /* 배경 이미지를 너비, 높이 100 100으로 확대 또는 축소 */
+	background-size: 100% 100%;
+	/* 배경 이미지를 너비, 높이 100 100으로 확대 또는 축소 */
 	background-position: center;
-  }
-  
-  .Home_Button {
+}
+
+.Home_Button {
 	background-image: url("../../public/resources/images/home-title.png");
 	background-repeat: no-repeat;
 	background-size: cover;
 	text-align: center;
 	animation: bounce_title 1s ease infinite;
-  }
-  button {
+}
+
+/* button {
 	cursor: none !important; 
-  }
-  @keyframes bounce_title {
+  } */
+@keyframes bounce_title {
 	0% {
-	  transform: scale(1);
+		transform: scale(1);
 	}
+
 	50% {
-	  transform: scale(1.1);
+		transform: scale(1.1);
 	}
+
 	100% {
-	  transform: scale(1);
+		transform: scale(1);
 	}
-  }
-  
-  /* 2. 게임 참가 */
-  .Game_Screen {
+}
+
+/* 2. 게임 참가 */
+.Game_Screen {
 	/* JANG: 게임 창 이미지 변경하기 */
 	background-image: url("../../public/resources/images/main-bg1.png");
 	height: 100vh;
 	width: 100vw;
-	background-size: 100% 100%; /* 배경 이미지를 너비, 높이 100 100으로 확대 또는 축소 */
+	background-size: 100% 100%;
+	/* 배경 이미지를 너비, 높이 100 100으로 확대 또는 축소 */
 	background-position: center;
-  }
-  
-  .JoinForm {
+}
+
+.JoinForm {
 	text-align: center;
-  }
-  
+}

@@ -7,6 +7,9 @@ import RealCanvas from "./For_canvas/RealCanvas";
 
 import socket from "../Openvidu/socket";
 
+// SANGYOON: Spy Sound
+import { WaitingSound, SpySound, EntranceEffect } from "./audio";
+
 // 게임 컴포넌트
 import GameCanvas from "./For_canvas/GameCanvas";
 // JANG: 08.06 - 폭죽 애니메이션
@@ -324,7 +327,6 @@ const SpyUI = () => {
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 이벤트 핸들러
   useEffect(() => {
     socket.on('gameEndByButton', () => {
-      alert('게임이 종료되었습니다.');
       setMode('waitingRoom');
     })
 
@@ -372,6 +374,16 @@ const SpyUI = () => {
   };
 
   // JUNHO: 스파이모드 끝
+
+  // SANGYOON: 경쟁모드에서 대기실로 돌아가서 입장 사운드 실행
+  const waitingroomSound = () => {
+    SpySound.pause();
+    EntranceEffect.play();
+    WaitingSound.loop = true;
+    WaitingSound.currentTime = 0;
+    WaitingSound.play();
+    WaitingSound.volume = 0.5;
+  };
 
   return (
     <>
@@ -692,14 +704,28 @@ const SpyUI = () => {
             {/* JANG: 푸시 때 주석 해제! */}
             {/*** @2-2. 스파이 모드 ***/}
           </VStack>
-          <Button onClick={goToWaitingRoom} style={{width: "min-content", position: "relative"}}>대기방으로~</Button>
+          <Button 
+            onClick={() => {
+              goToWaitingRoom();
+              waitingroomSound();
+            }}
+            style={{width: "min-content", position: "relative"}}>
+            대기실로 이동
+          </Button>
         </Flex>
         </>
         ) : (
           <>
             <h1>인원이 모자랍니다. 잠시만 기다려 주세요~</h1>
             <Flex>
-              <Button onClick={goToWaitingRoom}>대기방으로~</Button>
+              <Button 
+                onClick={() => {
+                  goToWaitingRoom();
+                  waitingroomSound();
+                }}
+                >
+                대기실로 이동
+              </Button>
             </Flex>
           </>
         )

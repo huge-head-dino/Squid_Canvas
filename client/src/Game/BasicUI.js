@@ -4,7 +4,7 @@ import useStore from "../store";
 import "./BasicUI.css";
 
 // SANGYOON: BGM 설정
-import { WaitingSound } from "./audio";
+import { WaitingSound, CompetitionSound, SpySound, GameEntranceEffect } from "./audio";
 
 // JANG: 경쟁, 스파이 모드 컴포넌트 분리
 import CompetitionUI from "./CompetitionUI";
@@ -74,7 +74,7 @@ function BasicUI() {
 
   const joinSelectedMode = () => {
     if (selectedMode === "competition") {
-      cllickCompetition();
+      clickCompetition();
     } else if (selectedMode === "spy") {
       clickSpy();
     }
@@ -82,17 +82,27 @@ function BasicUI() {
 
   // JUNHO: 1
 
-  const cllickCompetition = () => {
-    WaitingSound.pause(); // 경쟁모드 클릭시 WaitingSound play off
-    // 경쟁모드 클릭시 CompetitionSound play on
+  // SANGYOON: 대기실에서 사용하는 sound effect
+  const clickCompetition = () => {
+    WaitingSound.pause();             // 오징어격투 클릭시 WaitingSound play off
+    GameEntranceEffect.play();
+    CompetitionSound.loop = true;     // 반복재생
+    CompetitionSound.currentTime = 0; // 곡 처음부터 시작
+    CompetitionSound.play();          // 오징어격투 클릭시 CompetitionSound play on
+    CompetitionSound.volume = 0.5;
     setMode("competition");
   };
 
   const clickSpy = () => {
+    WaitingSound.pause();     // 스파이문어 클릭시 WaitingSound play off
+    GameEntranceEffect.play();
+    SpySound.loop = true;
+    SpySound.currentTime = 0;
+    SpySound.play();          // 스파이문어 클릭시 SpySound play on
+    SpySound.volume = 0.5;
     setMode("spy");
-    // 스파이모드 클릭시 WaitingSound play off
-    // 스파이모드 클릭시 SpySound play off
   };
+  
 
   // JANG: 08.06 - 모드 선택 애니메이션
   const bounce = keyframes`

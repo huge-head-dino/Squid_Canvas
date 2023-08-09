@@ -18,7 +18,8 @@ import BasicUI from '../Game/BasicUI';
 // MRSEO: 
 import socket from './socket';
 
-import { RoundMusic, WaitingSound, EntranceSound } from '../Game/audio';
+// SANGYOON: Sound
+import { RoundMusic, WaitingSound, EntranceEffect } from '../Game/audio';
 
 // JANG: 08.06 - Chakra UI 추가
 import {
@@ -327,13 +328,19 @@ const Webcam = () => {
 
   }, [socket, gamers]);
 
-  // SANGYOON: 입장하기 사운드
+  // SANGYOON: 입장하기 버튼 클릭시 sound effect
   const entranceSquid = () => {
-    EntranceSound.play();
+    EntranceEffect.play();
     setTimeout(() => {
       WaitingSound.loop = true;
+      WaitingSound.currentTime = 0;
       WaitingSound.play();
+      WaitingSound.volume = 0.5;
     }, 1000 * 4);
+  };
+
+  const clickSquid = () => {
+    EntranceEffect.play();
   };
 
   const handleGameStart = () => {
@@ -521,7 +528,10 @@ const Webcam = () => {
                       borderRadius="md"
                       w="800px"
                       h="400px"
-                      onClick={onOpen}
+                      onClick={() => {
+                        onOpen(); // 첫 번째 작업
+                        clickSquid(); // 두 번째 작업
+                      }}
                       className="Home_Button"
                     >
                     </Box>
