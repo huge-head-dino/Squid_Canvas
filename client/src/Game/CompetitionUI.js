@@ -58,6 +58,8 @@ const CompetitionUI = () => {
     setMode,
     iAmPainter,
     iAmSolver,
+    myUserId,
+    phase,
   } = useStore((state) => ({
     gamers: state.gamers,
     setPlayerCount: state.setPlayerCount,
@@ -71,6 +73,8 @@ const CompetitionUI = () => {
     setMode: state.setMode,
     iAmPainter: state.iAmPainter,
     iAmSolver: state.iAmSolver,
+    myUserId: state.myUserId,
+    phase: state.phase,
   }));
 
   useEffect(() => {
@@ -145,6 +149,14 @@ const CompetitionUI = () => {
       setMode("waitingRoom");
     });
   });
+
+  const [iAmSolverRender, setIAmSolverRender] = useState(false);
+  const [iAmPainterRender, setIAmPainterRender] = useState(false);
+
+  useEffect(() => {
+    setIAmPainterRender(iAmPainter);
+    setIAmSolverRender(iAmSolver);
+  }, [iAmSolver, iAmPainter]);
 
   // MRSEO: 경쟁모드 초기화 함수
   const competitionUIInitializer = () => {
@@ -265,41 +277,66 @@ const CompetitionUI = () => {
                 //   : {} // 특정 조건이 아닐 때는 빈 객체를 전달하여 hover 효과를 적용하지 않음
               }}
             >
-              <div style={{position: 'relative'}}>
-              {gamers[0] && (
-                <UserVideoComponent
-                  streamManager={gamers[0].streamManager}
-                  my_name={gamers[0].name}
-                  key={gamers[0].name}
-                />
-              )}
+              <div style={{ position: 'relative' }}>
+                {gamers[0] && (
+                  <UserVideoComponent
+                    streamManager={gamers[0].streamManager}
+                    my_name={gamers[0].name}
+                    key={gamers[0].name}
+                  />
+                )}
 
-              {iAmPainter&&(
-              <Img
-                src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
-                alt="character"
-                width="30%"
-                height="30%"
-                style={{
-                  position: "absolute",
-                  top: "0%", // Adjust as necessary
-                  left: "0%", // Centering the image if it's 80% width
-                }}
-              />
-              )}
-              {iAmSolver&&(
-              <Img
-                src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
-                alt="character"
-                width="30%"
-                height="30%"
-                style={{
-                  position: "absolute",
-                  top: "0%", // Adjust as necessary
-                  left: "0%", // Centering the image if it's 80% width
-                }}
-              />
-              )}
+{phase === 'Ready' && (
+                  <>
+                    {iAmPainterRender && (
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                        alt="character"
+                        width="30%"
+                        height="30%"
+                        style={{
+                          position: "absolute",
+                          top: "0%", // Adjust as necessary
+                          left: "0%", // Centering the image if it's 80% width
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+                {phase !== 'Ready' && (
+                  <>
+                    {round === 1 && gamers[0].name === myUserId && (
+                      <>
+                        {iAmPainterRender && (
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                            alt="character"
+                            width="30%"
+                            height="30%"
+                            style={{
+                              position: "absolute",
+                              top: "0%", // Adjust as necessary
+                              left: "0%", // Centering the image if it's 80% width
+                            }}
+                          />
+                        )}
+                        {iAmSolverRender && (
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
+                            alt="character"
+                            width="30%"
+                            height="30%"
+                            style={{
+                              position: "absolute",
+                              top: "0%", // Adjust as necessary
+                              left: "0%", // Centering the image if it's 80% width
+                            }}
+                          />
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </Box>
             <Box
@@ -314,40 +351,65 @@ const CompetitionUI = () => {
                 boxShadow: "0 0 20px rgba(255, 0, 0, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과
               }}
             >
-              <div style={{position: 'relative'}}>
-              {gamers[2] && (
-                <UserVideoComponent
-                  streamManager={gamers[2].streamManager}
-                  my_name={gamers[2].name}
-                  key={gamers[2].name}
-                />
-              )}
-              {iAmPainter&&(
-              <Img
-                src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
-                alt="character"
-                width="30%"
-                height="30%"
-                style={{
-                  position: "absolute",
-                  top: "0%", // Adjust as necessary
-                  left: "0%", // Centering the image if it's 80% width
-                }}
-              />
-              )}
-              {iAmSolver&&(
-              <Img
-                src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
-                alt="character"
-                width="30%"
-                height="30%"
-                style={{
-                  position: "absolute",
-                  top: "0%", // Adjust as necessary
-                  left: "0%", // Centering the image if it's 80% width
-                }}
-              />
-              )}
+              <div style={{ position: 'relative' }}>
+                {gamers[2] && (
+                  <UserVideoComponent
+                    streamManager={gamers[2].streamManager}
+                    my_name={gamers[2].name}
+                    key={gamers[2].name}
+                  />
+                )}
+                {phase === 'Ready' && (
+                  <>
+                    {iAmPainterRender && (
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                        alt="character"
+                        width="30%"
+                        height="30%"
+                        style={{
+                          position: "absolute",
+                          top: "0%", // Adjust as necessary
+                          left: "0%", // Centering the image if it's 80% width
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+                {phase !== 'Ready' && (
+                  <>
+                    {round === 1 && gamers[2].name === myUserId && (
+                      <>
+                        {iAmPainterRender && (
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                            alt="character"
+                            width="30%"
+                            height="30%"
+                            style={{
+                              position: "absolute",
+                              top: "0%", // Adjust as necessary
+                              left: "0%", // Centering the image if it's 80% width
+                            }}
+                          />
+                        )}
+                        {iAmSolverRender && (
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
+                            alt="character"
+                            width="30%"
+                            height="30%"
+                            style={{
+                              position: "absolute",
+                              top: "0%", // Adjust as necessary
+                              left: "0%", // Centering the image if it's 80% width
+                            }}
+                          />
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </Box>
           </Flex>
@@ -389,40 +451,65 @@ const CompetitionUI = () => {
                 boxShadow: "0 0 20px rgba(0, 0, 255, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (파란색)
               }}
             >
-              <div style={{position: 'relative'}}>
-              {gamers[1] && (
-                <UserVideoComponent
-                  streamManager={gamers[1].streamManager}
-                  my_name={gamers[1].name}
-                  key={gamers[1].name}
-                />
-              )}
-              {iAmPainter&&(
-              <Img
-                src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
-                alt="character"
-                width="30%"
-                height="30%"
-                style={{
-                  position: "absolute",
-                  top: "0%", // Adjust as necessary
-                  left: "0%", // Centering the image if it's 80% width
-                }}
-              />
-              )}
-              {iAmSolver&&(
-              <Img
-                src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
-                alt="character"
-                width="30%"
-                height="30%"
-                style={{
-                  position: "absolute",
-                  top: "0%", // Adjust as necessary
-                  left: "0%", // Centering the image if it's 80% width
-                }}
-              />
-              )}
+              <div style={{ position: 'relative' }}>
+                {gamers[1] && (
+                  <UserVideoComponent
+                    streamManager={gamers[1].streamManager}
+                    my_name={gamers[1].name}
+                    key={gamers[1].name}
+                  />
+                )}
+                {phase === 'Ready' && (
+                  <>
+                    {iAmPainterRender && (
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                        alt="character"
+                        width="30%"
+                        height="30%"
+                        style={{
+                          position: "absolute",
+                          top: "0%", // Adjust as necessary
+                          left: "0%", // Centering the image if it's 80% width
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+                {phase !== 'Ready' && (
+                  <>
+                    {round === 2 && gamers[1].name === myUserId && (
+                      <>
+                        {iAmPainterRender && (
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                            alt="character"
+                            width="30%"
+                            height="30%"
+                            style={{
+                              position: "absolute",
+                              top: "0%", // Adjust as necessary
+                              left: "0%", // Centering the image if it's 80% width
+                            }}
+                          />
+                        )}
+                        {iAmSolverRender && (
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
+                            alt="character"
+                            width="30%"
+                            height="30%"
+                            style={{
+                              position: "absolute",
+                              top: "0%", // Adjust as necessary
+                              left: "0%", // Centering the image if it's 80% width
+                            }}
+                          />
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </Box>
             <Box
@@ -437,40 +524,66 @@ const CompetitionUI = () => {
                 boxShadow: "0 0 20px rgba(0, 0, 255, 0.8)", // 네온 샤인처럼 빛이 나는 hover 효과 (파란색)
               }}
             >
-              <div style={{position: 'relative'}}>
-              {gamers[3] && (
-                <UserVideoComponent
-                  streamManager={gamers[3].streamManager}
-                  my_name={gamers[3].name}
-                  key={gamers[3].name}
-                />
-              )}
-              {iAmPainter&&(
-              <Img
-                src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
-                alt="character"
-                width="30%"
-                height="30%"
-                style={{
-                  position: "absolute",
-                  top: "0%", // Adjust as necessary
-                  left: "0%", // Centering the image if it's 80% width
-                }}
-              />
-              )}
-              {iAmSolver&&(
-              <Img
-                src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
-                alt="character"
-                width="30%"
-                height="30%"
-                style={{
-                  position: "absolute",
-                  top: "0%", // Adjust as necessary
-                  left: "0%", // Centering the image if it's 80% width
-                }}
-              />
-              )}
+              <div style={{ position: 'relative' }}>
+                {gamers[3] && (
+                  <UserVideoComponent
+                    streamManager={gamers[3].streamManager}
+                    my_name={gamers[3].name}
+                    key={gamers[3].name}
+                  />
+                )}
+                {phase === 'Ready' && (
+                  <>
+                    {iAmPainterRender && (
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                        alt="character"
+                        width="30%"
+                        height="30%"
+                        style={{
+                          position: "absolute",
+                          top: "0%", // Adjust as necessary
+                          left: "0%", // Centering the image if it's 80% width
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+
+                {phase !== 'Ready' && (
+                  <>
+                    {round === 2 && gamers[3].name === myUserId && (
+                      <>
+                        {iAmPainterRender && (
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/Painter.png`}
+                            alt="character"
+                            width="30%"
+                            height="30%"
+                            style={{
+                              position: "absolute",
+                              top: "0%", // Adjust as necessary
+                              left: "0%", // Centering the image if it's 80% width
+                            }}
+                          />
+                        )}
+                        {iAmSolverRender && (
+                          <Img
+                            src={`${process.env.PUBLIC_URL}/resources/images/Solver.png`}
+                            alt="character"
+                            width="30%"
+                            height="30%"
+                            style={{
+                              position: "absolute",
+                              top: "0%", // Adjust as necessary
+                              left: "0%", // Centering the image if it's 80% width
+                            }}
+                          />
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </Box>
           </Flex>

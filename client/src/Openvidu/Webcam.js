@@ -205,7 +205,7 @@ const Webcam = () => {
           let publisher = await OV.initPublisherAsync(undefined, {
             audioSource: undefined,
             videoSource: undefined,
-            publishAudio: false,
+            publishAudio: true,
             publishVideo: true,
             resolution: '640x480',
             frameRate: 30,

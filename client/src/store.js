@@ -64,6 +64,18 @@ const useStore = create((set) => ({
     }));
   },
 
+  setAudioStatus: (status, myUserName) => {
+    set((state) => ({
+      gamers: state.gamers.map((gamer) => {
+        if (gamer.name === myUserName) {
+          gamer.streamManager.publishAudio(status);
+          return { ...gamer };
+        }
+        return gamer;
+      }),
+    }));
+  },
+
   curSession: undefined,
   setCurSession: (curSession) => { set({curSession: curSession}) },
 
@@ -113,6 +125,10 @@ const useStore = create((set) => ({
 
   iAmSpy: false,
   setIAmSpy: (iAmSpy) => { set({iAmSpy: iAmSpy}) },
+
+  audio: true,
+  setAudio: (audio) => { set({ audio: audio }) },
+
 
 }));
 

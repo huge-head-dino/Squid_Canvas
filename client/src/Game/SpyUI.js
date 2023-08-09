@@ -306,7 +306,7 @@ const SpyUI = () => {
 
   //YEONGWOO: 스파이 모드에서 현재 그리는 사람 & 현재 라운드
   useEffect(() => {
-    if (currentPainterId) {
+    if ( currentPainterId === myUserId ) {
       socket.emit('updateCurrentPainterId', currentPainterId);
     }
     setCurrentRound(currentRound + 1);

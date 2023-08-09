@@ -38,6 +38,9 @@ function GameCanvas() {
     setBlueScoreCnt,
     setAns,
     myUserId,
+    audio,
+    setAudio,
+    setAudioStatus,
   } = useStore((state) => ({
     setCanSubmitAns: state.setCanSubmitAns,
     gamers: state.gamers,
@@ -57,6 +60,9 @@ function GameCanvas() {
     setBlueScoreCnt: state.setBlueScoreCnt,
     setAns: state.setAns,
     myUserId: state.myUserId,
+    audio: state.audio,
+    setAudio: state.setAudio,
+    setAudioStatus: state.setAudioStatus,
   }));
 
   // MRSEO: 카운트 조건 초기화
@@ -88,6 +94,13 @@ function GameCanvas() {
     // MRSEO: 이벤트 리스너 관리를 위한 함수 추가와 클린업 함수 추가
     const round1CountdownHandler = () => {
       console.log("Round 1 - Countdown_client !!!!!");
+      // MRSEO:  red팀 소리 끄기
+      for ( let i = 0; i < gamers.length; i++ ) {
+        if (i === 0 || i === 2) {
+          setAudioStatus(false, myUserId);
+          setAudio(false);
+        }
+      }
       setRound1Countdown(true);
       setTimeout(() => {
         setRound1Countdown(false);
@@ -104,6 +117,13 @@ function GameCanvas() {
     };
 
     const round2CountdownHandler = () => {
+      // MRSEO:  red팀 소리 켜기
+      for ( let i = 0; i < gamers.length; i++ ) {
+        if ((i === 0 || i === 2) && gamers[i].name === myUserId) {
+          setAudioStatus(true, myUserId);
+          setAudio(true);
+        }
+      }
       setCanSubmitAns(false);
       console.log("Round 2 - Countdown_client !!!!!");
       setRound2Countdown(true);
