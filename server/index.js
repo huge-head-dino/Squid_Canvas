@@ -150,6 +150,11 @@ io.on('connection', (socket) => {
     io.emit('clearCanvasBySubmit');
   });
 
+  socket.on("hostSetting", () => {
+    console.log("🟣 hostSetting_server !!!!!");
+    io.emit("hostSetting");
+  });
+
   // SANGYOON: 2-1. Competition Mode - socket.on 수신
   socket.on('updateQuestWords_Com', () => {
     updateQuestWords_Com();

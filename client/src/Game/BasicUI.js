@@ -47,12 +47,18 @@ import {
 import Navbar from "./For_screen/Navbar";
 
 function BasicUI() {
-  const { gamers, setPlayerCount, curSession, sortGamer } = useStore(
+  const { gamers, 
+    setPlayerCount, 
+    curSession, 
+    sortGamer,
+    setHost,
+   } = useStore(
     (state) => ({
       gamers: state.gamers,
       setPlayerCount: state.setPlayerCount,
       curSession: state.curSession,
       sortGamer: state.sortGamer,
+      setHost: state.setHost,
     })
   );
 
@@ -69,6 +75,12 @@ function BasicUI() {
 
   const [selectedMode, setSelectedMode] = useState(null);
 
+  useEffect(() => {
+    socket.on("hostSetting", () => {
+      setHost(gamers[0].name)
+    });
+  },[socket]);
+
   const showCompetitionDescription = () => {
     clickCategory();
     setSelectedMode("competition");
@@ -81,9 +93,19 @@ function BasicUI() {
 
   const joinSelectedMode = () => {
     if (selectedMode === "competition") {
+      if (gamers.length === 4) {
+      socket.emit("hostSetting")
       clickCompetition();
+      } else {
+        alert("4명의 플레이어가 모여야 합니다.")
+      }
     } else if (selectedMode === "spy") {
+      if (gamers.length === 4) {
+      socket.emit("hostSetting")
       clickSpy();
+      } else {
+        alert("4명의 플레이어가 모여야 합니다.")
+      }
     }
   };
 
