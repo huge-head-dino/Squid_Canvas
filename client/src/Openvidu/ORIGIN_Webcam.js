@@ -51,8 +51,8 @@ import "./Webcam.css";
 
 
 // NOTE: 배포 전 확인!
-const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
-// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+// const APPLICATION_SERVER_URL = "https://mysquidcanvas.shop/"
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 const Webcam = () => {
   //JUNHO: 8.7 플레이스 홀더 변경
@@ -335,7 +335,7 @@ const Webcam = () => {
       WaitingSound.loop = true;
       WaitingSound.currentTime = 0;
       WaitingSound.play();
-      WaitingSound.volume = 0.5;
+      WaitingSound.volume = 0.3;
     }, 1000 * 4);
   };
 
@@ -347,7 +347,7 @@ const Webcam = () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
     console.log("게임 시작");
     RoundMusic.play();
-    RoundMusic.volume = 0.5;
+    RoundMusic.volume = 0.3;
     socket.emit('startSetting')
   };
 

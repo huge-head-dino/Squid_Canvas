@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
 
   socket.on('startTimer1', () => {
     console.log('🟡 startTimer1_server !!!!!');
-    timerModule.startTimer(io, 70, () => {
+    timerModule.startTimer(io, 40, () => {
       console.log('타이머 종료');
       io.emit('round2Countdown');
     });
@@ -110,7 +110,7 @@ io.on('connection', (socket) => {
 
   socket.on('startTimer2', () => {
     console.log('🟢 startTimer2_server !!!!!');
-    timerModule.startTimer(io, 70, () => {
+    timerModule.startTimer(io, 40, () => {
       console.log('타이머 종료');
       // 최종 스코어 로직
       if (redScore > blueScore) {
@@ -133,6 +133,16 @@ io.on('connection', (socket) => {
       blueScore++;
     }
     io.emit('scoreUpdate', { redScore, blueScore });
+  });
+
+  socket.on('correctAnswer', () => {
+    console.log('🟣 correctAnswer_server !!!!!');
+    io.emit('correctAnswer');
+  });
+
+  socket.on('incorrectAnswer', () => {
+    console.log('🟣 incorrectAnswer_server !!!!!');
+    io.emit('incorrectAnswer');
   });
 
   socket.on('clearCanvasBySubmit', () => {
@@ -189,7 +199,7 @@ io.on('connection', (socket) => {
   //1번 타이머 시작
   socket.on('startSpyTimer1', (spyPlayer1) => {
     console.log('startSpyTimer1');
-    spyTimerModule.startTimer(io, 15, () => {
+    spyTimerModule.startTimer(io, 20, () => {
       console.log('1번 타이머 종료');
       io.emit('spyTimer1End', spyPlayer1)
     });
@@ -206,7 +216,7 @@ io.on('connection', (socket) => {
   //2번 타이머 시작
   socket.on('startSpyTimer2', (spyPlayer2) => {
     console.log('startSpyTimer2');
-    spyTimerModule.startTimer(io, 15, () => {
+    spyTimerModule.startTimer(io, 20, () => {
       console.log('2번 타이머 종료');
       io.emit('spyTimer2End', spyPlayer2);
     });
@@ -222,7 +232,7 @@ io.on('connection', (socket) => {
   //3번 타이머 시작
   socket.on('startSpyTimer3', (spyPlayer3) => {
     console.log('startSpyTimer3');
-    spyTimerModule.startTimer(io, 15, () => {
+    spyTimerModule.startTimer(io, 20, () => {
       console.log('3번 타이머 종료');
       io.emit('spyTimer3End', spyPlayer3);
     });
@@ -239,7 +249,7 @@ io.on('connection', (socket) => {
   //4번 타이머 시작
   socket.on('startSpyTimer4', (spyPlayer4) => {
     console.log('startSpyTimer4');
-    spyTimerModule.startTimer(io, 15, () => {
+    spyTimerModule.startTimer(io, 20, () => {
       console.log('4번 타이머 종료');
       io.emit('spyTimer4End', spyPlayer4);
     });

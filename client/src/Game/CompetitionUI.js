@@ -181,7 +181,7 @@ const CompetitionUI = () => {
     WaitingSound.loop = true;
     WaitingSound.currentTime = 0;
     WaitingSound.play();
-    WaitingSound.volume = 0.5;
+    WaitingSound.volume = 0.3;
   };
 
   return (

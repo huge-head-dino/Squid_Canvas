@@ -250,9 +250,9 @@ const SpyUI = () => {
 
     socket.on('spyVoteTimerEnd', () => {
         setSpyPhase('Result');
-        if (host === myUserId) {
-          socket.emit('spyFinish');
-        }
+        // if (host === myUserId) {
+        //   socket.emit('spyFinish');
+        // }
     });
 
     socket.on('spyVoteResult', (spy, result) => {
@@ -268,7 +268,7 @@ const SpyUI = () => {
     });
 
     socket.on('spyWinBySubmit', () => {
-      console.log('spyWinBySubmit');
+      console.log('spyWinBySubmit_client');
       setSpyHowToWin('submit'); // MRSEO: 스파이가 정답 맞출 시 바로 승리
       setSpyWin(true);
       setSpyPhase('Result');
@@ -298,7 +298,10 @@ const SpyUI = () => {
       socket.off('spyTimer2End');
       socket.off('spyTimer3End');
       socket.off('spyTimer4End');
+      socket.off('spyVoteTimerEnd')
       socket.off('spyVoteResult');
+      socket.off('spyWinBySubmit');
+      socket.off('spyFinish');
       socket.off('updateCurrentPainterId');
     }
 
@@ -345,6 +348,7 @@ const SpyUI = () => {
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 이벤트 핸들러
   useEffect(() => {
     socket.on('gameEndByButton', () => {
+      waitingroomSound();
       setMode('waitingRoom');
     })
 
@@ -366,7 +370,9 @@ const SpyUI = () => {
       socket.off('spyTimer2End');
       socket.off('spyTimer3End');
       socket.off('spyTimer4End');
+      socket.off('spyVoteTimerEnd')
       socket.off('spyVoteResult');
+      socket.off('spyFinish');
       socket.off('updateCurrentPainterId');
     }
   };
@@ -412,7 +418,7 @@ const SpyUI = () => {
     WaitingSound.loop = true;
     WaitingSound.currentTime = 0;
     WaitingSound.play();
-    WaitingSound.volume = 0.5;
+    WaitingSound.volume = 0.3;
   };
 
   //JANG: 스파이모드 버튼 누르면 제시어 뜨게끔 변경 (상태 추가)

@@ -96,7 +96,7 @@ function BasicUI() {
     CompetitionSound.loop = true; // 반복재생
     CompetitionSound.currentTime = 0; // 곡 처음부터 시작
     CompetitionSound.play(); // 오징어격투 클릭시 CompetitionSound play on
-    CompetitionSound.volume = 0.5;
+    CompetitionSound.volume = 0.3;
     setMode("competition");
   };
 
@@ -106,7 +106,7 @@ function BasicUI() {
     SpySound.loop = true;
     SpySound.currentTime = 0;
     SpySound.play(); // 스파이문어 클릭시 SpySound play on
-    SpySound.volume = 0.5;
+    SpySound.volume = 0.3;
     setMode("spy");
   };
 

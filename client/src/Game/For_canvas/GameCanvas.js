@@ -138,7 +138,7 @@ function GameCanvas() {
         if (useStore.getState().host === myUserName) {
           //SANGYOON: 스타트 버튼 누르면 제시어 생성
           RoundMusic.play();
-          RoundMusic.volume = 0.5;
+          RoundMusic.volume = 0.3;
           socket.emit("updateQuestWords_Com");
           console.log("Round 2 - 제시어 나옴");
           console.log("startTimer 2 on");
@@ -150,7 +150,6 @@ function GameCanvas() {
     const round2EndHandler = (result) => {
       console.log("Result_client !!!!");
       // MRSEO: 게임 종료 후 결과 페이지로 이동
-
       if (result === "red") {
         alert("레드팀 승리");
       } else if (result === "blue") {
@@ -231,6 +230,28 @@ function GameCanvas() {
     }
   }, [socket, canvas]);
 
+  // 경쟁모드 정답 제출 시 정답, 오답 알림
+  useEffect(() => {
+    socket.on('correctAnswer', () => {
+      setCorrectRender(true);
+      setTimeout(() => {
+        setCorrectRender(false);
+      }, 1000);
+    });
+
+    socket.on('incorrectAnswer', () => {
+      setIncorrectRender(true);
+      setTimeout(() => {
+        setIncorrectRender(false);
+      }, 1000);
+    });
+
+    return () => {
+      socket.off('correctAnswer');
+      socket.off('incorrectAnswer');
+    }
+  }, [socket, correctRender, incorrectRender]);
+
   // MRSEO: 정답 제출
   const submitAns = () => {
     // SubmitSound.play(); // SANGYOON: 정답, 오답시 sound effect 추가
@@ -248,10 +269,7 @@ function GameCanvas() {
 
         setRedScoreCnt(redScoreCnt + 1);
 
-        setCorrectRender(true);
-        setTimeout(() => {
-          setCorrectRender(false);
-        }, 1000);
+        socket.emit('correctAnswer')
 
         socket.emit("sendScore", team);
         socket.emit("req_changeSolver", "red");
@@ -259,10 +277,7 @@ function GameCanvas() {
       } else {
         WrongAnswer.play();
 
-        setIncorrectRender(true);
-        setTimeout(() => {
-          setIncorrectRender(false);
-        }, 1000);
+        socket.emit('incorrectAnswer')
       }
     }
     if (round === 2) {
@@ -278,10 +293,7 @@ function GameCanvas() {
 
         setBlueScoreCnt(blueScoreCnt + 1);
 
-        setCorrectRender(true);
-        setTimeout(() => {
-          setCorrectRender(false);
-        }, 1000);
+        socket.emit('correctAnswer')
 
         socket.emit("sendScore", team);
         socket.emit("req_changeSolver", "blue");
@@ -289,10 +301,7 @@ function GameCanvas() {
       } else {
         WrongAnswer.play();
 
-        setIncorrectRender(true);
-        setTimeout(() => {
-          setIncorrectRender(false);
-        }, 1000);
+        socket.emit('incorrectAnswer')
       }
     }
     setAns("");
