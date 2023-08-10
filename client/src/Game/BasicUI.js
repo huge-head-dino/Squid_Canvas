@@ -8,7 +8,8 @@ import {
   WaitingSound,
   CompetitionSound,
   SpySound,
-  GameEntranceEffect,
+  EntranceEffect,
+  SubmitSound
 } from "./audio";
 
 // JANG: 경쟁, 스파이 모드 컴포넌트 분리
@@ -69,10 +70,12 @@ function BasicUI() {
   const [selectedMode, setSelectedMode] = useState(null);
 
   const showCompetitionDescription = () => {
+    clickCategory();
     setSelectedMode("competition");
   };
 
   const showSpyDescription = () => {
+    clickCategory();
     setSelectedMode("spy");
   };
 
@@ -89,7 +92,7 @@ function BasicUI() {
   // SANGYOON: 대기실에서 사용하는 sound effect
   const clickCompetition = () => {
     WaitingSound.pause(); // 오징어격투 클릭시 WaitingSound play off
-    GameEntranceEffect.play();
+    EntranceEffect.play();
     CompetitionSound.loop = true; // 반복재생
     CompetitionSound.currentTime = 0; // 곡 처음부터 시작
     CompetitionSound.play(); // 오징어격투 클릭시 CompetitionSound play on
@@ -99,13 +102,17 @@ function BasicUI() {
 
   const clickSpy = () => {
     WaitingSound.pause(); // 스파이문어 클릭시 WaitingSound play off
-    GameEntranceEffect.play();
+    EntranceEffect.play();
     SpySound.loop = true;
     SpySound.currentTime = 0;
     SpySound.play(); // 스파이문어 클릭시 SpySound play on
     SpySound.volume = 0.5;
     setMode("spy");
   };
+
+  const clickCategory = () => {
+    SubmitSound.play();
+  }
 
   // JANG: 08.06 - 모드 선택 애니메이션
   const bounce = keyframes`
