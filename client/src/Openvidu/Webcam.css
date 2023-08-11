@@ -48,3 +48,24 @@
 .JoinForm {
 	text-align: center;
 }
+
+/* JANG: 경쟁모드 스타트 버튼 css -> 나중에 변경! */
+/* 버튼의 기본 스타일 */
+.Start_Button {
+  background-color: darkred;
+  padding: 20px 40px; /* 큰 버튼 사이즈 */
+  border: none;
+  border-radius: 20px; /* 둥근 모서리 */
+  color: white;
+  font-size: 50px; /* 큰 폰트 사이즈 */
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* 입체감 */
+  transition: transform 0.1s ease, box-shadow 0.1s ease; /* 부드러운 애니메이션 효과 */
+}
+
+/* 버튼이 눌러질 때의 스타일 */
+.Start_Button:active {
+  transform: translateY(3px); /* 약간 아래로 이동 */
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2); /* 입체감이 조금 줄어듦 */
+}

@@ -14,6 +14,7 @@ import { RoundMusic, SubmitSound, CorrectAnswer, WrongAnswer } from "../audio";
 
 // JANG: 08.06 - chakra-ui 추가 + react-bootstrap 변경할 것!
 import { Box, Input, Flex, Grid, Button, Img } from "@chakra-ui/react";
+import confetti from "canvas-confetti";
 
 function GameCanvas() {
   const { mySessionId, myUserName } = useContext(SessionContext);
@@ -90,7 +91,7 @@ function GameCanvas() {
     // 10초 후에 깜박거리는 효과 종료
     setTimeout(() => {
       setBlinking(false);
-    }, 10000);
+    }, 1000);
   };
   // JUNHO: 깜박이는 애니메이션
 
@@ -151,8 +152,12 @@ function GameCanvas() {
       console.log("Result_client !!!!");
       // MRSEO: 게임 종료 후 결과 페이지로 이동
       if (result === "red") {
+        // JANG: ★ 변경!!!
+        confetti();
         alert("레드팀 승리");
       } else if (result === "blue") {
+        // JANG: ★ 변경!!!
+        confetti();
         alert("블루팀 승리");
       } else {
         alert("무승부");

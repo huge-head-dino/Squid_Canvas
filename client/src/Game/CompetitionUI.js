@@ -126,9 +126,9 @@ const CompetitionUI = () => {
   const animation = `${bounce} infinite 2s ease`;
 
   //MRSEO: 08.06 useState를 useEffect로 바꿈.
-  useEffect(() => {
-    confetti();
-  }, []);
+  // useEffect(() => {
+  //   confetti();
+  // }, []);
 
   // MRSEO: 대기실 버튼으로 대기실로 돌아가는 이벤트 핸들러
   useEffect(() => {

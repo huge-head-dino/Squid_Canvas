@@ -26,6 +26,7 @@ import Countdown from "./Countdown";
 
 // JANG: Chakra UI 추가
 import {
+  chakra,
   Button,
   Box,
   Center,
@@ -45,6 +46,7 @@ import {
 } from "@chakra-ui/react";
 
 import Navbar from "./For_screen/Navbar";
+
 
 function BasicUI() {
   const { gamers, 
@@ -79,7 +81,7 @@ function BasicUI() {
     socket.on("hostSetting", () => {
       setHost(gamers[0].name)
     });
-  },[socket]);
+  },[socket,gamers]);
 
   const showCompetitionDescription = () => {
     clickCategory();
@@ -144,10 +146,26 @@ function BasicUI() {
   `;
   const animation = `${bounce} infinite 2s ease`;
 
-  //MRSEO: 08.06 useState를 useEffect로 바꿈.
-  useEffect(() => {
-    confetti();
-  }, []);
+  //JANG: 게임룸 입장 버튼 꾸밈 -> BasicUI.css Game_Go_Buttonb으로 이동
+  // const GoGameButton = chakra(Button, {
+  //   baseStyle: {
+  //     background: "linear-gradient(135deg, #9D50BB, #6E48AA)", // 그래디언트 배경 적용
+  //     color: "white",
+  //     position: "relative",
+  //     overflow: "hidden", // 내부 요소가 버튼 밖으로 나가지 않도록 함
+  //     "&::before": { // 휘몰아치는 눈보라 효과
+  //       content: '""',
+  //       position: "absolute",
+  //       top: "0%",
+  //       left: "-100%",
+  //       width: "200%",
+  //       height: "100%",
+  //       background: `repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1) 10px, transparent 10px, transparent 20px)`,
+  //       zIndex: 1,
+  //       animation: "snowstorm 5s infinite linear",
+  //     },
+  //   },
+  // });
 
   return (
     <>
@@ -188,44 +206,41 @@ function BasicUI() {
                 >
                   <Grid gap={20}>
                     <Button
-                      bgColor="green.500"
-                      color="white"
                       flex={1}
-                      size="xl"
-                      fontSize="50px" // 글자 크기 조정
+                      bgColor="#1f75d9"
+                      borderBottom="7px solid #165195"
+                      width="300px"
+                      height="100px"
+                      fontSize="50px"
                       onClick={showSpyDescription}
-                      className="Button_Mode"
-                      _hover={{ transform: "scale(1.1)" }}
+                      color="white"
+                      padding="10px 20px 10px 20px"
+                      borderRadius="10px"
+                      transition="all 0.1s"
+                      textShadow="0px -3px rgba(0, 0, 0, 0.44)"
+                      cursor="pointer"
+                      _active={{ transform: "translateY(4px)" }}
                     >
                       스파이 문어
                     </Button>
                     <Button
-                      bgColor="green.500"
-                      color="white"
                       flex={1}
-                      size="xl"
-                      fontSize="50px" // 글자 크기 조정
+                      bgColor= "red.500"   /*"#ff521e"*/
+                      borderBottom="7px solid #c1370e"
+                      width="300px"
+                      height="100px"
+                      fontSize="50px"
                       onClick={showCompetitionDescription}
-                      className="Button_Mode"
-                      _hover={{ transform: "scale(1.1)" }} // hover시 커지게
+                      color="white"
+                      padding="10px 20px 10px 20px"
+                      borderRadius="10px"
+                      transition="all 0.1s"
+                      textShadow="0px -3px rgba(0, 0, 0, 0.44)"
+                      cursor="pointer"
+                      _active={{ transform: "translateY(4px)" }}
                     >
                       스피드 퀴즈
                     </Button>
-
-                    {/* JUNHO: Join Button */}
-
-                    {/* <Button
-                      bgColor="green.500"
-                      color="white"
-                      flex={1}
-                      size="xl"
-                      fontSize="50px" // 글자 크기 조정
-                      onClick={joinSelectedMode}
-                      className="Button_Mode"
-                      _hover={{ transform: "scale(1.1)" }}
-                    >
-                      게임룸 입장
-                    </Button> */}
                   </Grid>
                 </Box>
                 <Box
@@ -238,74 +253,29 @@ function BasicUI() {
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
-                  className="Game_Mode"
                   borderRadius="20px" // 모서리 둥글게
+                  marginLeft="20px"
+                  className="Game_Mode_Desc"
                 >
                   {/* @2-1. 경쟁/스파이 모드 선택 */}
                   <Flex
                     justifyContent="space-between"
                     alignContent="center"
-                    width="80%"
+                    width="90%"
+                    height="80%"
                     gap="30px"
                   >
                     {/* Mode Descriptions */}
                     {selectedMode === "competition" && (
-                      <>
+                    <>
+                        <Flex flexDirection="column" width="60%"
+                              justifyContent="center" alignItems="center"
+                        >
                         <Img
+                          flex="2"
                           src={`${process.env.PUBLIC_URL}/resources/images/Comp_rule.png`}
                           alt="character"
-                          width="40%"
-                          height="40%"
-                          style={{
-                            // position: "absolute",
-                            top: "0%", // Adjust as necessary
-                            left: "20%", // Centering the image if it's 80% width
-                          }}
-                          />
-                        <div style={{ textAlign: 'left' }}>
-                        <h1 style={{color:"red"}}>
-                        이 모드는 스피드 퀴즈 입니다. 
-                        </h1>
-                        <br></br>
-                        <h4>
-                        1. 2 대 2 로 팀을 나누어 진행합니다. 
-                        </h4>
-                        <br></br>
-                        <h4>
-                        2. 정답을 맞추면 그리는 오징어와 맞히는 오징어의 역할이 바뀝니다. 
-                        </h4>
-                        <br></br>
-                        <h4>
-                        3. 각 라운드당 제한시간 70초 입니다.
-                        </h4>
-                        <br></br> 
-                        <h4>
-                        4.'방해하기' 아이템을 통해 상대팀을 최대한 헷갈리게 해보세요!
-                        </h4>
-                        
-                        <Button
-                          bgColor="green.500"
-                          color="white"
-                          flex={1}
-                          size="xl"
-                          fontSize="50px" // 글자 크기 조정
-                          onClick={joinSelectedMode}
-                          className="Button_Mode"
-                          _hover={{ transform: "scale(1.1)" }}
-                        >
-                          게임룸 입장
-                        </Button>
-
-                        </div>
-                      </>
-                    )}
-
-                    {selectedMode === "spy" && (
-                      <>
-                        <Img
-                          src={`${process.env.PUBLIC_URL}/resources/images/Spy_rule.png`}
-                          alt="character"
-                          width="40%"
+                          width="80%"
                           height="40%"
                           style={{
                             // position: "absolute",
@@ -313,28 +283,78 @@ function BasicUI() {
                             left: "20%", // Centering the image if it's 80% width
                           }}
                         />
-                      <div style={{ textAlign: 'left' }}>
-                        <h1 style={{color:"red"}}>이 모드는 스파이 문어 입니다 </h1>
-                        <br></br> <h4>1. 4명의 플레이어가 함께 진행합니다. </h4>
-                        <br></br> <h4>2. 4명 중 1명의 스파이 문어가 존재하며 나머지 3명은 평범한 오징어 입니다. </h4>
-                        <br></br> <h4>3. 제시어 한 개가 주어지며, 스파이는 이 제시어를 알지 못 합니다. </h4>
-                        <br></br> <h4>4. 카운트가 시작되면, 플레이어마다 10초씩 그림을 이어 그려서 제시어를 완성시킵니다.</h4>
-                        {/* <br></br> <h4>5. 모든 플레이어가 그림을 그리기 전까지, 스파이가 제시어를 눈치채 정답을 맞추면 스파이의 승리! 답을 맞출 기회는 총 3번입니다.</h4> 
-                        <br></br> <h4>6. 스파이가 답을 맞추지 못 한채로 모든 턴이 끝이 난다면, 플레이어들은 투표를 통해 스파이 문어를 색출합니다. </h4>
-                        <br></br> <h4>7. 투표를 통해 색출한 플레이어가 스파이 문어이면 오징어들의 승리! 문어를 색출하지 못하면 스파이 문어의 승리입니다.</h4> */}
+                        <div flex="1">
+                        <Button
+                          marginTop="50px"
+                          width="300px"
+                          height="150px"
+                          fontSize="50px" // 글자 크기 조정
+                          onClick={joinSelectedMode}
+                          _hover={{ bg: "#6E48AA" }}
+                          className="Game_Go_Button"
+                        >
+                          게임룸 입장
+                        </Button>
+                        </div>
+                        
+                      </Flex>
+                        
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <div style={{ textAlign: 'left' }}>
+                            <h2 style={{ marginBottom: '40px' }}>진행 방식 : <span style={{ color: "red"}}>2 대 2</span> 팀전 </h2>
+                            <h2 style={{ marginBottom: '40px' }}>제한 시간 : (라운드 당) <span style={{ color: "red"}}>70초</span></h2>
+                            <h2 style={{ marginBottom: '40px' }}>팀원과 번갈아 가며 그림을 그리고, <br/>제시어를 더 많이 맞추는 팀이 <span style={{ backgroundColor: "yellow"}}>승리!</span></h2>
+                            <h2 style={{ marginBottom: '40px' }}>상대 팀은 <span style={{ backgroundColor: "yellow"}}>'방해하기'</span> 버튼을 눌러 방해해 보세요!</h2>
+                            {/* <br></br> <h4>5. 모든 플레이어가 그림을 그리기 전까지, 스파이가 제시어를 눈치채 정답을 맞추면 스파이의 승리! 답을 맞출 기회는 총 3번입니다.</h4> 
+                            <br></br> <h4>6. 스파이가 답을 맞추지 못 한채로 모든 턴이 끝이 난다면, 플레이어들은 투표를 통해 스파이 문어를 색출합니다. </h4>
+                            <br></br> <h4>7. 투표를 통해 색출한 플레이어가 스파이 문어이면 오징어들의 승리! 문어를 색출하지 못하면 스파이 문어의 승리입니다.</h4> */}
+                        </div> 
+                      </div>
+                      </>
+                    )}
 
-                    <Button
-                      bgColor="green.500"
-                      color="white"
-                      flex={1}
-                      size="xl"
-                      fontSize="50px" // 글자 크기 조정
-                      onClick={joinSelectedMode}
-                      className="Button_Mode"
-                      _hover={{ transform: "scale(1.1)" }}
-                    >
-                      게임룸 입장
-                    </Button>
+                    {selectedMode === "spy" && (
+                      <>
+                        <Flex flexDirection="column" width="60%"
+                              justifyContent="center" alignItems="center"
+                        >
+                        <Img
+                          flex="2"
+                          src={`${process.env.PUBLIC_URL}/resources/images/Spy_rule.png`}
+                          alt="character"
+                          width="100%"
+                          height="40%"
+                          style={{
+                            top: "0%", 
+                            left: "20%", 
+                          }}
+                        />
+                        <div flex="1">
+                          <Button
+                          marginTop="50px"
+                          width="300px"
+                          height="150px"
+                          fontSize="50px" // 글자 크기 조정
+                          onClick={joinSelectedMode}
+                          _hover={{ bg: "#6E48AA" }}
+                          className="Game_Go_Button"
+                          >
+                            게임룸 입장
+                          </Button>
+                        </div>
+                        
+                      </Flex>
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <div style={{ textAlign: 'left' }}>
+                            <h2 style={{ marginBottom: '40px' }}>진행 방식 : <span style={{ color: "red"}}>1 대 3</span> (스파이 문어 vs 오징어) </h2>
+                            <h2 style={{ marginBottom: '40px' }}>제한 시간 : (한 명씩) <span style={{ color: "red"}}>15초</span></h2>
+                            <h2 style={{ marginBottom: '40px' }}>주어진 제시어를 보고, 순서대로 이어 그려가며 하나의 그림을 완성해야 합니다.</h2>
+                            <h2 style={{ marginBottom: '40px' }}>제한 시간 내에 스파이가 제시어를 맞추거나,<br/>투표로 다른 오징어가 지목되면 <span style={{ backgroundColor: "yellow"}}>스파이 승리!</span></h2>
+                            <h2 style={{ marginBottom: '40px' }}>투표로 스파이가 지목되면 <span style={{ backgroundColor: "yellow"}}>오징어팀 승리!</span></h2>
+                            {/* <br></br> <h4>5. 모든 플레이어가 그림을 그리기 전까지, 스파이가 제시어를 눈치채 정답을 맞추면 스파이의 승리! 답을 맞출 기회는 총 3번입니다.</h4> 
+                            <br></br> <h4>6. 스파이가 답을 맞추지 못 한채로 모든 턴이 끝이 난다면, 플레이어들은 투표를 통해 스파이 문어를 색출합니다. </h4>
+                            <br></br> <h4>7. 투표를 통해 색출한 플레이어가 스파이 문어이면 오징어들의 승리! 문어를 색출하지 못하면 스파이 문어의 승리입니다.</h4> */}
+                        </div> 
                       </div>
                       </>
                     )}

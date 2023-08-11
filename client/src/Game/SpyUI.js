@@ -92,9 +92,9 @@ const SpyUI = () => {
   const animation = `${bounce} infinite 2s ease`;
 
   //MRSEO: 08.06 useState를 useEffect로 바꿈.
-  useEffect(() => {
-    confetti();
-  }, []);
+  // useEffect(() => {
+  //   confetti();
+  // }, []);
 
   // JUNHO: 스파이모드 시작
   const [spyTimerValue, setSpyTimerValue] = useState(0);
@@ -272,6 +272,7 @@ const SpyUI = () => {
       setSpyHowToWin('submit'); // MRSEO: 스파이가 정답 맞출 시 바로 승리
       setSpyWin(true);
       setSpyPhase('Result');
+      confetti(); // JANG: 폭죽 터지는지 확인
     });
 
     socket.on('spyFinish', () => {
@@ -491,7 +492,7 @@ const SpyUI = () => {
                               justifyContent="center"
                             >
                               <div>
-                                <h4 display="center">제시어</h4>
+                                <h4 style={{ textAlign: "center" }}>제시어</h4>
                                 <h1 >[ <span style={{ color: "red" }}>{suggestWord}</span> ]</h1>
                               </div>
                             </Flex>
@@ -505,6 +506,16 @@ const SpyUI = () => {
                           >
                             {iAmSpy ? (
                               <div>
+                                <Flex
+                                  display="flex"
+                                  alignItems="center"
+                                  justifyContent="center"
+                                >
+                                  <div>
+                                    <h4 style={{ textAlign: "center" }}>제시어</h4>
+                                    <h1>[ <span style={{ color: "red", filter: "blur(8px)" }}>{suggestWord}</span> ]</h1>
+                                  </div>
+                                </Flex>
                                 <FormLabel><h5 style={{ color: "gray" }}>(쉿! 당신은 스파이입니다.)</h5></FormLabel>
                                 <VStack>
                                   <Flex>

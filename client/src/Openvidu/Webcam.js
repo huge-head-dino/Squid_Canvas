@@ -86,6 +86,7 @@ const Webcam = () => {
     spyPainter,
     iAmSpy,
     setMode,
+    mode,
   } = useStore(
     state => ({
       round: state.round,
@@ -109,6 +110,7 @@ const Webcam = () => {
       spyPainter: state.spyPainter,
       iAmSpy: state.iAmSpy,
       setMode: state.setMode,
+      mode: state.mode,
     })
   );
 
@@ -343,13 +345,22 @@ const Webcam = () => {
     EntranceEffect.play();
   };
 
+  
+  // JANG: 게임 시작 버튼 클릭시, 회색 버튼 창 사라짐
+  const [startButtonVisible, setStartButtonVisible] = useState(true); 
+
   const handleGameStart = () => {
     // MRSEO: 게임 시작 버튼 누르면, 게임 시작, useStore.getState()지움
     console.log("게임 시작");
     RoundMusic.play();
     RoundMusic.volume = 0.3;
     socket.emit('startSetting')
+
+    setStartButtonVisible(false); // Start 버튼이 사라짐
+
   };
+
+
 
 
   // MRSEO: 게임 초기화
@@ -465,10 +476,8 @@ const Webcam = () => {
     setXy({ x: mouseX, y: mouseY });
   };
   return (
-    <div>
 
-      {/* // JANG: 08.06 - 마우스 캐릭터 -> 나중에 주석 해지하기!! */}
-      {/* <div
+      <div
       onMouseMove={xyHandler}
       onMouseDown={() => {
         setPointerSize(40);
@@ -477,7 +486,7 @@ const Webcam = () => {
         setPointerSize(40);
       }}
       style={{ width: "100vw", height: "100vh", cursor: "none" }}
-    >
+      >
       <Img
         src={`${process.env.PUBLIC_URL}/resources/images/character_squid.png`}
         alt="pointer"
@@ -492,7 +501,7 @@ const Webcam = () => {
           zIndex: "1000",
           pointerEvents: "none",
         }}
-      /> */}
+      />
 
       {session === undefined ? (
         <Box textAlign="center" className="Home_Screen">
@@ -509,25 +518,11 @@ const Webcam = () => {
                 <Flex alignContent="center" justifyContent="center" h="100%">
                   <VStack spacing={10}>
                     {/* JANG: 로고 선정해서 넣기 */}
-                    {/* <Flex
-                      alignItems="center"
-                      justifyContent="center"
-                      bg="orange"
-                      color="white"
-                      w="60vw"
-                      h="40vh"
-                      borderRadius="md"
-                      p={4}
-                    >
-                      <div class="Home_Logo" >
-                      @ 1-1. 홈 화면 - 로고
-                      </div>
-                    </Flex> */}
+                    
                     <Box
-                      colorScheme="teal"
                       borderRadius="md"
-                      w="800px"
-                      h="400px"
+                      w="900px"
+                      h="500px"
                       onClick={() => {
                         onOpen(); // 첫 번째 작업
                         clickSquid(); // 두 번째 작업
@@ -544,8 +539,8 @@ const Webcam = () => {
                         height="25%"
                         animation={animation_character}
                         position="fixed"
-                        top="30px"
-                        left="300px"
+                        top="10%"
+                        left="23%"
                       />
                       <Img
                         src={`${process.env.PUBLIC_URL}/resources/images/character_shark.png`}
@@ -554,8 +549,8 @@ const Webcam = () => {
                         height="25%"
                         animation={animation_character}
                         position="fixed"
-                        top="200px"
-                        right="150px"
+                        top="25%"
+                        right="10%"
                       />
                       <Img
                         src={`${process.env.PUBLIC_URL}/resources/images/character_crab.png`}
@@ -564,8 +559,8 @@ const Webcam = () => {
                         height="13%"
                         animation={animation_character}
                         position="fixed"
-                        bottom="15px"
-                        left="500px"
+                        bottom="5%"
+                        left="33%"
                       />
                       <Img
                         src={`${process.env.PUBLIC_URL}/resources/images/character_plant.png`}
@@ -636,7 +631,7 @@ const Webcam = () => {
         </Box>
       ) : null}
 
-{session !== undefined ? (
+    {session !== undefined ? (
         <Box textAlign="center" className="Game_Screen">
           {/* MRSEO: useStore.getState()지움 */}
           {phase === "Ready" || phase === "Game1" || phase === "Game2" ? (
@@ -657,15 +652,37 @@ const Webcam = () => {
               </Flex>
 
               {/* JANG: 하단에 Test 버튼과 EXIT 버튼 임시로 ORIGIN_Webcam.js에 넣어둠 */}
-              {myUserName === host && gamers?.length === 4 ? (
-                    <Button
-                      colorScheme="Messenger"
-                      size="lg"
-                      onClick={handleGameStart}
-                      marginRight="10px"
+              {mode === "competition" && myUserName === host && gamers?.length === 4 && startButtonVisible ? (
+                    <div
+                    style={{
+                        background: "#000000a0",
+                        width: "960px",
+                        height: "650px",
+                        borderRadius: "20px",
+
+                        position: "absolute",
+                        left: "50%",
+                        top: "53%",
+                        transform: "translate(-50%, -50%)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "white",
+                        fontWeight: "700",
+                        fontSize: "60px",
+                        zIndex: "1000",
+                    }}
                     >
-                      Start
+                    <Button
+                      className="Start_Button"
+                      colorScheme="Messenger"
+                      width="250px"
+                      height="200px"
+                      onClick={handleGameStart}
+                    >
+                      <h1>Start</h1>
                     </Button>
+                    </div>
               ) : null}
               
               </Flex>
@@ -675,6 +692,7 @@ const Webcam = () => {
       ) : null}
 
     </div>
+
   );
 };
 

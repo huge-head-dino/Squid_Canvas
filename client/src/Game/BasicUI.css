@@ -62,22 +62,28 @@ border-radius: 20px;
 padding: 20px;
 }
 
-/* 버튼 스타일 */
-.Button_mode {
-font-size: 18px;
-/* font-weight: bold; */
-padding: 12px 20px;
-border: 2px solid #000;
-border-radius: 8px;
-cursor: pointer;
+/* 게임룸 입장 버튼 -> 적용 안 됨!! JANG: 확인!! */
+.Game_Go_Button {
+  background: linear-gradient(135deg, #9D50BB, #6E48AA);
+  color: white;
+  position:relative;
+  overflow: hidden;
 }
 
-.Button_mode:hover {
-background-color: #ffde00; /* 닌텐도 노란색 */
-color: #000; /* 흰색 텍스트 */
+.Game_Go_Button::before{
+  position: absolute;
+  top: 0%;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1) 10px, transparent 10px, transparent 20px);
+  z-index: 100;
+  animation: snowstorm 5s infinite linear;
+
 }
 
-.Button_mode:active {
-background-color: #e60012; /* 닌텐도 빨간색 */
-color: #fff; /* 흰색 텍스트 */
+@keyframes snowstorm {
+  to {
+    transform: translateX(50%);
+  }
 }
