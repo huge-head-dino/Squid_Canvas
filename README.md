@@ -4,7 +4,7 @@
 
 ### 사진
 ### SQUIDCANVAS 시연영상
-[(링크)](https://youtu.be/MURQ6iLsth0)
+[https://youtu.be/MURQ6iLsth0](https://youtu.be/MURQ6iLsth0)
 
 --
 ## 게임소개
