@@ -1,7 +1,7 @@
 # 🦑 SquidCanvas 🦑
 (팀명 : JungleCanvas)
 
-### `SquidCanvas`는 공유 캔버스를 활용한 화상 웹 게임'입니다!
+### `SquidCanvas`는 공유캔버스를 활용한 화상 웹 게임'입니다!
 
 **(게임 시작화면 gif)**
 
